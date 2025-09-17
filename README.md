@@ -77,11 +77,14 @@ rust 1.89版本 2025年最新的特性
 ### 运行最小服务
 
 ```bash
+# Linux/macOS
 cargo run
 # 另一个终端
 curl http://127.0.0.1:8080/healthz
 curl -X POST http://127.0.0.1:8080/infer -H "Content-Type: application/json" -d '{"prompt":"hello"}'
 ```
+
+- Windows PowerShell 提示：不要用 `&&` 链接命令，改为分行执行。
 
 ### 测试
 
@@ -89,8 +92,25 @@ curl -X POST http://127.0.0.1:8080/infer -H "Content-Type: application/json" -d 
 cargo test
 ```
 
+- 集成测试会在测试进程内启动一个临时端口的 axum 服务（见 `tests/http_smoke.rs`），无需本地先行运行可执行文件。
+- 若本机有系统代理/HTTP 代理（如 Privoxy、公司代理），可能导致本地环回请求被劫持。我们的测试使用 `reqwest::Client::builder().no_proxy()` 显式禁用代理。
+
+### 代码结构
+
+- `src/lib.rs`：导出 `create_app()`，封装路由与状态
+- `src/engine.rs`：推理引擎 trait `InferenceEngine` 与默认实现 `DummyEngine`
+- `src/main.rs`：仅负责引导（日志、监听、`axum::serve`）
+- `tests/http_smoke.rs`：在进程内启动服务进行 HTTP 冒烟测试
+
 ### 可替换推理引擎
 
 - 引擎抽象：`src/engine.rs` 中定义 `InferenceEngine`
 - 默认实现：`DummyEngine`（回显）
-- 替换方式：实现该 trait 并在 `main` 中用你的引擎替换 `DummyEngine`
+- 替换方式：实现该 trait 并在 `create_app()` 中注入自定义引擎（或暴露构造函数以供 main 注入）
+
+### 配置与运维提示
+
+- 监听端口：支持环境变量 `PORT`，默认 `8080`
+- CORS：默认放开 `origin/method/headers`，如需收紧可在 `src/lib.rs` 的 `CorsLayer` 中修改
+- 就绪/存活：新增 `GET /readyz` 与 `GET /healthz`
+- 优雅关停：支持 `Ctrl+C`（Windows）/ `SIGINT`、`SIGTERM`（Unix）
