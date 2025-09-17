@@ -1,0 +1,31 @@
+[package]
+name = "c08_serving_ops"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+anyhow.workspace = true
+axum.workspace = true
+tokio.workspace = true
+serde.workspace = true
+tower-http.workspace = true
+async-trait.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+candle-core.workspace = true
+candle-nn.workspace = true
+candle-transformers.workspace = true
+tokenizers.workspace = true
+
+
+[dev-dependencies]
+# integration tests under `tests/` compile as separate crates and need their own deps
+reqwest.workspace = true
+tokio.workspace = true
+axum.workspace = true
+serde_json.workspace = true
+
+

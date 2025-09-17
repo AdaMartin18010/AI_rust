@@ -1,5 +1,14 @@
 # AI × Rust 课程大纲（实践导向）
 
+> 快速跳转：
+>
+> - 文档导航：`docs/ai_learning_overview.md`
+> - 学习路径：`docs/ai_learning_path.md`
+> - 数学基础：`docs/ai_mathematical_foundations.md`
+> - 算法解析：`docs/ai_algorithms_deep_dive.md`
+> - 实践指南：`docs/rust_ai_practice_guide.md`
+> - 阅读清单：`docs/reading_list.md`
+
 ## 模块 A：推理服务
 
 - `candle`/`onnxruntime` 加载与推理

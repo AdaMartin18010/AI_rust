@@ -2,7 +2,7 @@
 mod tests {
     use reqwest::Client;
     use tokio::net::TcpListener;
-    use ai_rust_svc::create_app;
+    use c08_serving_ops::create_app;
     use std::net::SocketAddr;
 
     async fn spawn_app() -> (String, tokio::task::JoinHandle<()>) {
@@ -49,6 +49,42 @@ mod tests {
         eprintln!("infer status={:?} body={}", status, body);
         assert!(status.is_success());
         assert_eq!(body["output"], "echo: hello");
+        handle.abort();
+    }
+
+    #[tokio::test]
+    async fn embed_should_return_vectors() {
+        let (base, handle) = spawn_app().await;
+        let client = Client::builder().no_proxy().build().unwrap();
+        let resp = client
+            .post(format!("{}/embed", base))
+            .json(&serde_json::json!({"texts":["a","bb","ccc"]}))
+            .send()
+            .await
+            .expect("request failed");
+        let status = resp.status();
+        let body: serde_json::Value = resp.json().await.expect("json parse");
+        eprintln!("embed status={:?} body={}", status, body);
+        assert!(status.is_success());
+        assert!(body["embeddings"].as_array().unwrap().len() == 3);
+        handle.abort();
+    }
+
+    #[tokio::test]
+    async fn search_should_return_hits() {
+        let (base, handle) = spawn_app().await;
+        let client = Client::builder().no_proxy().build().unwrap();
+        let resp = client
+            .post(format!("{}/search", base))
+            .json(&serde_json::json!({"query":"rust"}))
+            .send()
+            .await
+            .expect("request failed");
+        let status = resp.status();
+        let body: serde_json::Value = resp.json().await.expect("json parse");
+        eprintln!("search status={:?} body={}", status, body);
+        assert!(status.is_success());
+        assert!(body["hits"].as_array().unwrap().len() >= 1);
         handle.abort();
     }
 }

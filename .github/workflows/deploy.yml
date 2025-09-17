@@ -1,0 +1,137 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+    
+    - name: Cache cargo registry
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
+    
+    - name: Build release binary
+      run: cargo build --release --verbose
+    
+    - name: Create release archive
+      run: |
+        tar -czf ai-rust-service.tar.gz target/release/main
+        tar -czf ai-rust-service-debug.tar.gz target/debug/main
+    
+    - name: Upload release artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ai-rust-service-${{ github.ref_name }}
+        path: |
+          ai-rust-service.tar.gz
+          ai-rust-service-debug.tar.gz
+        retention-days: 30
+    
+    - name: Create GitHub Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
+        body: |
+          ## AI Rust Service Release ${{ github.ref_name }}
+          
+          ### Changes
+          - Automated release build
+          - Performance optimizations
+          - Bug fixes
+          
+          ### Downloads
+          - `ai-rust-service.tar.gz` - Release binary
+          - `ai-rust-service-debug.tar.gz` - Debug binary
+        draft: false
+        prerelease: false
+    
+    - name: Deploy to staging
+      if: github.event.inputs.environment == 'staging' || github.ref == 'refs/heads/main'
+      run: |
+        echo "Deploying to staging environment..."
+        # Add actual deployment commands here
+        # Example: scp, docker push, etc.
+    
+    - name: Deploy to production
+      if: github.event.inputs.environment == 'production' || startsWith(github.ref, 'refs/tags/')
+      run: |
+        echo "Deploying to production environment..."
+        # Add actual deployment commands here
+        # Example: scp, docker push, etc.
+
+  docker:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ai-rust-service
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=raw,value=latest,enable={{is_default_branch}}
+    
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max

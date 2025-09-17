@@ -1,0 +1,13 @@
+[package]
+name = "c07_agents_systems"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+anyhow.workspace = true
+serde.workspace = true
+
+

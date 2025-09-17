@@ -1,0 +1,12 @@
+[package]
+name = "c06_retrieval_tools"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+anyhow.workspace = true
+
+

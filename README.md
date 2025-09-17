@@ -1,5 +1,18 @@
 # AI_rust
 
+## 目录
+
+- [1. GPT模型](#1-gpt模型)
+- [2. 推理引擎](#2-推理引擎)
+- [3. RUST的使用框架](#3-rust的使用框架)
+- [4. RUST的AI框架扩展](#4-rust的ai框架扩展)
+- [快速导航与学习路径（2025-09 对齐）](#快速导航与学习路径2025-09-对齐)
+- [运行最小服务](#运行最小服务)
+- [测试](#测试)
+- [代码结构](#代码结构)
+- [可替换推理引擎](#可替换推理引擎)
+- [配置与运维提示](#配置与运维提示)
+
 ## 1. GPT模型
 
 [RustGPT]<https://github.com/tekaratzas/RustGPT>
@@ -58,6 +71,7 @@ rust 1.89版本 2025年最新的特性
   - `docs/foundations.md`：数学/计算机/科学基础知识框架
   - `docs/ai_rust_landscape.md`：Rust × AI 生态全景与落地建议
   - `docs/research_watch.md`：递归迭代的检索与更新机制
+  - `docs/ai_learning_path.md`：本仓库的AI学习路径与到 crate 的映射
 
 - 计划与推进：
   - `plans/MASTER_PLAN.md`：主计划与里程碑
@@ -67,8 +81,9 @@ rust 1.89版本 2025年最新的特性
   - `courses/rust/SYLLABUS.md`：Rust 基础→进阶大纲
   - `courses/ai-with-rust/SYLLABUS.md`：AI × Rust 实战大纲
 
-- 目录占位：
-  - `src/`：实战源码
+- 目录占位（workspace）：
+  - `crates/`：按主题分类的 crate（如 `C01_base`）
+  - `src/`：当前最小服务（`ai_rust_svc`）
   - `reports/`：基准与测试报告
   - `notes/`：经验记录与问题清单
 
@@ -77,8 +92,8 @@ rust 1.89版本 2025年最新的特性
 ### 运行最小服务
 
 ```bash
-# Linux/macOS
-cargo run
+# Linux/macOS（workspace 根）
+cargo run -p ai_rust_svc
 # 另一个终端
 curl http://127.0.0.1:8080/healthz
 curl -X POST http://127.0.0.1:8080/infer -H "Content-Type: application/json" -d '{"prompt":"hello"}'
@@ -89,7 +104,7 @@ curl -X POST http://127.0.0.1:8080/infer -H "Content-Type: application/json" -d 
 ### 测试
 
 ```bash
-cargo test
+cargo test -p ai_rust_svc
 ```
 
 - 集成测试会在测试进程内启动一个临时端口的 axum 服务（见 `tests/http_smoke.rs`），无需本地先行运行可执行文件。
@@ -114,3 +129,17 @@ cargo test
 - CORS：默认放开 `origin/method/headers`，如需收紧可在 `src/lib.rs` 的 `CorsLayer` 中修改
 - 就绪/存活：新增 `GET /readyz` 与 `GET /healthz`
 - 优雅关停：支持 `Ctrl+C`（Windows）/ `SIGINT`、`SIGTERM`（Unix）
+
+---
+
+## 文档索引
+
+- `docs/ai_learning_overview.md` — 总览与导航
+- `docs/ai_learning_path.md` — 学习路径（严格编号）
+- `docs/ai_algorithms_deep_dive.md` — 算法深度解析（含数学推导）
+- `docs/rapid_progress_strategy.md` — 快速推进策略
+- `docs/rust_ai_practice_guide.md` — Rust实践（工程衔接）
+- `docs/ai_rust_landscape.md` — 生态全景
+- `docs/foundations.md` — 基础知识框架（数学/计算机/科学）
+- `docs/taxonomy_2025.md` — 知识分类
+- `docs/curricula_2025.md` — 课程对齐

@@ -3,7 +3,7 @@ use std::net::SocketAddr;
 use tokio::net::TcpListener;
 use tracing_subscriber::{fmt, EnvFilter};
 
-use ai_rust_svc::create_app;
+use c08_serving_ops::create_app;
 
 // runtime entry only; logic resides in library
 
