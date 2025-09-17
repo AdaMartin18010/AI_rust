@@ -122,11 +122,12 @@ impl GaussianNaiveBayes {
         
         // 计算类别先验概率和特征均值
         for (class_idx, &class) in self.classes.iter().enumerate() {
-            let class_samples: Vec<&Vec<f64>> = features.iter()
-                .zip(labels.iter())
-                .filter(|(_, &label)|if *label == class
-                .map(|(feature, _)| feature)
-                .collect();
+            let mut class_samples: Vec<&Vec<f64>> = Vec::new();
+            for (feature, label) in features.iter().zip(labels.iter()) {
+                if *label == class {
+                    class_samples.push(feature);
+                }
+            }
                 
             self.class_priors[class_idx] = class_samples.len() as f64 / features.len() as f64;
             
@@ -243,5 +244,3 @@ mod tests {
         assert_eq!(prediction2, 1);
     }
 }
-
-

@@ -19,6 +19,7 @@ candle-core.workspace = true
 candle-nn.workspace = true
 candle-transformers.workspace = true
 tokenizers.workspace = true
+serde_json.workspace = true
 
 
 [dev-dependencies]

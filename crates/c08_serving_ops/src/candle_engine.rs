@@ -4,14 +4,15 @@ use candle_core::{
     //Tensor,
 };
 
-use candle_nn::{
-    VarBuilder,
-    Linear,
-};
+
+//use candle_nn::{
+//    VarBuilder,
+//    Linear,
+//};
 
 use candle_transformers::models::llama::{
     Llama, 
-    LlamaConfig,
+    //LlamaConfig,
 };
 
 use std::future::Future;
@@ -22,6 +23,7 @@ use tokio::sync::Mutex;
 
 use super::engine::InferenceEngine;
 
+#[allow(dead_code)]
 pub struct CandleEngine {
     model: Arc<Mutex<Option<Llama>>>,
     tokenizer: Arc<Mutex<Option<Tokenizer>>>,
