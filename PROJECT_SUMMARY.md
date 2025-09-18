@@ -7,6 +7,7 @@
 ## 📁 项目结构
 
 ### 🛠️ 核心代码模块 (crates/)
+
 - **c01_base** - 基础工具与数学库
 - **c02_data** - 数据处理与预处理
 - **c03_ml_basics** - 机器学习基础算法
@@ -17,6 +18,7 @@
 - **c08_serving_ops** - 模型服务与运维
 
 ### 📚 知识框架文档 (docs/)
+
 - **01_authority_frameworks** - 权威知识框架 ⭐⭐⭐
 - **02_knowledge_structures** - 知识结构体系 ⭐⭐
 - **03_tech_trends** - 技术趋势分析 ⭐
@@ -29,16 +31,19 @@
 ## 🛠️ 技术栈
 
 ### 核心AI框架
+
 - **Candle**：轻量级深度学习框架
 - **Linfa**：机器学习工具包
 - **SmartCore**：机器学习算法库
 
 ### 数据处理
+
 - **Polars**：高性能数据处理
 - **Ndarray**：多维数组计算
 - **Serde**：序列化框架
 
 ### Web服务
+
 - **Axum**：异步Web框架
 - **Tokio**：异步运行时
 - **Tower**：中间件框架
@@ -46,18 +51,21 @@
 ## 📚 学习路径
 
 ### 新手入门路径
+
 1. **Rust基础** → `courses/rust/SYLLABUS.md`
 2. **数学基础** → `docs/05_practical_guides/foundations.md`
 3. **数据处理** → `crates/c02_data/`
 4. **机器学习** → `crates/c03_ml_basics/`
 
 ### 进阶学习路径
+
 1. **深度学习** → `crates/c04_dl_fundamentals/`
 2. **NLP技术** → `crates/c05_nlp_transformers/`
 3. **系统架构** → `crates/c07_agents_systems/`
 4. **服务部署** → `crates/c08_serving_ops/`
 
 ### 专家级路径
+
 1. **核心原理** → `docs/01_authority_frameworks/2025_ai_core_principles_analysis.md`
 2. **前沿技术** → `docs/03_tech_trends/`
 3. **研究分析** → `docs/06_research_analysis/`
@@ -65,12 +73,14 @@
 ## 🎯 学习目标
 
 ### 技术目标
+
 - 掌握Rust在AI领域的应用
 - 理解AI算法的数学原理
 - 实现完整的AI系统
 - 掌握模型部署和运维
 
 ### 能力目标
+
 - 系统设计能力
 - 性能优化能力
 - 工程实践能力
@@ -94,11 +104,13 @@
 ## 🚀 快速开始
 
 ### 环境要求
+
 - Rust 1.70+
 - Cargo
 - Git
 
 ### 安装与运行
+
 ```bash
 # 克隆项目
 git clone <repository-url>
@@ -117,14 +129,17 @@ cargo test
 ## 📖 核心文档
 
 ### 🏆 权威知识框架 ⭐⭐⭐
+
 - `docs/01_authority_frameworks/2025_ai_rust_comprehensive_authority_framework.md`
 - `docs/01_authority_frameworks/2025_ai_core_principles_analysis.md`
 
 ### 📚 知识结构体系 ⭐⭐
+
 - `docs/02_knowledge_structures/2025_knowledge_landscape.md`
 - `docs/02_knowledge_structures/2025_ai_knowledge_framework.md`
 
 ### 🛠️ 实践指南
+
 - `docs/05_practical_guides/rust_ai_practice_guide.md`
 - `docs/05_practical_guides/ai_algorithms_deep_dive.md`
 

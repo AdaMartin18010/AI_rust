@@ -37,6 +37,20 @@
     - [6.1 短期趋势（2025-2026）](#61-短期趋势2025-2026)
     - [6.2 中期趋势（2026-2028）](#62-中期趋势2026-2028)
     - [6.3 长期趋势（2028+）](#63-长期趋势2028)
+  - [7. 理论基础与数学原理](#7-理论基础与数学原理)
+    - [7.1 机器学习理论基础](#71-机器学习理论基础)
+      - [7.1.1 统计学习理论](#711-统计学习理论)
+      - [7.1.2 信息论基础](#712-信息论基础)
+    - [7.2 深度学习理论基础](#72-深度学习理论基础)
+      - [7.2.1 反向传播理论](#721-反向传播理论)
+      - [7.2.2 优化理论](#722-优化理论)
+    - [7.3 强化学习理论基础](#73-强化学习理论基础)
+      - [7.3.1 马尔可夫决策过程](#731-马尔可夫决策过程)
+    - [7.4 信息几何与优化](#74-信息几何与优化)
+      - [7.4.1 自然梯度](#741-自然梯度)
+    - [7.5 理论验证与实验设计的学术严谨性](#75-理论验证与实验设计的学术严谨性)
+      - [7.5.1 统计显著性检验的数学理论基础](#751-统计显著性检验的数学理论基础)
+      - [7.5.2 实验设计原理](#752-实验设计原理)
 
 ## 1. 前沿论文分析
 
@@ -990,9 +1004,798 @@ impl CollaborativeFiltering {
 - 教育个性化
 - 创意内容生成
 
+## 7. 理论基础与数学原理
+
+### 7.1 机器学习理论基础
+
+#### 7.1.1 统计学习理论
+
+**PAC学习理论**：
+
+```rust
+pub struct PACLearner {
+    hypothesis_space: HypothesisSpace,
+    sample_complexity: usize,
+    confidence: f64,
+    accuracy: f64,
+}
+
+impl PACLearner {
+    pub fn learn(&self, samples: &[Sample]) -> Result<Hypothesis, LearningError> {
+        // PAC学习算法实现
+        let hypothesis = self.find_consistent_hypothesis(samples)?;
+        
+        // 验证PAC条件
+        if self.verify_pac_conditions(samples, &hypothesis)? {
+            Ok(hypothesis)
+        } else {
+            Err(LearningError::PACConditionsNotMet)
+        }
+    }
+    
+    fn verify_pac_conditions(&self, samples: &[Sample], hypothesis: &Hypothesis) -> Result<bool, LearningError> {
+        let empirical_error = self.compute_empirical_error(samples, hypothesis);
+        let generalization_bound = self.compute_generalization_bound();
+        
+        Ok(empirical_error + generalization_bound <= self.accuracy)
+    }
+    
+    fn compute_generalization_bound(&self) -> f64 {
+        // VC维理论推导的泛化界
+        let vc_dim = self.hypothesis_space.vc_dimension();
+        let sample_size = self.sample_complexity;
+        let confidence = self.confidence;
+        
+        // 泛化界：O(sqrt((d * log(n) + log(1/δ)) / n))
+        let bound = (vc_dim as f64 * (sample_size as f64).ln() + (1.0 / confidence).ln()) / sample_size as f64;
+        bound.sqrt()
+    }
+}
+```
+
+**VC维理论**：
+
+```rust
+pub struct VCDimension {
+    hypothesis_space: HypothesisSpace,
+}
+
+impl VCDimension {
+    pub fn compute_vc_dimension(&self) -> usize {
+        // 对于线性分类器，VC维 = 特征维度 + 1
+        match &self.hypothesis_space {
+            HypothesisSpace::Linear(dim) => dim + 1,
+            HypothesisSpace::Polynomial(degree, dim) => (dim + degree).choose(degree),
+            HypothesisSpace::NeuralNetwork(layers) => self.compute_neural_network_vc_dim(layers),
+        }
+    }
+    
+    fn compute_neural_network_vc_dim(&self, layers: &[usize]) -> usize {
+        // 神经网络VC维的近似计算
+        let mut vc_dim = 0;
+        for i in 0..layers.len() - 1 {
+            vc_dim += layers[i] * layers[i + 1];
+        }
+        vc_dim
+    }
+}
+```
+
+#### 7.1.2 信息论基础
+
+**熵与互信息**：
+
+```rust
+pub struct InformationTheory {
+    base: f64,
+}
+
+impl InformationTheory {
+    pub fn entropy(&self, probabilities: &[f64]) -> f64 {
+        probabilities.iter()
+            .filter(|&&p| p > 0.0)
+            .map(|&p| -p * p.log(self.base))
+            .sum()
+    }
+    
+    pub fn mutual_information(&self, joint_dist: &[[f64; 2]; 2]) -> f64 {
+        let h_x = self.entropy(&[joint_dist[0][0] + joint_dist[0][1], joint_dist[1][0] + joint_dist[1][1]]);
+        let h_y = self.entropy(&[joint_dist[0][0] + joint_dist[1][0], joint_dist[0][1] + joint_dist[1][1]]);
+        let h_xy = self.joint_entropy(joint_dist);
+        
+        h_x + h_y - h_xy
+    }
+    
+    pub fn joint_entropy(&self, joint_dist: &[[f64; 2]; 2]) -> f64 {
+        let mut entropy = 0.0;
+        for row in joint_dist {
+            for &prob in row {
+                if prob > 0.0 {
+                    entropy -= prob * prob.log(self.base);
+                }
+            }
+        }
+        entropy
+    }
+    
+    pub fn kl_divergence(&self, p: &[f64], q: &[f64]) -> f64 {
+        p.iter().zip(q.iter())
+            .filter(|(&&p_val, &&q_val)| p_val > 0.0 && q_val > 0.0)
+            .map(|(&p_val, &q_val)| p_val * (p_val / q_val).log(self.base))
+            .sum()
+    }
+}
+```
+
+### 7.2 深度学习理论基础
+
+#### 7.2.1 反向传播理论
+
+**梯度计算与链式法则**：
+
+```rust
+pub struct Backpropagation {
+    network: NeuralNetwork,
+    learning_rate: f64,
+}
+
+impl Backpropagation {
+    pub fn backward(&self, input: &Tensor, target: &Tensor) -> Result<Vec<Tensor>, BackpropError> {
+        // 前向传播
+        let activations = self.forward_pass(input)?;
+        
+        // 计算输出层误差
+        let output_error = self.compute_output_error(&activations.last().unwrap(), target)?;
+        
+        // 反向传播误差
+        let mut errors = vec![output_error];
+        for i in (0..self.network.layers.len() - 1).rev() {
+            let error = self.propagate_error(&errors[0], &self.network.layers[i + 1], &activations[i])?;
+            errors.insert(0, error);
+        }
+        
+        // 计算梯度
+        let mut gradients = Vec::new();
+        for (i, layer) in self.network.layers.iter().enumerate() {
+            let gradient = self.compute_gradient(&errors[i], &activations[i], layer)?;
+            gradients.push(gradient);
+        }
+        
+        Ok(gradients)
+    }
+    
+    fn compute_gradient(&self, error: &Tensor, activation: &Tensor, layer: &Layer) -> Result<Tensor, BackpropError> {
+        // 梯度 = 误差 ⊗ 激活值
+        error.outer_product(activation)
+    }
+    
+    fn propagate_error(&self, error: &Tensor, layer: &Layer, prev_activation: &Tensor) -> Result<Tensor, BackpropError> {
+        // 误差传播：δ^(l) = (W^(l+1))^T δ^(l+1) ⊙ σ'(z^(l))
+        let weight_transpose = layer.weights.transpose()?;
+        let propagated_error = weight_transpose.matmul(error)?;
+        let activation_derivative = self.compute_activation_derivative(prev_activation, layer.activation)?;
+        
+        Ok(propagated_error.hadamard_product(&activation_derivative)?)
+    }
+}
+```
+
+#### 7.2.2 优化理论
+
+**收敛性分析**：
+
+```rust
+pub struct OptimizationTheory {
+    objective_function: Box<dyn ObjectiveFunction>,
+    optimizer: Box<dyn Optimizer>,
+}
+
+impl OptimizationTheory {
+    pub fn analyze_convergence(&self, initial_params: &[f64]) -> ConvergenceAnalysis {
+        let mut params = initial_params.to_vec();
+        let mut losses = Vec::new();
+        let mut gradients = Vec::new();
+        
+        for iteration in 0..1000 {
+            let (loss, grad) = self.objective_function.compute_loss_and_gradient(&params);
+            losses.push(loss);
+            gradients.push(grad.clone());
+            
+            // 更新参数
+            params = self.optimizer.update(&params, &grad);
+            
+            // 检查收敛条件
+            if self.check_convergence(&losses, &gradients) {
+                return ConvergenceAnalysis {
+                    converged: true,
+                    iterations: iteration + 1,
+                    final_loss: loss,
+                    convergence_rate: self.compute_convergence_rate(&losses),
+                };
+            }
+        }
+        
+        ConvergenceAnalysis {
+            converged: false,
+            iterations: 1000,
+            final_loss: losses.last().unwrap().clone(),
+            convergence_rate: self.compute_convergence_rate(&losses),
+        }
+    }
+    
+    fn check_convergence(&self, losses: &[f64], gradients: &[Vec<f64>]) -> bool {
+        // 检查梯度范数
+        let gradient_norm = gradients.last().unwrap().iter().map(|g| g * g).sum::<f64>().sqrt();
+        if gradient_norm < 1e-6 {
+            return true;
+        }
+        
+        // 检查损失变化
+        if losses.len() >= 10 {
+            let recent_losses = &losses[losses.len() - 10..];
+            let loss_variance = self.compute_variance(recent_losses);
+            if loss_variance < 1e-8 {
+                return true;
+            }
+        }
+        
+        false
+    }
+    
+    fn compute_convergence_rate(&self, losses: &[f64]) -> f64 {
+        if losses.len() < 2 {
+            return 0.0;
+        }
+        
+        let mut convergence_rates = Vec::new();
+        for i in 1..losses.len() {
+            if losses[i - 1] > 0.0 {
+                let rate = (losses[i] / losses[i - 1]).ln();
+                convergence_rates.push(rate);
+            }
+        }
+        
+        if convergence_rates.is_empty() {
+            0.0
+        } else {
+            convergence_rates.iter().sum::<f64>() / convergence_rates.len() as f64
+        }
+    }
+}
+```
+
+### 7.3 强化学习理论基础
+
+#### 7.3.1 马尔可夫决策过程
+
+**价值函数与策略优化**：
+
+```rust
+pub struct MarkovDecisionProcess {
+    states: Vec<State>,
+    actions: Vec<Action>,
+    transition_probabilities: HashMap<(State, Action), Vec<(State, f64)>>,
+    rewards: HashMap<(State, Action, State), f64>,
+    discount_factor: f64,
+}
+
+impl MarkovDecisionProcess {
+    pub fn value_iteration(&self, epsilon: f64) -> HashMap<State, f64> {
+        let mut value_function = HashMap::new();
+        
+        // 初始化价值函数
+        for state in &self.states {
+            value_function.insert(*state, 0.0);
+        }
+        
+        loop {
+            let mut new_value_function = HashMap::new();
+            let mut max_change = 0.0;
+            
+            for state in &self.states {
+                let mut max_value = f64::NEG_INFINITY;
+                
+                for action in &self.actions {
+                    let value = self.compute_state_value(*state, *action, &value_function);
+                    max_value = max_value.max(value);
+                }
+                
+                new_value_function.insert(*state, max_value);
+                max_change = max_change.max((max_value - value_function[state]).abs());
+            }
+            
+            value_function = new_value_function;
+            
+            if max_change < epsilon {
+                break;
+            }
+        }
+        
+        value_function
+    }
+    
+    fn compute_state_value(&self, state: State, action: Action, value_function: &HashMap<State, f64>) -> f64 {
+        let transitions = &self.transition_probabilities[&(state, action)];
+        let mut expected_value = 0.0;
+        
+        for (next_state, prob) in transitions {
+            let reward = self.rewards.get(&(state, action, *next_state)).unwrap_or(&0.0);
+            expected_value += prob * (reward + self.discount_factor * value_function[next_state]);
+        }
+        
+        expected_value
+    }
+    
+    pub fn policy_iteration(&self) -> HashMap<State, Action> {
+        let mut policy = HashMap::new();
+        
+        // 初始化随机策略
+        for state in &self.states {
+            policy.insert(*state, self.actions[0]);
+        }
+        
+        loop {
+            // 策略评估
+            let value_function = self.evaluate_policy(&policy);
+            
+            // 策略改进
+            let mut policy_stable = true;
+            let mut new_policy = policy.clone();
+            
+            for state in &self.states {
+                let mut best_action = policy[state];
+                let mut best_value = f64::NEG_INFINITY;
+                
+                for action in &self.actions {
+                    let value = self.compute_state_value(*state, *action, &value_function);
+                    if value > best_value {
+                        best_value = value;
+                        best_action = *action;
+                    }
+                }
+                
+                if best_action != policy[state] {
+                    policy_stable = false;
+                    new_policy.insert(*state, best_action);
+                }
+            }
+            
+            policy = new_policy;
+            
+            if policy_stable {
+                break;
+            }
+        }
+        
+        policy
+    }
+}
+```
+
+### 7.4 信息几何与优化
+
+#### 7.4.1 自然梯度
+
+**费舍尔信息矩阵**：
+
+```rust
+pub struct NaturalGradient {
+    fisher_information: Tensor,
+    learning_rate: f64,
+}
+
+impl NaturalGradient {
+    pub fn compute_fisher_information(&mut self, model: &dyn Model, data: &[Sample]) -> Result<(), NaturalGradientError> {
+        let mut fisher = Tensor::zeros(&[model.parameter_count(), model.parameter_count()]);
+        
+        for sample in data {
+            let log_likelihood = model.log_likelihood(sample)?;
+            let gradient = model.compute_gradient(sample)?;
+            
+            // 费舍尔信息矩阵：F = E[∇log p(x|θ) ∇log p(x|θ)^T]
+            let outer_product = gradient.outer_product(&gradient)?;
+            fisher = &fisher + &outer_product;
+        }
+        
+        // 归一化
+        fisher = &fisher / data.len() as f64;
+        self.fisher_information = fisher;
+        
+        Ok(())
+    }
+    
+    pub fn natural_gradient_step(&self, parameters: &mut [f64], gradient: &[f64]) -> Result<(), NaturalGradientError> {
+        // 自然梯度：∇̃f(θ) = F^(-1) ∇f(θ)
+        let fisher_inv = self.fisher_information.inverse()?;
+        let natural_gradient = fisher_inv.matmul(&Tensor::from_slice(gradient))?;
+        
+        // 参数更新：θ = θ - α ∇̃f(θ)
+        for (param, nat_grad) in parameters.iter_mut().zip(natural_gradient.to_slice()?) {
+            *param -= self.learning_rate * nat_grad;
+        }
+        
+        Ok(())
+    }
+}
+```
+
+### 7.5 理论验证与实验设计的学术严谨性
+
+#### 7.5.1 统计显著性检验的数学理论基础
+
+**假设检验的数学框架**：
+
+**定义8（假设检验）**：
+假设检验是统计学中用于判断关于总体参数假设是否成立的统计方法。设θ为总体参数，H₀为原假设，H₁为备择假设，则假设检验的数学形式为：
+H₀: θ ∈ Θ₀ vs H₁: θ ∈ Θ₁
+
+其中Θ₀ ∩ Θ₁ = ∅，Θ₀ ∪ Θ₁ = Θ（参数空间）。
+
+**检验统计量的构造**：
+对于样本X₁, X₂, ..., Xₙ，检验统计量T = T(X₁, X₂, ..., Xₙ)的选择应满足：
+
+1. 在原假设H₀下，T的分布已知
+2. 在备择假设H₁下，T倾向于偏离原假设下的分布
+
+**p值的数学定义**：
+p值是在原假设H₀为真的条件下，观察到当前统计量值或更极端值的概率：
+p = P(T ≥ t_obs | H₀)
+
+其中t_obs是观察到的统计量值。
+
+**第一类错误和第二类错误**：
+
+- 第一类错误（α）：拒绝真原假设的概率
+- 第二类错误（β）：接受假原假设的概率
+- 检验功效（1-β）：正确拒绝假原假设的概率
+
+**t检验的数学理论**：
+
+**定理5（t检验统计量）**：
+对于两个独立样本X₁, ..., Xₙ₁和Y₁, ..., Yₙ₂，检验H₀: μ₁ = μ₂的t统计量为：
+t = (X̄ - Ȳ) / S_p √(1/n₁ + 1/n₂)
+
+其中：
+
+- X̄, Ȳ是样本均值
+- S_p² = [(n₁-1)S₁² + (n₂-1)S₂²] / (n₁+n₂-2) 是合并方差
+- 在H₀下，t ~ t(n₁+n₂-2)
+
+**效应量的理论分析**：
+
+**定义9（Cohen's d）**：
+Cohen's d是标准化的均值差异：
+d = (μ₁ - μ₂) / σ
+
+其中σ是总体标准差。
+
+**效应量解释**：
+
+- |d| < 0.2：小效应
+- 0.2 ≤ |d| < 0.5：中等效应
+- 0.5 ≤ |d| < 0.8：大效应
+- |d| ≥ 0.8：非常大效应
+
+**卡方检验的理论基础**：
+
+**定理6（卡方检验统计量）**：
+对于观察频数O₁, ..., Oₖ和期望频数E₁, ..., Eₖ，卡方统计量为：
+χ² = Σᵢ₌₁ᵏ (Oᵢ - Eᵢ)² / Eᵢ
+
+在H₀下，χ² ~ χ²(k-1)，其中k-1是自由度。
+
+**多重比较校正**：
+
+**Bonferroni校正**：
+对于m个同时进行的假设检验，将显著性水平调整为α/m：
+α_corrected = α / m
+
+**False Discovery Rate (FDR)控制**：
+Benjamini-Hochberg程序控制FDR：
+
+1. 将p值按升序排列：p₁ ≤ p₂ ≤ ... ≤ pₘ
+2. 找到最大的i使得pᵢ ≤ (i/m) × α
+3. 拒绝前i个假设
+
+**贝叶斯假设检验**：
+
+**贝叶斯因子**：
+BF₁₀ = P(D|H₁) / P(D|H₀)
+
+其中P(D|Hᵢ)是假设Hᵢ下的边际似然。
+
+**后验概率**：
+P(H₁|D) = BF₁₀ × P(H₁) / [BF₁₀ × P(H₁) + P(H₀)]
+
+**统计检验的Rust实现**：
+
+```rust
+use statrs::distribution::{StudentsT, ChiSquared, ContinuousCDF};
+use statrs::statistics::Statistics;
+
+pub struct AdvancedStatisticalTesting {
+    significance_level: f64,
+    correction_method: MultipleComparisonCorrection,
+}
+
+#[derive(Debug, Clone)]
+pub enum MultipleComparisonCorrection {
+    None,
+    Bonferroni,
+    BenjaminiHochberg,
+    Holm,
+}
+
+#[derive(Debug)]
+pub struct TTestResult {
+    pub t_statistic: f64,
+    pub p_value: f64,
+    pub degrees_of_freedom: usize,
+    pub is_significant: bool,
+    pub effect_size: f64,
+    pub confidence_interval: (f64, f64),
+    pub power: f64,
+}
+
+#[derive(Debug)]
+pub struct ChiSquareResult {
+    pub chi_square_statistic: f64,
+    pub p_value: f64,
+    pub degrees_of_freedom: usize,
+    pub is_significant: bool,
+    pub cramers_v: f64,
+    pub contingency_coefficient: f64,
+}
+
+impl AdvancedStatisticalTesting {
+    pub fn new(significance_level: f64, correction_method: MultipleComparisonCorrection) -> Self {
+        Self {
+            significance_level,
+            correction_method,
+        }
+    }
+    
+    pub fn independent_samples_t_test(&self, sample1: &[f64], sample2: &[f64]) -> Result<TTestResult, StatisticalError> {
+        let n1 = sample1.len() as f64;
+        let n2 = sample2.len() as f64;
+        
+        // 计算样本统计量
+        let mean1 = sample1.mean();
+        let mean2 = sample2.mean();
+        let var1 = sample1.variance();
+        let var2 = sample2.variance();
+        
+        // 合并方差
+        let pooled_variance = ((n1 - 1.0) * var1 + (n2 - 1.0) * var2) / (n1 + n2 - 2.0);
+        let standard_error = (pooled_variance * (1.0 / n1 + 1.0 / n2)).sqrt();
+        
+        // t统计量
+        let t_statistic = (mean1 - mean2) / standard_error;
+        let degrees_of_freedom = (n1 + n2 - 2.0) as usize;
+        
+        // p值计算
+        let t_dist = StudentsT::new(0.0, 1.0, degrees_of_freedom as f64)?;
+        let p_value = 2.0 * (1.0 - t_dist.cdf(t_statistic.abs()));
+        
+        // 效应量（Cohen's d）
+        let effect_size = (mean1 - mean2) / pooled_variance.sqrt();
+        
+        // 置信区间
+        let t_critical = t_dist.inverse_cdf(1.0 - self.significance_level / 2.0);
+        let margin_of_error = t_critical * standard_error;
+        let confidence_interval = (
+            (mean1 - mean2) - margin_of_error,
+            (mean1 - mean2) + margin_of_error
+        );
+        
+        // 检验功效（简化计算）
+        let power = self.calculate_power(effect_size, n1 + n2, self.significance_level);
+        
+        let is_significant = p_value < self.significance_level;
+        
+        Ok(TTestResult {
+            t_statistic,
+            p_value,
+            degrees_of_freedom,
+            is_significant,
+            effect_size,
+            confidence_interval,
+            power,
+        })
+    }
+    
+    pub fn chi_square_test(&self, observed: &[f64], expected: &[f64]) -> Result<ChiSquareResult, StatisticalError> {
+        if observed.len() != expected.len() {
+            return Err(StatisticalError::DimensionMismatch);
+        }
+        
+        // 卡方统计量
+        let chi_square: f64 = observed.iter().zip(expected.iter())
+            .map(|(obs, exp)| {
+                if *exp <= 0.0 {
+                    return Err(StatisticalError::InvalidExpectedValue);
+                }
+                Ok((obs - exp).powi(2) / exp)
+            })
+            .collect::<Result<Vec<_>, _>>()?
+            .iter()
+            .sum();
+        
+        let degrees_of_freedom = observed.len() - 1;
+        
+        // p值计算
+        let chi_dist = ChiSquared::new(degrees_of_freedom as f64)?;
+        let p_value = 1.0 - chi_dist.cdf(chi_square);
+        
+        // Cramer's V（关联强度）
+        let n: f64 = observed.iter().sum();
+        let min_dim = (observed.len() - 1).min(1);
+        let cramers_v = (chi_square / (n * min_dim as f64)).sqrt();
+        
+        // 列联系数
+        let contingency_coefficient = (chi_square / (chi_square + n)).sqrt();
+        
+        let is_significant = p_value < self.significance_level;
+        
+        Ok(ChiSquareResult {
+            chi_square_statistic: chi_square,
+            p_value,
+            degrees_of_freedom,
+            is_significant,
+            cramers_v,
+            contingency_coefficient,
+        })
+    }
+    
+    pub fn multiple_comparison_correction(&self, p_values: &mut [f64]) -> Vec<f64> {
+        match self.correction_method {
+            MultipleComparisonCorrection::None => p_values.to_vec(),
+            MultipleComparisonCorrection::Bonferroni => {
+                p_values.iter().map(|p| (p * p_values.len() as f64).min(1.0)).collect()
+            }
+            MultipleComparisonCorrection::BenjaminiHochberg => {
+                self.benjamini_hochberg_correction(p_values)
+            }
+            MultipleComparisonCorrection::Holm => {
+                self.holm_correction(p_values)
+            }
+        }
+    }
+    
+    fn benjamini_hochberg_correction(&self, p_values: &[f64]) -> Vec<f64> {
+        let m = p_values.len();
+        let mut indexed_p: Vec<(usize, f64)> = p_values.iter().enumerate().map(|(i, &p)| (i, p)).collect();
+        indexed_p.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+        
+        let mut corrected_p = vec![0.0; m];
+        let mut max_significant = 0;
+        
+        for i in 0..m {
+            let corrected = indexed_p[i].1 * (m as f64) / ((i + 1) as f64);
+            if corrected <= self.significance_level {
+                max_significant = i;
+            }
+            corrected_p[indexed_p[i].0] = corrected.min(1.0);
+        }
+        
+        // 确保单调性
+        for i in (0..max_significant).rev() {
+            if corrected_p[indexed_p[i].0] > corrected_p[indexed_p[i + 1].0] {
+                corrected_p[indexed_p[i].0] = corrected_p[indexed_p[i + 1].0];
+            }
+        }
+        
+        corrected_p
+    }
+    
+    fn holm_correction(&self, p_values: &[f64]) -> Vec<f64> {
+        let m = p_values.len();
+        let mut indexed_p: Vec<(usize, f64)> = p_values.iter().enumerate().map(|(i, &p)| (i, p)).collect();
+        indexed_p.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+        
+        let mut corrected_p = vec![0.0; m];
+        
+        for i in 0..m {
+            let corrected = indexed_p[i].1 * (m - i) as f64;
+            corrected_p[indexed_p[i].0] = corrected.min(1.0);
+        }
+        
+        corrected_p
+    }
+    
+    fn calculate_power(&self, effect_size: f64, sample_size: f64, alpha: f64) -> f64 {
+        // 简化的功效计算
+        // 实际应用中应使用更精确的方法
+        let ncp = effect_size * (sample_size / 2.0).sqrt(); // 非中心参数
+        let critical_t = StudentsT::new(0.0, 1.0, sample_size - 2.0)
+            .unwrap()
+            .inverse_cdf(1.0 - alpha / 2.0);
+        
+        // 使用非中心t分布计算功效
+        // 这里使用简化近似
+        if ncp.abs() > critical_t {
+            0.8 // 高功效
+        } else if ncp.abs() > critical_t * 0.5 {
+            0.5 // 中等功效
+        } else {
+            0.2 // 低功效
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum StatisticalError {
+    DimensionMismatch,
+    InvalidExpectedValue,
+    DistributionError(String),
+}
+
+impl std::fmt::Display for StatisticalError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            StatisticalError::DimensionMismatch => write!(f, "Dimension mismatch between observed and expected values"),
+            StatisticalError::InvalidExpectedValue => write!(f, "Invalid expected value (must be positive)"),
+            StatisticalError::DistributionError(msg) => write!(f, "Distribution error: {}", msg),
+        }
+    }
+}
+
+impl std::error::Error for StatisticalError {}
+```
+
+#### 7.5.2 实验设计原理
+
+**随机对照试验**：
+
+```rust
+pub struct RandomizedControlledTrial {
+    treatment_groups: Vec<TreatmentGroup>,
+    control_group: ControlGroup,
+    randomization_strategy: RandomizationStrategy,
+}
+
+impl RandomizedControlledTrial {
+    pub fn design_experiment(&self, participants: &[Participant]) -> Result<ExperimentDesign, ExperimentError> {
+        let mut design = ExperimentDesign::new();
+        
+        // 随机分配参与者
+        let assignments = self.randomization_strategy.assign(participants, &self.treatment_groups)?;
+        
+        // 创建实验组
+        for (group, participants) in assignments {
+            design.add_group(group, participants);
+        }
+        
+        // 添加对照组
+        design.add_control_group(self.control_group.clone());
+        
+        // 计算统计功效
+        let power = self.compute_statistical_power(&design)?;
+        design.set_statistical_power(power);
+        
+        Ok(design)
+    }
+    
+    fn compute_statistical_power(&self, design: &ExperimentDesign) -> Result<f64, ExperimentError> {
+        // 统计功效计算：1 - β = P(拒绝H0 | H1为真)
+        let effect_size = self.estimate_effect_size(design)?;
+        let sample_size = design.total_sample_size();
+        let alpha = self.significance_level;
+        
+        // 使用非中心t分布计算功效
+        let non_centrality_parameter = effect_size * (sample_size as f64 / 2.0).sqrt();
+        let critical_value = self.compute_critical_value(alpha, sample_size - 2);
+        
+        let power = 1.0 - self.compute_beta(non_centrality_parameter, critical_value, sample_size - 2);
+        
+        Ok(power)
+    }
+}
+```
+
 ---
 
 *最后更新：2025年1月*  
-*版本：v1.0*  
+*版本：v2.0*  
 *状态：持续更新中*  
-*适用对象：AI研究人员、技术架构师、Rust开发者*
+*适用对象：AI研究人员、技术架构师、Rust开发者、理论研究者*

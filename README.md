@@ -283,18 +283,25 @@ tracing = "0.1"
 
 ### 🏆 权威知识框架 ⭐⭐⭐
 
-- `docs/01_authority_frameworks/2025_ai_rust_comprehensive_authority_framework.md`
-- `docs/01_authority_frameworks/2025_ai_core_principles_analysis.md`
+- `docs/01_authority_frameworks/2025_ai_rust_comprehensive_authority_framework.md` - 国际权威知识框架
+- `docs/01_authority_frameworks/2025_ai_rust_authority_topic_structure.md` - 权威主题目录结构
+- `docs/01_authority_frameworks/2025_ai_core_principles_analysis.md` - AI核心原理深度分析
 
 ### 📚 知识结构体系 ⭐⭐
 
-- `docs/02_knowledge_structures/2025_knowledge_landscape.md`
-- `docs/02_knowledge_structures/2025_ai_knowledge_framework.md`
+- `docs/02_knowledge_structures/2025_ai_rust_comprehensive_knowledge_framework.md` - 综合知识框架
+- `docs/02_knowledge_structures/2025_knowledge_landscape.md` - 知识全景图
+- `docs/02_knowledge_structures/2025_ai_knowledge_framework.md` - AI知识框架
 
 ### 🛠️ 实践指南
 
-- `docs/05_practical_guides/rust_ai_practice_guide.md`
-- `docs/05_practical_guides/ai_algorithms_deep_dive.md`
+- `docs/05_practical_guides/rust_ai_practice_guide.md` - Rust AI实践指南
+- `docs/05_practical_guides/ai_algorithms_deep_dive.md` - AI算法深度解析
+- `docs/05_practical_guides/foundations.md` - 基础知识框架
+
+### 📊 项目管理
+
+- `docs/07_project_management/2025_ai_rust_knowledge_framework_summary.md` - 知识框架构建总结
 
 ## 🎯 学习目标
 
