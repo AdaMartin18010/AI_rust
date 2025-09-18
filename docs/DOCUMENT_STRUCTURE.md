@@ -34,6 +34,7 @@ docs/
 │
 ├── 🛠️ 05_practical_guides/                # 实践指南
 │   ├── rust_ai_practice_guide.md
+│   ├── 2025_rust_ai_practical_guide.md
 │   ├── ai_algorithms_deep_dive.md
 │   └── foundations.md
 │

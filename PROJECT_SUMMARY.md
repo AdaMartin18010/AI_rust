@@ -2,7 +2,8 @@
 
 ## 🎯 项目概述
 
-**AI-Rust** 是一个使用Rust语言结合成熟开源库学习AI相关技术和原理的实践项目。项目旨在通过实际的代码实现来深入理解AI算法的数学原理和工程实践。
+**AI-Rust** 是一个使用Rust语言结合成熟开源库学习AI相关技术和原理的实践项目。
+项目旨在通过实际的代码实现来深入理解AI算法的数学原理和工程实践。
 
 ## 📁 项目结构
 
@@ -77,6 +78,16 @@
 - 掌握Rust在AI领域的应用
 - 理解AI算法的数学原理
 - 实现完整的AI系统
+
+## 📦 可复现与报告
+
+- 文档闭环：理念→分类→层次→映射→口径→论证→案例 已在实践/知识/权威/趋势/算法文档中对齐。
+- 脚本与数据：
+  - Linux/macOS：`scripts/bench/run_pareto.sh`、`scripts/rag/eval_hybrid.sh`、`scripts/repro/export_report.sh`
+  - Windows：`scripts/bench/run_pareto.ps1`、`scripts/rag/eval_hybrid.ps1`、`scripts/repro/export_report.ps1`
+  - 数据模板：`data/qa.example.jsonl`、`data/index/README.md`
+- 报告与口径：`reports/README.md` 指定 CSV 列与指标统一口径；追踪样本支持审计与回放。
+- CI：`.github/workflows/reports.yml` 手动触发生成与上传工件。
 - 掌握模型部署和运维
 
 ### 能力目标

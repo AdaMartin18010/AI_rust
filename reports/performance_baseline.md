@@ -1,4 +1,22 @@
-# 性能基准测试报告
+# 性能基线（对齐§Z.7 与实践指南§8.1）
+
+说明：本文件用于集中记录阶段性基准结果与CSV导出示例。所有图表需可由 `scripts/bench/` 一键再生。
+
+## CSV 表头（统一口径）
+
+```csv
+run_id,model,scenario,batch,concurrency,seq_len,precision,quant,dataset,latency_p50_ms,latency_p95_ms,latency_p99_ms,qps,gpu_util,cpu_util,mem_peak_mb,vram_peak_mb,tokens_per_joule,cost_per_1k_tok_usd,error_rate,timeout_rate,samples_n,ci95_low_ms,ci95_high_ms
+```
+
+## 示例行（占位，需以实际脚本生成结果替换）
+
+```csv
+baseline-2025Q3,large-v1,serving-chat,8,16,2048,fp16,int8,internal-qa,120,280,450,320,0.82,0.35,22000,14000,45.2,0.19,0.8,0.2,5,270,290
+```
+
+— 口径来源：`docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §Z.7；报告模板：`docs/05_practical_guides/2025_rust_ai_practical_guide.md` §8.1。
+
+## 性能基准测试报告
 
 ## 测试环境
 

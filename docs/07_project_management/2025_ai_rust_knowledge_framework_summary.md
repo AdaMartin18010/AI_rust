@@ -1,5 +1,7 @@
 # 2025年AI-Rust知识框架构建总结报告
 
+> 对齐声明：本报告中的术语与指标统一遵循 `docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md` 与 `docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §Z.7；涉及图表/表格均需可由 `reports/` 中的 CSV（统一表头）通过 `scripts/repro/` 再生。
+
 ## 执行摘要
 
 基于您的要求，我已经完成了对AI与Rust技术趋势的全面检索和分析，并构建了完整的知识框架体系。本报告总结了完成的工作成果和核心价值。
@@ -353,6 +355,47 @@ graph LR
     D --> M[ndarray]
     D --> N[serde]
 ```
+
+### 0. 概念与理念对齐（From Principles to Practice）
+
+- 核心理念：目标对齐、风险最小化、性价比最优；度量优先、可复现、可审计。
+- 适用范围：研究→PoC→试点→规模化；与《综合知识框架》《权威主题结构》《技术趋势报告》交叉对齐。
+
+#### 0.1 概念定义（DAR 扩展）
+
+- 定义：任务、模型、数据、推理、检索增强、代理、治理、工具、上下文、能力、契约、预算、风险。
+- 属性：来源/许可证/时效/质量、参数规模/上下文长/量化位宽/吞吐、SLO 与容量、审计与红队覆盖。
+- 关系：任务→指标→数据→模型→推理→服务→体验；治理/观测纵向全栈；成本/合规全局约束。
+
+#### 0.2 知识分类与层次
+
+- 分类：方法学、工程实践、系统架构、安全与合规、评测与复现、数据学、性能经济学、产品与体验、运维与流程。
+- 层次：理念→知识→架构→实现→运维；横切：安全、观测、成本、合规。
+
+#### 0.3 映射（理念→实现）
+
+- 指标→架构：缓存层次、并发、背压、熔断、埋点；
+- 架构→代码：`axum/tokio`、`tracing`、`candle/onnxruntime` 契约；
+- 代码→运维：蓝绿/金丝雀、基线与回滚、预算护栏。
+
+#### 0.4 案例桥接（最小证据包）
+
+- 案例A：量化+路由的 Pareto 优化；指标：P50/P95/P99、QPS、tokens/J、$/1k tok、引用率；复现脚本与 trace 列表必备。
+- 案例B：混合检索+部分重排；指标：recall、NDCG、citation_rate、端到端延迟/成本；K/K' 消融对照。
+
+用法示例：
+
+- Pareto 对照：
+  - `bash scripts/bench/run_pareto.sh --model large-v1 --quant int4 --batch 8 --concurrency 16 --seq-len 2048 --router small-fallback --repeats 5 --out reports`
+- 混合检索评测：
+  - `bash scripts/rag/eval_hybrid.sh --index data/index --dataset data/qa.jsonl --k 100 --kprime 20 --reranker cross-encoder-small --out reports`
+
+#### 0.5 交叉引用与索引
+
+- 权威框架：`docs/01_authority_frameworks/2025_ai_rust_authority_topic_structure.md`
+- 综合知识框架：`docs/02_knowledge_structures/2025_ai_rust_comprehensive_knowledge_framework.md`
+- 技术趋势：`docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md`
+- 术语表：`docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md`
 
 ## 学习路径规划
 

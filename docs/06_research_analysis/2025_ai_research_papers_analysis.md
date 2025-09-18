@@ -1,5 +1,7 @@
 # 2025年AI前沿论文与技术架构深度分析
 
+> 口径与复现说明：指标与字段命名遵循 `docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §Z.7；所有图表/表格需由 `reports/` 中的 CSV 一键再生，脚本见 `scripts/repro/`、`scripts/bench/`、`scripts/rag/`；关键指标包含 {latency_p50/95/99_ms, qps, tokens_per_joule, cost_per_1k_tok_usd, citation_rate}，并附样本数与置信区间。
+
 ## 目录
 
 - [2025年AI前沿论文与技术架构深度分析](#2025年ai前沿论文与技术架构深度分析)

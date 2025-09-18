@@ -1,5 +1,14 @@
 # 2025年AI-Rust学习路径与最佳实践指南
 
+> 对齐声明：术语统一见 `docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md`；指标与报告口径见趋势报告 §Z.7；图表需由 `reports/` CSV 通过 `scripts/repro/` 再生。
+
+— 阶段验收清单（对齐§Z.7）—
+
+- 覆盖：每阶段至少一条 `metrics.csv` 新记录，含样本数与CI；
+- 质量：若涉及RAG，需产出 `citation_rate/coverage`；
+- 性能：报告 {p50/p95/p99,qps} 与能效/成本；
+- 复现：记录脚本命令与 `trace-id` 样本。
+
 ## 目录
 
 - [2025年AI-Rust学习路径与最佳实践指南](#2025年ai-rust学习路径与最佳实践指南)

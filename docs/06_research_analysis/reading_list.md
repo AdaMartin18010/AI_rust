@@ -82,7 +82,7 @@
 
 **Week 1-2：Transformer基础**:
 
-- [ ] "Attention Is All You Need" (Vaswani et al., 2017)
+- [x] "Attention Is All You Need" (Vaswani et al., 2017)
   - 动机：解决RNN序列建模的并行化问题
   - 核心：自注意力机制、多头注意力、位置编码
   - 实现：从零实现Transformer编码器
@@ -90,8 +90,10 @@
 
 **Week 3-4：预训练语言模型**:
 
-- [ ] "BERT: Pre-training of Deep Bidirectional Transformers" (Devlin et al., 2018)
-- [ ] "Language Models are Unsupervised Multitask Learners" (GPT-2, Radford et al., 2019)
+- [x] "BERT: Pre-training of Deep Bidirectional Transformers" (Devlin et al., 2018)
+  - 一句话摘要：双向掩码语言模型与NSP奠定通用语义表征基线。
+- [x] "Language Models are Unsupervised Multitask Learners" (GPT-2, Radford et al., 2019)
+  - 一句话摘要：大规模自回归LM展现“无监督多任务”涌现能力。
   - 对比：双向vs单向、掩码vs自回归
   - 实现：简化版BERT/GPT训练脚本
   - 验收：在小数据集上复现预训练效果
@@ -100,8 +102,10 @@
 
 **Week 5-6：参数高效微调**:
 
-- [ ] "LoRA: Low-Rank Adaptation of Large Language Models" (Hu et al., 2021)
-- [ ] "QLoRA: Efficient Finetuning of Quantized LLMs" (Dettmers et al., 2023)
+- [x] "LoRA: Low-Rank Adaptation of Large Language Models" (Hu et al., 2021)
+  - 一句话摘要：冻结主权重，仅学习低秩适配矩阵，显著降内存成本。
+- [x] "QLoRA: Efficient Finetuning of Quantized LLMs" (Dettmers et al., 2023)
+  - 一句话摘要：4-bit量化+LoRA在单卡上实现接近全参微调效果。
   - 核心：低秩分解、量化感知训练
   - 实现：LoRA微调脚本，支持多种任务
   - 验收：在指令跟随任务上达到全参数微调80%性能
@@ -109,7 +113,9 @@
 **Week 7-8：人类反馈对齐**:
 
 - [ ] "Training language models to follow instructions with human feedback" (InstructGPT, Ouyang et al., 2022)
+  - 一句话摘要：监督微调+奖励模型+PPO提升人类偏好一致性。
 - [ ] "Direct Preference Optimization" (DPO, Rafailov et al., 2023)
+  - 一句话摘要：绕过显式奖励模型，直接最优化偏好目标简化流程。
   - 对比：RLHF vs DPO的优缺点
   - 实现：DPO训练pipeline
   - 验收：在偏好数据集上提升对齐质量
@@ -119,7 +125,9 @@
 **Week 9-10：检索增强生成**:
 
 - [ ] "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks" (RAG, Lewis et al., 2020)
+  - 一句话摘要：外部检索与生成端到端协同，提升事实性。
 - [ ] "Dense Passage Retrieval for Open-Domain Question Answering" (Karpukhin et al., 2020)
+  - 一句话摘要：双塔密集检索替代BM25，显著提高召回。
   - 核心：密集检索、生成器-检索器联合训练
   - 实现：端到端RAG系统
   - 验收：在知识问答任务上显著提升准确性
@@ -127,7 +135,9 @@
 **Week 11-12：多模态理解**:
 
 - [ ] "Learning Transferable Visual Models From Natural Language Supervision" (CLIP, Radford et al., 2021)
+  - 一句话摘要：对比学习将图文映射至共享语义空间，零样本强。
 - [ ] "BLIP: Bootstrapping Language-Image Pre-training" (Li et al., 2022)
+  - 一句话摘要：统一框架实现图文理解与生成的协同预训练。
   - 核心：对比学习、跨模态对齐
   - 实现：简化版CLIP训练
   - 验收：在图像-文本匹配任务上达到合理性能

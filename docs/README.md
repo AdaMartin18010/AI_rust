@@ -113,6 +113,17 @@
 3. **文档归档**：过时文档移动到legacy文件夹
 4. **结构优化**：定期评估和调整文件夹结构
 
+### 交叉索引与更新节律
+
+- 术语与别名：统一指向 `02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md` 与 `02_knowledge_structures/glossary_index.csv`；首次出现标注中英与锚点。
+- 指标与口径：报告/评测统一遵循 `03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §Z.7；实践落地参考 `05_practical_guides/2025_rust_ai_practical_guide.md` §8。
+- 研究专题：按 `06_research_analysis/research_watch.md` 专题模板与季度条目维护；重大变更在本README顶端“变更日志”追加一行链接。
+- 复现与脚本：所有图表/表格需能由 `scripts/` 一键再生，产物存于 `reports/`，并附 `trace-id` 样本。
+
+— 变更日志（近期待补示例）—
+
+- 2025-09：补充 §Z.7 指标口径与实践指南 §8.1 报告模板，对齐 research_watch 专题模板（RAG）。
+
 ---
 
 *最后更新：2025年1月*  

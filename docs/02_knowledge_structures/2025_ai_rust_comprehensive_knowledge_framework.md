@@ -2012,3 +2012,130 @@ impl CausalKnowledgeGraph {
 *版本：v2.0*  
 *状态：持续更新中*  
 *适用对象：AI研究人员、技术架构师、Rust开发者、知识工程师、学习设计师*
+
+---
+
+## 附录Y：层级映射与跨域对齐（Comprehensive Deepening）
+
+### Y.0 跨文档锚点与一致性
+
+- 锚点对齐：与实践指南的“0. 概念与理念总览”一致；指标口径与DAR模板与趋势报告附录Z一致。
+- 链接规范：首次出现术语链接至术语表，同一术语全书使用同一锚点与别名。
+
+### Y.1 层级映射（理论→实现→工程→业务）
+
+- 理论→实现：
+  - 信息论→注意力机制（熵/互信息→注意力分配）
+  - 凸优化→训练稳定性（学习率调度/二阶近似）
+  - 图论→GNN/知识图谱（拓扑性质→消息传递）
+
+- 实现→工程：
+  - Transformer→长上下文与外部记忆
+  - MoE→高吞吐推理与并行路由
+  - 量化/剪枝→边缘部署
+
+- 工程→业务：
+  - 流式推理→实时客服/协作编辑
+  - 多模态→教育/医疗影像/内容生成
+  - Agentic Web→流程自动化与运营机器人
+
+### Y.2 关系本体对齐
+
+- 采用关系类型：IsA/PartOf/InstanceOf、Causes/Enables/Requires、Contains/DependsOn、SimilarTo/Influences、Implements/Extends/Uses/Optimizes。
+- 概念/关系度量：强度[0-1]、证据等级A/B/C、来源、时间戳、复现链接。
+
+### Y.2.1 术语引用与别名规范
+
+- 首次出现：加粗并在括号内给出英文；文末统一链接至术语表。
+- 别名/缩写：在术语表登记主名称与别名映射；文中统一使用主名称。
+- 引用标注：若涉及具体指标或口径，邻近位置给出度量前提与单位。
+
+### Y.2.2 概念-属性-关系（DAR）最小卡片
+
+- 模板：Definition（含边界）/Attributes（可度量）/Relations（带类型与强度）/Evidence（等级与来源）。
+- 存储：建议以YAML或RDF/Turtle管理，便于跨文档复用与校验。
+
+### Y.2.3 统一口径补充（单位/采样/统计）
+
+- 性能：P50/P95/P99（窗口/分位算法）、QPS（稳态与高峰）、tokens/J（排除冷启动）；
+- 质量：引用率、覆盖率、一致性（定义与匹配规则）；
+- 经济：$/1k tok、TCO，计量口径与分摊；
+- 数据：谱系、版本、漂移分数、敏感级别；
+
+### Y.3 证据与反例框架
+
+- 主张：长上下文处理可达百万token。证据：A；反例：窗口滑动在跨段引用时退化；边界：显存/带宽/缓存命中率。
+- 主张：WebAssembly边缘推理显著降延迟。证据：A；反例：冷启动与IO放大；边界：移动端功耗与内存。
+
+### Y.4 任务到架构的映射清单
+
+- 检索问答（KAG）：RAG流水线→重排序→事实验证→可解释性输出。
+- 代码生成（LLM+Rust）：语义检索→上下文压缩→并行候选→一致性选择。
+- 代理系统（Agentic）：感知→推理→规划→执行→记忆→反思。
+
+### Y.5 交叉引用
+
+- 术语与定义：`docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md`
+- 全景附录（概念/关系/论证）：`2025_knowledge_landscape.md` 附录A/B/D/E/F
+- 趋势验证清单：`docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` 附录Z
+
+### Y.6 DAR（定义-属性-关系）最小卡片库
+
+- 模板：Definition（含边界）/Attributes（可度量）/Relations（类型+强度）/Evidence（等级与来源）/版本与时间戳。
+- 存储：推荐YAML/RDF（Turtle），提供校验脚本；跨文档以ID锚定。
+
+#### Y.6.1 YAML 示例（可校验）
+
+```yaml
+id: metric.tokens_per_joule
+name: "tokens/J"
+layer: Meta
+definition: "单位能量内完成的生成token数量"
+attributes:
+  - key: sampling_window
+    type: duration
+  - key: exclude_cold_start
+    type: boolean
+  - key: device_power_sampling_hz
+    type: number
+relations:
+  - type: Optimizes
+    target: cost
+    strength: 0.7
+evidence:
+  level: A
+  sources:
+    - reports/performance_baseline.md
+version: 2025-09-18
+```
+
+#### Y.6.2 校验指引
+
+- 结构校验：提供 `scripts/repro/export_report.*` 中的简单YAML校验步骤，检查 key 是否齐备（definition/attributes/relations/evidence/version）。
+- 口径一致：与趋势 §Z.7 字段命名统一，指标类条目推荐提供单位与统计窗口。
+
+### Y.7 层次映射扩展（理论→实现→工程→业务）
+
+- 信息论→注意力/稀疏→长上下文→法务与知识审阅；
+- 因果推断→干预/反事实→鲁棒评测→风控与合规；
+- 优化理论→学习率/二阶近似→稳定训练→医疗影像；
+- 图论→GNN/知识图谱→检索与推理→企业知识中台。
+
+### Y.8 指标与统一口径
+
+- 性能：P50/P95/P99、QPS/TPM、吞吐/并发、tokens/J、显存峰值；
+- 质量：准确/一致/事实、引用覆盖、可解释性；
+- 工程：SLO/SLA、错误率、可观测性覆盖；
+- 经济：TCO、$/1k tok、ROI；
+- 参照：趋势§Z.7 与原则§F.5。
+
+### Y.9 案例桥接（与实践指南 §0.10 对齐）
+
+- 案例A：量化+路由；指标/证据/回滚条件/脚本链接；
+- 案例B：混合检索+重排；K/K' 消融、引用率与端到端成本；
+
+### Y.9 迁移与治理
+
+- 研究→生产（R2P）清单：与趋势§Z.17一致；
+- 治理：模型/数据/Prompt三层审查，红队演练、事后复盘、失效模式登记；
+- 安全：输入/中间/输出控制；合规：PII、内容审核、审计留痕。

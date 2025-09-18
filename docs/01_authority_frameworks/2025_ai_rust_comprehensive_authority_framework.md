@@ -16,6 +16,12 @@
 
 ## 1. 执行摘要
 
+注：本篇跨文档锚点与指标口径对齐说明——
+
+- 术语与别名：统一链接 `docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md` 与 `docs/02_knowledge_structures/glossary_index.csv`。
+- 指标与口径：统一遵循 `docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §Z.7；报告产物口径参见 `docs/05_practical_guides/2025_rust_ai_practical_guide.md` §8.1。
+- 复现与脚本：基准/图表需可由 `scripts/bench/` 与 `scripts/rag/` 一键再生，产物存于 `reports/`。
+
 ### 1.1 2025年AI-Rust技术全景
 
 **核心发现**：
@@ -513,6 +519,31 @@ impl CandleEngine {
 ---
 
 ## 6. 知识框架体系设计
+
+### 6.0 概念-属性-关系与论证（DAR + Claims）
+
+- 目的：将“概念定义→属性口径→关系约束→命题/证据/结论”标准化，确保跨文档一致。
+- 适配：与 `docs/02_knowledge_structures/2025_ai_rust_comprehensive_knowledge_framework.md` 附录Y 对齐；与 `docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` 附录Z 对齐。
+
+#### 6.0.1 DAR最小卡片
+
+- 定义（Definition）：术语的可操作化说明与边界条件。
+- 属性（Properties）：统一度量与单位，如 tokens/J、P95、成本/1k tokens、许可证类型。
+- 关系（Relations）：依赖、包含、约束、等价/近似、因果。
+
+示例（RAG流水线）：
+
+- 定义：切分→嵌入→检索→重排→上下文构建→生成→事实校验。
+- 属性：召回率、重排NDCG、引用率、延迟P95、成本/查询。
+- 关系：检索质量提升→生成事实性↑；上下文过长→延迟↑成本↑。
+
+#### 6.0.2 命题-证据-结论模板（Claims-Evidence-Conclusion）
+
+- 命题：在SLO=延迟P95≤X、QPS≥Y、预算≤B下，采用量化Q+批量合并M优于基线。
+- 证据：同口径对照实验、消融研究、置信区间、复现脚本、红队覆盖。
+- 结论：选择(Q,M)；设再评估条件（数据漂移、硬件/SLO变化）。
+
+注：统一指标口径见附录Z.7；跨文档索引见附录Z.13。
 
 ### 6.1 理论基础层
 

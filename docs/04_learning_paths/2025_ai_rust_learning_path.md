@@ -1,5 +1,13 @@
 # 2025年AI Rust学习路径指南
 
+> 对齐声明：本学习路径中的术语与指标统一遵循 `docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md` 与 `docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §Z.7；阶段性图表/表格需由 `reports/` CSV（统一表头）通过 `scripts/repro/` 再生。
+
+— 阶段产物清单 —
+
+- 基础阶段（0-4周）：完成 `reports/metrics.csv` 初版（小型基线，含 p50/p95/qps/tokens_per_joule/cost_per_1k_tok_usd），提交 `summary.md`；
+- 进阶阶段（5-8周）：补充 RAG 评测条目与引用率，生成 Pareto 图与延迟CDF；
+- 项目阶段（9-12周）：形成完整复现包（脚本+CSV+图表），并在 `reports/` 下归档。
+
 ## 目录
 
 - [2025年AI Rust学习路径指南](#2025年ai-rust学习路径指南)

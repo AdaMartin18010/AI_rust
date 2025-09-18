@@ -49,6 +49,17 @@
     - [12.1 分布式AI系统架构](#121-分布式ai系统架构)
     - [12.2 AI系统可靠性设计](#122-ai系统可靠性设计)
   - [总结](#总结)
+  - [附录F：定义-属性-关系与论证层次（Definitions, Properties, Relations, Argumentation）](#附录f定义-属性-关系与论证层次definitions-properties-relations-argumentation)
+    - [F.1 定义模板（Definition Schema）](#f1-定义模板definition-schema)
+    - [F.2 核心概念对齐示例](#f2-核心概念对齐示例)
+    - [F.3 论证层次与证据结构](#f3-论证层次与证据结构)
+    - [F.4 从理论到工程的映射表](#f4-从理论到工程的映射表)
+    - [F.5 指标与口径统一](#f5-指标与口径统一)
+    - [F.6 交叉引用](#f6-交叉引用)
+    - [F.7 概念—属性—关系（DAR）注册表](#f7-概念属性关系dar注册表)
+    - [F.8 原则到工程控制（P→EC）](#f8-原则到工程控制pec)
+    - [F.9 论证与反例机制（A\&C）](#f9-论证与反例机制ac)
+    - [F.10 学习与迁移路径映射](#f10-学习与迁移路径映射)
 
 ---
 
@@ -1345,8 +1356,8 @@ where
             0.0
         };
         Y::from(result)
+        }
     }
-}
     
     pub fn sample_complexity_bound(&self) -> usize {
         // 计算样本复杂度上界
@@ -3889,3 +3900,73 @@ impl AIPerformanceMonitor {
 *版本：v3.0*  
 *状态：持续更新中*  
 *适用对象：AI研究人员、Rust开发者、技术架构师、量子计算研究者、AI伦理专家、系统架构师*
+
+## 附录F：定义-属性-关系与论证层次（Definitions, Properties, Relations, Argumentation）
+
+### F.1 定义模板（Definition Schema）
+
+- 名称/别名（中英）
+- 抽象层级：Meta | Domain | Implementation | Application
+- 精确定义：最小可反驳描述（包含边界与非例）
+- 关键属性：可度量/可验证的性质清单（含单位/口径）
+- 常见关系：IsA/PartOf/DependsOn/Enables/Causes/Optimizes/Prevents/SimilarTo
+- 证据等级：A（可复现开源）/B（白皮书/报告）/C（案例观察）
+
+### F.2 核心概念对齐示例
+
+- 注意力（Attention）：
+  - 层级：Implementation；定义：条件加权的表示聚合机制；
+  - 属性：上下文长度、稀疏度、数值稳定性、计算/带宽复杂度；
+  - 关系：DependsOn(softmax/替代核)、Enables(长上下文/多模态)、Optimizes(表示能力)。
+
+- 稀疏专家（MoE）：
+  - 层级：Implementation；定义：路由只激活子网络的可扩展结构；
+  - 属性：激活稀疏度、专家容量、路由稳定性、吞吐/延迟；
+  - 关系：DependsOn(高效AllToAll)、Optimizes(吞吐)、Risks(不稳定/知识碎片化)。
+
+### F.3 论证层次与证据结构
+
+- 层次：命题→方法→数据/硬件→指标→结果→误差→复现→边界→反例。
+- 证据权重：A > B > C；冲突时以更高等级与更严格方法占优。
+- 反例登记：统一在 `docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` 附录Z.8 交叉链接。
+
+### F.4 从理论到工程的映射表
+
+- 信息论→注意力稀疏/压缩→长上下文推理→法务/长文档审阅。
+- 凸优化→学习率与二阶近似→稳定收敛→医疗影像训练。
+- 因果推断→数据/干预策略→鲁棒评测→风控与合规。
+
+### F.5 指标与口径统一
+
+- 性能：P50/P95/P99、QPS/TPM、tokens/J、峰值显存；
+- 质量：准确率/一致性/事实性、可解释性评分；
+- 工程：SLO达标率、错误率、可观测性覆盖度；
+- 经济：TCO、$/1k tok、ROI。
+
+### F.6 交叉引用
+
+- 术语与别名：`docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md`
+- 知识框架层次：`docs/02_knowledge_structures/2025_ai_rust_comprehensive_knowledge_framework.md` 附录Y
+
+### F.7 概念—属性—关系（DAR）注册表
+
+- 目标：将核心原则映射为可操作的概念卡片与约束，统一被下游趋势、架构与实战引用。
+- 结构：Definition｜Attributes（含单位与口径）｜Relations（类型+强度）｜Evidence（等级+来源）｜版本与时间戳。
+- 存储建议：YAML/RDF（Turtle）与脚本校验；跨文档锚点与ID统一。
+
+### F.8 原则到工程控制（P→EC）
+
+- 安全优先：输入（脱敏/越权拦截）→ 中间（工具调用沙箱/预算限制）→ 输出（信心分层/证据引用/审计）。
+- 性能与成本：统一口径（§F.5）→ 端到端压测曲线 → Pareto前沿（§Z.16）。
+- 可观测性：追踪ID贯穿、指标/日志/追踪三合一、变更审查与回滚剧本。
+
+### F.9 论证与反例机制（A&C）
+
+- 主张最小结构：命题→方法→数据/硬件→指标→结果→误差→复现→边界→反例（与趋势附录Z.8对齐）。
+- 冲突处理：高等级证据优先；跨域时采用多任务共识与反事实检验。
+
+### F.10 学习与迁移路径映射
+
+- 理论→实现→工程→业务四层图，与知识框架附录Y对齐；
+- 任务模板：检索问答/代码生成/代理系统/多模态感知的最小可行路径；
+- 评测闭环：离线集→A/B→灰度→全面上线，提供回滚与审计留痕。

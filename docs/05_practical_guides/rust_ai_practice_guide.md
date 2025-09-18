@@ -5,6 +5,12 @@
 - [Rust AI 实践指南（精简版）](#rust-ai-实践指南精简版)
   - [目录](#目录)
   - [1. Rust AI 生态概览](#1-rust-ai-生态概览)
+  - [0. 概念与口径对齐（DAR/Metrics/Mapping）](#0-概念与口径对齐darmetricsmapping)
+    - [0.1 DAR 最小卡片](#01-dar-最小卡片)
+    - [0.2 指标与采样口径](#02-指标与采样口径)
+    - [0.3 从实践到实现的映射](#03-从实践到实现的映射)
+    - [0.4 案例桥接（最小证据包）](#04-案例桥接最小证据包)
+    - [0.5 交叉引用](#05-交叉引用)
     - [1.1 推理与训练](#11-推理与训练)
     - [1.2 科学计算](#12-科学计算)
     - [1.3 系统与工程](#13-系统与工程)
@@ -31,6 +37,43 @@
     - [按 crate 练习与验收标准](#按-crate-练习与验收标准)
 
 ## 1. Rust AI 生态概览
+
+## 0. 概念与口径对齐（DAR/Metrics/Mapping）
+
+- 与《2025 Rust AI 实战指南》§0、《综合知识框架》附录Y、《技术趋势》附录Z一致：统一术语、属性口径与映射。
+
+### 0.1 DAR 最小卡片
+
+- 模板：Definition｜Attributes（单位/口径）｜Relations（类型+强度）｜Evidence（等级/来源）。
+- 示例：KV缓存｜Impl｜P95、命中率、成本/请求｜Optimizes(解码延迟)｜A。
+
+### 0.2 指标与采样口径
+
+- 分位统计：P50/P95/P99 指定窗口与算法（t-digest）。
+- 吞吐：稳态/峰值 QPS，注明批量与并发。
+- 能效：tokens/J 排除冷启动；
+- 经济：$/1k tok 含检索分摊，TCO 口径明确。
+
+### 0.3 从实践到实现的映射
+
+- 指标→架构：缓存/并发/背压/熔断/埋点；
+- 架构→代码：`axum/tokio`、`tracing`、`candle/onnxruntime`；
+- 代码→运维：金丝雀/回滚、基线、预算护栏。
+
+### 0.4 案例桥接（最小证据包）
+
+- 案例A：INT4 量化+小模型回退路由的成本-延迟 Pareto；
+  - 指标：P95/P99、QPS、tokens/J、$/1k tok；
+  - 证据：对照/消融；脚本与 trace 列表。
+- 案例B：混合检索+部分重排提升引用率并控制端到端成本；
+  - 指标：recall、NDCG、citation_rate、成本/查询；
+  - 证据：K/K' 消融；索引参数与版本固定。
+
+### 0.5 交叉引用
+
+- 实战：`docs/05_practical_guides/2025_rust_ai_practical_guide.md` §0；
+- 知识：`docs/02_knowledge_structures/2025_ai_rust_comprehensive_knowledge_framework.md` 附录Y；
+- 趋势：`docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` 附录Z。
 
 ### 1.1 推理与训练
 

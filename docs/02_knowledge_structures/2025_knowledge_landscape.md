@@ -32,6 +32,12 @@
   - [9. 未来发展方向](#9-未来发展方向)
     - [9.1 技术趋势](#91-技术趋势)
     - [9.2 应用场景](#92-应用场景)
+  - [附录A：概念体系与本体扩展（Landscape Deepening）](#附录a概念体系与本体扩展landscape-deepening)
+  - [附录B：关系类型与因果结构（Relation Ontology）](#附录b关系类型与因果结构relation-ontology)
+  - [附录C：层次结构与跨域映射（Hierarchy \& Mapping）](#附录c层次结构与跨域映射hierarchy--mapping)
+  - [附录D：论证与证据框架（Argumentation \& Evidence）](#附录d论证与证据框架argumentation--evidence)
+  - [附录E：多任务执行方法论（MTP – Multi-Task Progress）](#附录e多任务执行方法论mtp--multi-task-progress)
+  - [附录F：术语与交叉引用](#附录f术语与交叉引用)
 
 ## 1. 2025年AI技术趋势概览
 
@@ -487,3 +493,57 @@ impl AIServiceRegistry {
 *最后更新：2025年1月*  
 *版本：v1.0*  
 *状态：持续更新中*
+
+---
+
+## 附录A：概念体系与本体扩展（Landscape Deepening）
+
+**目标**：为全景文档提供统一的概念定义、属性、约束与关系类型，支撑跨文档一致性与机器可读性。
+
+- **核心概念族**：人工智能、机器学习、深度学习、强化学习、多模态AI、代理式系统、知识增强生成、知识图谱、推理引擎、可观测性、MLOps、边缘AI、Agentic Web。
+- **概念属性模板**：名称、定义、别名、语义类型、抽象层级、关键属性、典型关系、度量指标、参考实现、代表论文。
+- **抽象层级**：元层（Meta）、领域层（Domain）、应用层（Application）、实现层（Implementation）。
+
+示例（多模态AI）：
+
+- **定义**：能够联合处理文本/图像/音频/视频并进行统一表征与推理的AI系统。
+- **关键属性**：表示对齐度、模态覆盖、融合策略、鲁棒性、推理延迟、能效。
+- **典型关系**：Uses(Transformer)、DependsOn(跨模态注意力)、Enables(Agentic Web)。
+
+## 附录B：关系类型与因果结构（Relation Ontology）
+
+- **层次关系**：IsA、PartOf、InstanceOf
+- **功能关系**：Causes、Enables、Prevents、Requires
+- **结构关系**：Contains、Composes、Connects、DependsOn
+- **语义关系**：SimilarTo、OppositeTo、RelatedTo、Influences
+- **技术关系**：Implements、Extends、Uses、Optimizes
+
+关系度量建议：强度[0-1]、证据等级（A/B/C）、时间戳、来源（论文/实现/基准）。
+
+## 附录C：层次结构与跨域映射（Hierarchy & Mapping）
+
+- **理论基础层 → 技术实现层**：信息论→注意力机制；凸优化→训练稳定性；图论→图神经网络。
+- **技术实现层 → 工程实践层**：Transformer→长上下文服务；MoE→高吞吐推理；量化→边缘部署。
+- **工程实践层 → 业务场景层**：流式推理→实时客服；多模态→教育与医疗；Agentic Web→运营自动化。
+
+映射规范：每个映射包含目标、约束、指标（延迟/QPS/精度/成本）、已知权衡。
+
+## 附录D：论证与证据框架（Argumentation & Evidence）
+
+- **主张类型**：性能主张（Latency/QPS/Util）、能力主张（准确率/鲁棒性）、经济主张（TCO/ROI）。
+- **证据层级**：
+  - A：可复现实验 + 开源代码 + 公共数据集
+  - B：公司白皮书/内部基准（含方法细节）
+  - C：观察与案例（弱可复现）
+- **最小可证流程**：方法描述 → 数据/硬件 → 指标定义 → 结果与误差 → 可重复脚本。
+
+## 附录E：多任务执行方法论（MTP – Multi-Task Progress）
+
+- **并行化策略**：按层（理论/实现/应用）并行；按模态（Text/Image/Audio）并行；按工序（检索/生成/验证/发布）并行。
+- **冲突消解**：概念冲突→回到本体定义；指标冲突→统一度量口径；结论冲突→以证据等级A优先。
+- **持续更新节拍**：月度快照、季度回溯评审、重大突破即时纳入（附证据编号）。
+
+## 附录F：术语与交叉引用
+
+- 全局术语表见：`docs/02_knowledge_structures/GLOSSARY.md`
+- 本文内概念在首次出现处以粗体标注，并在附录A/B给出精确定义与关系类型，跨文档保持一致。

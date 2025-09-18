@@ -42,6 +42,19 @@ AI_rust/
 
 ## 🚀 快速开始
 
+### 复现与报告（可选）
+
+- Linux/macOS：
+  - Pareto：`bash scripts/bench/run_pareto.sh --model large-v1 --quant int4 --batch 8 --concurrency 16 --seq-len 2048 --router small-fallback --repeats 5 --out reports`
+  - RAG：`bash scripts/rag/eval_hybrid.sh --index data/index --dataset data/qa.example.jsonl --k 100 --kprime 20 --reranker cross-encoder-small --out reports`
+  - 打包：`bash scripts/repro/export_report.sh --reports reports --out dist`
+- Windows：
+  - Pareto：`./scripts/bench/run_pareto.ps1 -Model large-v1 -Quant int4 -Batch 8 -Concurrency 16 -SeqLen 2048 -Router small-fallback -Repeats 5 -Out reports`
+  - RAG：`./scripts/rag/eval_hybrid.ps1 -Index data/index -Dataset data/qa.example.jsonl -K 100 -KPrime 20 -Reranker cross-encoder-small -Out reports`
+  - 打包：`./scripts/repro/export_report.ps1 -Reports reports -Out dist`
+
+CI：`.github/workflows/reports.yml` 支持手动触发，自动上传压缩工件。
+
 ### 环境要求
 
 - Rust 1.70+

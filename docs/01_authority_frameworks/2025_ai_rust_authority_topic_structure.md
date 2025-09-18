@@ -728,3 +728,55 @@ graph LR
 *版本：v1.0*  
 *状态：持续更新中*  
 *适用对象：AI研究人员、技术架构师、Rust开发者、教育工作者*
+
+### 附录A：概念—属性—关系（DAR）清单（精简版）
+
+- 结构：Definition｜Attributes（单位/口径）｜Relations（类型+强度）｜Evidence（等级）｜首次章节。
+- 示例：
+  - 注意力（Attention）｜Impl｜上下文长度/稀疏度/数稳/带宽复杂度｜DependsOn(softmax)｜A｜§模型基础。
+  - 稀疏专家（MoE）｜Impl｜激活稀疏度/专家容量/路由稳定性｜DependsOn(AllToAll)｜A｜§模型扩展。
+  - KV缓存（KV Cache）｜Impl｜延迟/成本/一致性风险｜Optimizes(解码延迟)｜A｜§系统优化。
+- 交叉引用：完整术语与别名见 `docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md`。
+
+#### A.1 DAR 对齐（理念→实现的最小契约）
+
+- 定义：术语在首现章节的最小定义；
+- 属性：计量单位、采样窗口、统计方法（均值/分位数/置信区间）；
+- 关系：依赖/优化/冲突/包含/并行；
+- 证据：对照/消融/置信与功效；
+- 契约：输入/输出 schema、SLO 与失败模式、审计与回滚；
+- 追踪：`trace-id` 与报告编号映射；
+
+#### A.2 DAR 跨文档映射
+
+- → 实践指南 §0（Definitions/Attributes/Relations/Mapping/Checklist）；
+- → 综合知识框架 附录Y（Y.2/Y.6/Y.8）；
+- → 技术趋势报告 附录Z（Z.6/Z.7/Z.11/Z.16/Z.17）。
+
+### 附录B：层次映射（理念→分类→层级）
+
+- 理念→分类：AI原生Web｜高能效AI｜可信AI｜多模态-场景化。
+- 层级：理论→实现→工程→业务；与 `2025_ai_rust_comprehensive_knowledge_framework.md` 附录Y对齐。
+- 例：信息论→稀疏注意力→长上下文服务→法务审阅；因果→干预策略→鲁棒评测→风控。
+
+#### B.1 层次到 Rust/AI 模块对齐
+
+- 理念→`README.md`/`PROJECT_SUMMARY.md`；
+- 知识→`docs/02_knowledge_structures`；
+- 架构→实践指南 §1/§3/§4/§5；
+- 实现→`crates/c08_serving_ops`、`crates/c05_nlp_transformers`；
+- 运维→实践指南 §7/§8/§9。
+
+### 附录C：评测与统一口径
+
+- 指标：质量（准确/一致/事实）、性能（P50/P95/P99、QPS、tokens/J）、工程（SLO、错误率）、经济（TCO、$/1k tok）。
+- 口径：硬件/批量/精度/并发/数据版本须显式；模板参见趋势报告§Z.7、§Z.11。
+
+### 附录D：从研究到生产（R2P）映射
+
+- 需求→架构→模型→数据→评测→观测→安全→运维→复现；与趋势报告§Z.17一致。
+- 清单：A/B与灰度、追踪ID、预算/限流、回滚策略、Runbook。
+
+---
+
+更新：2025-09  本文附录与趋势报告§Z、核心原则§F双向对齐，并随术语表持续演进。

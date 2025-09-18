@@ -265,6 +265,15 @@ pub struct EdgeAIInference {
 - 创建了新的技术整合报告和学习指南
 - 建立了清晰的学习路径和导航体系
 
+## 指标与度量（对齐§Z.7）
+
+如下表为阶段性指标摘要，字段命名与口径参见 `03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §Z.7。
+
+```csv
+run_id,model,scenario,batch,concurrency,seq_len,precision,quant,dataset,latency_p50_ms,latency_p95_ms,latency_p99_ms,qps,gpu_util,cpu_util,mem_peak_mb,vram_peak_mb,tokens_per_joule,cost_per_1k_tok_usd,error_rate,timeout_rate,samples_n,ci95_low_ms,ci95_high_ms
+baseline-2025Q3,large-v1,serving-chat,8,16,2048,fp16,int8,internal-qa,120,280,450,320,0.82,0.35,22000,14000,45.2,0.19,0.8,0.2,5,270,290
+```
+
 ### 3. 实践指导完善
 
 - 提供了详细的技术选型决策树

@@ -5,6 +5,12 @@
 - [AI 算法深度解析（2025版）](#ai-算法深度解析2025版)
   - [目录](#目录)
   - [1. 机器学习基础算法](#1-机器学习基础算法)
+  - [0. 概念与口径对齐（DAR/Metrics/Mapping）](#0-概念与口径对齐darmetricsmapping)
+    - [0.1 统一术语与DAR卡片](#01-统一术语与dar卡片)
+    - [0.2 指标与采样口径](#02-指标与采样口径)
+    - [0.3 从算法到实现的映射](#03-从算法到实现的映射)
+    - [0.4 案例桥接（最小证据包）](#04-案例桥接最小证据包)
+    - [0.5 交叉引用](#05-交叉引用)
     - [1.1 监督学习](#11-监督学习)
       - [1.1.1 线性模型](#111-线性模型)
       - [1.1.2 树模型](#112-树模型)
@@ -106,6 +112,51 @@
     - [A.3 专业（能复现/能改造）](#a3-专业能复现能改造)
 
 ## 1. 机器学习基础算法
+
+## 0. 概念与口径对齐（DAR/Metrics/Mapping）
+
+- 核心：与实践指南§0、综合知识框架附录Y、趋势报告附录Z保持一致的术语、属性口径与映射；
+- DAR 最小卡片：Definition｜Attributes（单位/口径）｜Relations（类型+强度）｜Evidence（等级/来源）。
+
+### 0.1 统一术语与DAR卡片
+
+- 例：注意力（Attention）｜Impl｜上下文长度/数稳/带宽复杂度｜DependsOn(softmax)｜A。
+- 例：稀疏专家（MoE）｜Impl｜激活稀疏度/路由稳性/AllToAll占比｜DependsOn(AllToAll)｜A。
+
+### 0.2 指标与采样口径
+
+- 分位统计：P50/P95/P99 指定窗口与算法（t-digest）；
+- 吞吐：稳态/峰值 QPS，注明批量与并发；
+- 能效：tokens/J 排除冷启动；
+- 经济：$/1k tok 含检索分摊，TCO 口径明确；
+
+### 0.3 从算法到实现的映射
+
+- 指标→架构：缓存/并发/背压/熔断/埋点；
+- 架构→代码：`candle/onnxruntime`、`axum/tokio`、`tracing`；
+- 代码→运维：金丝雀/回滚、基线、预算护栏。
+
+### 0.4 案例桥接（最小证据包）
+
+- 案例A：采样温度与一致性过滤对生成质量的影响；
+  - 指标：一致率、事实性、P95、$/1k tok；
+  - 证据：对照与消融；复现脚本与 trace 列表。
+- 案例B：混合检索+重排对扩散模型提示质量的提升；
+  - 指标：引用率、覆盖率、端到端延迟/成本；
+  - 证据：K/K' 消融；脚本与数据版本固定。
+
+用法示例：
+
+- Pareto 对照：
+  - `bash scripts/bench/run_pareto.sh --model large-v1 --quant int4 --batch 8 --concurrency 16 --seq-len 2048 --router small-fallback --repeats 5 --out reports`
+- 混合检索评测：
+  - `bash scripts/rag/eval_hybrid.sh --index data/index --dataset data/qa.jsonl --k 100 --kprime 20 --reranker cross-encoder-small --out reports`
+
+### 0.5 交叉引用
+
+- 实践：`docs/05_practical_guides/2025_rust_ai_practical_guide.md` §0.10；
+- 知识：`docs/02_knowledge_structures/2025_ai_rust_comprehensive_knowledge_framework.md` 附录Y；
+- 趋势：`docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` 附录Z；
 
 ### 1.1 监督学习
 

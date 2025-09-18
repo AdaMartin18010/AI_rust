@@ -1,0 +1,2 @@
+{"id":"q1","question":"What is Rust ownership?","answer":"Ownership is a set of rules that govern how a Rust program manages memory.","citations":[{"doc_id":"rust-book","chunk_id":"ch4-1"}]}
+{"id":"q2","question":"What is RAG?","answer":"Retrieval-augmented generation combines retrieval with generation to improve factuality.","citations":[{"doc_id":"blog-rag","chunk_id":"sec-2"}]}

@@ -1,0 +1,98 @@
+name: Reports
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model name"
+        required: false
+        default: "large-v1"
+      quant:
+        description: "Quantization (fp16/int8/int4)"
+        required: false
+        default: "int4"
+      batch:
+        description: "Batch size"
+        required: false
+        default: "8"
+      concurrency:
+        description: "Concurrency"
+        required: false
+        default: "16"
+      seq_len:
+        description: "Sequence length"
+        required: false
+        default: "2048"
+      router:
+        description: "Router (none/small-fallback/consistency)"
+        required: false
+        default: "small-fallback"
+      repeats:
+        description: "Repeats"
+        required: false
+        default: "5"
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare
+        run: |
+          chmod +x scripts/bench/run_pareto.sh || true
+          chmod +x scripts/rag/eval_hybrid.sh || true
+          chmod +x scripts/repro/export_report.sh || true
+          mkdir -p reports
+      - name: Run Pareto
+        run: |
+          bash scripts/bench/run_pareto.sh \
+            --model "${{ github.event.inputs.model }}" \
+            --quant "${{ github.event.inputs.quant }}" \
+            --batch "${{ github.event.inputs.batch }}" \
+            --concurrency "${{ github.event.inputs.concurrency }}" \
+            --seq-len "${{ github.event.inputs.seq_len }}" \
+            --router "${{ github.event.inputs.router }}" \
+            --repeats "${{ github.event.inputs.repeats }}" \
+            --out reports
+      - name: Run RAG eval (example)
+        run: |
+          bash scripts/rag/eval_hybrid.sh \
+            --index data/index \
+            --dataset data/qa.example.jsonl \
+            --k 100 --kprime 20 \
+            --reranker cross-encoder-small \
+            --out reports
+      - name: Package
+        run: |
+          bash scripts/repro/export_report.sh --reports reports --out dist
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-linux
+          path: dist/*.tar.gz
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path reports | Out-Null
+      - name: Run Pareto
+        shell: pwsh
+        run: |
+          ./scripts/bench/run_pareto.ps1 -Model "${{ github.event.inputs.model }}" -Quant "${{ github.event.inputs.quant }}" -Batch ([int]"${{ github.event.inputs.batch }}") -Concurrency ([int]"${{ github.event.inputs.concurrency }}") -SeqLen ([int]"${{ github.event.inputs.seq_len }}") -Router "${{ github.event.inputs.router }}" -Repeats ([int]"${{ github.event.inputs.repeats }}") -Out reports
+      - name: Run RAG eval (example)
+        shell: pwsh
+        run: |
+          ./scripts/rag/eval_hybrid.ps1 -Index data/index -Dataset data/qa.example.jsonl -K 100 -KPrime 20 -Reranker cross-encoder-small -Out reports
+      - name: Package
+        shell: pwsh
+        run: |
+          ./scripts/repro/export_report.ps1 -Reports reports -Out dist
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-windows
+          path: dist/*.zip
