@@ -14,7 +14,7 @@ members = [
 
 [workspace.package]
 edition = "2024"
-rust-version = "1.89"
+rust-version = "1.90"
 
 [profile.release]
 
@@ -238,6 +238,17 @@ candle-transformers = "0.9.1"
 tch = "0.17.0"
 petgraph = "0.8.2"
 tokenizers = "0.20"
+
+# 2025年最新AI库 - Rust 1.90优化
+# 注意：以下库名可能需要调整，因为某些库可能尚未发布或名称不同
+# faer-rs - 高性能线性代数库
+faer = "0.22.0"
+# 其他库暂时注释，等待实际发布
+# kornia-rs = "0.1.0"  # 3D计算机视觉高性能库
+# thistle = "0.3.0"     # 高性能向量数据库
+# ad_trait = "0.1.0"    # 自动微分库
+# similari = "0.26.0"   # 对象跟踪和相似性搜索
+# orch = "0.0.16"       # 语言模型编排库
 
 # Web 和 GUI 框架 - 2025年1月最新稳定版本
 # tauri 已移除，使用 egui/iced 替代 (解决 GTK3 安全漏洞)

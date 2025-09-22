@@ -121,13 +121,20 @@ bumpalo = "3.19.0"
 aes-gcm = { version = "0.10.3", optional = true }
 ring = { version = "0.17.14", optional = true }
 
-# 2025年最新AI/ML库
-# Orch - 语言模型编排库
-orch = { version = "0.0.16", optional = true }
-# Similari - 对象跟踪和相似性搜索
-similari = { version = "0.26", optional = true }
+# 2025年最新AI/ML库 - Rust 1.90优化
 # Faer-rs - 高性能线性代数库
-faer = { version = "0.22", optional = true }
+faer = { workspace = true, optional = true }
+# 其他库暂时注释，等待实际发布
+# Orch - 语言模型编排库
+# orch = { workspace = true, optional = true }
+# Similari - 对象跟踪和相似性搜索
+# similari = { workspace = true, optional = true }
+# Kornia-rs - 3D计算机视觉高性能库
+# kornia-rs = { workspace = true, optional = true }
+# Thistle - 高性能向量数据库
+# thistle = { workspace = true, optional = true }
+# ad-trait - 自动微分库
+# ad_trait = { workspace = true, optional = true }
 # 异步运行时增强 - 使用工作区版本
 futures = { workspace = true }
 async-trait = { workspace = true }
@@ -211,10 +218,17 @@ monitoring = ["dep:metrics", "dep:metrics-exporter-prometheus"]
 security = ["dep:aes-gcm", "dep:ring"]
 # 文本处理增强
 text-processing = ["dep:whatlang", "dep:rust-stemmers"]
-# 2025年最新AI特性
-orch-integration = ["dep:orch"]
-computer-vision-advanced = ["dep:similari"]
+# 2025年最新AI特性 - Rust 1.90优化
 linear-algebra-advanced = ["dep:faer"]
+# 其他特性暂时注释，等待库发布
+# orch-integration = ["dep:orch"]
+# computer-vision-advanced = ["dep:similari", "dep:kornia-rs"]
+# automatic-differentiation = ["dep:ad_trait"]
+# vector-database-advanced = ["dep:thistle"]
+# 3D计算机视觉
+# computer-vision-3d = ["dep:kornia-rs"]
+# 对象跟踪
+# object-tracking = ["dep:similari"]
 # REST API服务
 api-server = ["dep:axum", "dep:tower", "dep:tower-http", "dep:hyper"]
 # 数据库支持 (暂时禁用，存在版本冲突)
@@ -233,7 +247,7 @@ quantum = []
 # burn = ["dep:burn", "dep:burn-ndarray"]  # 暂时禁用，存在版本兼容性问题
 
 # 完整功能（注意：这会拉入多种后端及其系统依赖）
-full = ["candle", "dfdx", "llm", "vision", "nlp", "data", "search", "gnn", "timeseries", "monitoring", "multimodal", "security", "text-processing", "orch-integration", "computer-vision-advanced", "linear-algebra-advanced"]
+full = ["candle", "dfdx", "llm", "vision", "nlp", "data", "search", "gnn", "timeseries", "monitoring", "multimodal", "security", "text-processing", "linear-algebra-advanced"]
 
 [[bench]]
 name = "neural_network_bench"
@@ -325,3 +339,28 @@ required-features = ["candle", "nlp", "data", "security"]
 name = "api_server"
 path = "examples/api_server.rs"
 required-features = ["api-server"]
+
+[[example]]
+name = "rust_190_ai_features"
+path = "examples/rust_190_ai_features.rs"
+required-features = ["candle", "linear-algebra-advanced"]
+
+[[example]]
+name = "wasm_ai_inference"
+path = "examples/wasm_ai_inference.rs"
+required-features = []
+
+[[example]]
+name = "multimodal_ai_processing"
+path = "examples/multimodal_ai_processing.rs"
+required-features = []
+
+[[example]]
+name = "agentic_web_architecture"
+path = "examples/agentic_web_architecture.rs"
+required-features = []
+
+[[example]]
+name = "performance_optimization"
+path = "examples/performance_optimization.rs"
+required-features = []
