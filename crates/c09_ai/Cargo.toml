@@ -22,21 +22,34 @@ anyhow = { workspace = true }
 thiserror = { workspace = true }
 uuid = { workspace = true }
 
-# 数学和数值计算 - 2025年最新版本
+# 数学和数值计算 - 2025年9月最新版本
+# ndarray: 多维数组库，支持向量化操作和线性代数
 ndarray = { version = "0.16.1", features = ["serde", "rayon", "approx"] }
+# nalgebra: 线性代数库，提供矩阵和向量操作
 nalgebra = "0.34.1"
+# num-traits: 数值类型特征定义
 num-traits = "0.2.19"
+# num-complex: 复数类型支持
 num-complex = "0.4.6"
+# approx: 浮点数近似比较
 approx = "0.5.1"
+# statrs: 统计函数库
 statrs = "0.18.0"
 
-# 机器学习核心库 - 2025年最新版本
+# 机器学习核心库 - 2025年9月最新版本
+# linfa: Rust机器学习工具包，提供多种算法实现
 linfa = { version = "0.7.1", optional = true }
+# smartcore: 智能核心机器学习库
 smartcore = { version = "0.4.2", optional = true }
+# candle-core: 工作区统一版本的candle核心库
 candle-core = { workspace = true, optional = true }
+# candle-nn: 工作区统一版本的candle神经网络库
 candle-nn = { workspace = true, optional = true }
+# candle-transformers: 工作区统一版本的candle transformer库
 candle-transformers = { workspace = true, optional = true }
+# candle-datasets: candle数据集处理库
 candle-datasets = { version = "0.9.1", optional = true }
+# candle-kernels: candle内核函数库
 candle-kernels = { version = "0.9.1", optional = true }
 
 # 深度学习框架 - 2025年最新版本
@@ -44,12 +57,18 @@ candle-kernels = { version = "0.9.1", optional = true }
 tch = { workspace = true, optional = true }
 dfdx = { version = "0.13.0", optional = true }
 
-# 自然语言处理 - 2025年最新版本
+# 自然语言处理 - 2025年9月最新版本
+# tokenizers: 文本分词器，支持多种预训练模型
 tokenizers = { version = "0.22.1", optional = true }
+# rust-bert: BERT模型的Rust实现
 rust-bert = { version = "0.23.0", optional = true }
+# llm-chain: 大语言模型链式处理框架
 llm-chain = { version = "0.13.0", optional = true }
+# llm-chain-openai: OpenAI API集成
 llm-chain-openai = { version = "0.13.0", optional = true }
+# llm-chain-llama: LLaMA模型集成
 llm-chain-llama = { version = "0.13.0", optional = true }
+# llm-chain-local: 本地模型运行支持
 llm-chain-local = { version = "0.12.3", optional = true }
 
 # 2025年最新深度学习框架 - Burn
@@ -62,9 +81,12 @@ opencv = { version = "0.95.1", optional = true }
 image = { version = "0.25.8", optional = true }
 imageproc = { version = "0.25.0", optional = true }
 
-# 数据处理 - 2025年最新版本
+# 数据处理 - 2025年9月最新版本
+# polars: 高性能数据框库，类似pandas但更快速
 polars = { version = "0.50.0", features = ["lazy", "temporal", "strings", "dtype-categorical", "dtype-struct"], optional = true }
+# datafusion: 分布式查询引擎
 datafusion = { version = "49.0.2", optional = true }
+# arrow: Apache Arrow的Rust实现，用于列式数据存储
 arrow = { version = "56.1.0", optional = true }
 
 # 向量数据库和搜索 - 2025年最新版本
@@ -76,8 +98,11 @@ whatlang = { version = "0.16.1", optional = true }
 rust-stemmers = { version = "1.2.0", optional = true }
 
 # 网络和API - 使用工作区统一版本
+# reqwest: 工作区统一版本的HTTP客户端
 reqwest = { workspace = true }
+# async-openai: 异步OpenAI API客户端
 async-openai = { version = "0.29.3", optional = true }
+# openai: OpenAI API的同步客户端
 openai = { version = "1.1.1", optional = true }
 
 # 序列化和配置 - 2025年最新版本
@@ -139,11 +164,15 @@ faer = { workspace = true, optional = true }
 futures = { workspace = true }
 async-trait = { workspace = true }
 
-# Web框架和HTTP服务器
-axum = { version = "0.7", features = ["macros", "tracing"], optional = true }
-tower = { version = "0.4", features = ["full"], optional = true }
-tower-http = { version = "0.5", features = ["cors", "trace", "compression-br", "timeout", "limit"], optional = true }
-hyper = { version = "1.0", features = ["full"], optional = true }
+# Web框架和HTTP服务器 - 2025年9月最新版本
+# axum: 现代异步web框架，基于tokio
+axum = { version = "0.8.4", features = ["macros", "tracing"], optional = true }
+# tower: 中间件和服务抽象层
+tower = { version = "0.5.2", features = ["full"], optional = true }
+# tower-http: HTTP中间件集合
+tower-http = { version = "0.6.6", features = ["cors", "trace", "compression-br", "timeout", "limit"], optional = true }
+# hyper: 底层HTTP库
+hyper = { version = "1.7.0", features = ["full"], optional = true }
 
 # 序列化和反序列化 (已在上面定义)
 
@@ -151,17 +180,22 @@ hyper = { version = "1.0", features = ["full"], optional = true }
 
 # 时间处理
 chrono = { workspace = true, features = ["serde"] }
-# 加密和哈希
-sha2 = "0.10"
-argon2 = "0.5"
-md5 = "0.7"
-regex = "1.10"
+# 加密和哈希 - 2025年9月最新版本
+# sha2: SHA-2哈希算法实现
+sha2 = "0.10.9"
+# argon2: Argon2密码哈希算法
+argon2 = "0.5.3"
+# md5: MD5哈希算法实现
+md5 = "0.7.0"
+# regex: 正则表达式库
+regex = "1.11.2"
 
 # 数据库 (暂时禁用，存在版本冲突)
 # sqlx = { version = "0.7", features = ["runtime-tokio", "macros", "postgres", "mysql", "chrono", "uuid", "json"], optional = true }
 
-# 缓存
-redis = { version = "0.23", features = ["tokio-comp"], optional = true }
+# 缓存 - 2025年9月最新版本
+# redis: Redis客户端库，支持异步操作
+redis = { version = "0.32.5", features = ["tokio-comp"], optional = true }
 
 # 日志
 env_logger = "0.11"

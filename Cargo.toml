@@ -89,25 +89,40 @@ codegen-units = 1
 [profile.bench.build-override]
 opt-level = 2
 
-# 工作区级别的依赖版本统一 - 2025年9月21日最新稳定版本
+# 工作区级别的依赖版本统一 - 2025年9月27日最新稳定版本
 [workspace.dependencies]
-# 网络和 HTTP 相关 - 2025年1月最新稳定版本
+# 网络和 HTTP 相关 - 2025年9月最新稳定版本
+# reqwest: HTTP客户端库，支持异步请求和多种功能特性
 reqwest = { version = "0.12.23", features = ["json", "rustls-tls"] }
+# hyper: 底层HTTP库，提供高性能的HTTP/1和HTTP/2支持
 hyper = { version = "1.7.0", features = ["full"] }
+# hyper-util: hyper的实用工具库
 hyper-util = "0.1.17"
+# hyper-rustls: hyper与rustls TLS后端的集成
 hyper-rustls = "0.28.1"
-hyper-tls = "0.6.0"
+# hyper-tls: hyper与native-tls后端的集成
+hyper-tls = "0.6.1"
+# hyper-timeout: hyper的超时支持
 hyper-timeout = "0.6.1"
+# h2: HTTP/2协议实现
 h2 = "0.5.1"
+# http: HTTP类型和特征定义
 http = "1.3.1"
 
-# Web 框架 - 2025年1月最新稳定版本
+# Web 框架 - 2025年9月最新稳定版本
+# axum: 基于tokio的现代web框架，提供类型安全的API
 axum = { version = "0.8.4", features = ["macros", "multipart", "tracing"] }
+# axum-core: axum的核心类型和特征
 axum-core = "0.6.1"
+# tower: 中间件和服务的抽象层
 tower = "0.5.2"
+# tower-http: 为tower提供的HTTP中间件集合
 tower-http = { version = "0.6.6", features = ["cors", "trace", "timeout", "compression-gzip"] }
+# actix-web: 高性能的actor-based web框架
 actix-web = "4.11.0"
+# actix: actor框架核心
 actix = "0.13.5"
+# actix-rt: actix运行时
 actix-rt = "2.11.0"
 
 # 终端UI库
@@ -158,14 +173,20 @@ tokio-rustls = "0.26.3"
 ring = "0.17.14"
 webpki-roots = "1.1.1"
 
-# 错误处理 - 2025年1月最新稳定版本
+# 错误处理 - 2025年9月最新稳定版本
+# thiserror: 为自定义错误类型提供derive宏，简化错误处理
 thiserror = "2.0.16"
+# anyhow: 简化错误处理，提供便捷的错误类型转换
 anyhow = "1.0.100"
 
-# 序列化 - 2025年1月最新稳定版本
+# 序列化 - 2025年9月最新稳定版本
+# serde: Rust生态系统的序列化框架，支持多种数据格式
 serde = { version = "1.0.226", features = ["derive"] }
+# serde_json: JSON序列化支持
 serde_json = "1.0.145"
+# serde_yaml: YAML序列化支持
 serde_yaml = "0.9.34"
+# bincode: 二进制序列化格式，高效且紧凑
 bincode = "1.3.3"
 
 # 异步运行时 - 2025年1月最新稳定版本
@@ -231,17 +252,23 @@ parking_lot = "0.12.4"
 mockall = "0.13.1"
 proptest = "1.8.0"
 
-# AI 和机器学习 - 2025年1月最新稳定版本
+# AI 和机器学习 - 2025年9月最新稳定版本
+# candle-core: Rust机器学习框架的核心库，提供张量操作和基础类型
 candle-core = "0.9.1"
+# candle-nn: 神经网络层和模型定义
 candle-nn = "0.9.1"
+# candle-transformers: Transformer模型实现
 candle-transformers = "0.9.1"
+# tch: PyTorch的Rust绑定，支持深度学习模型
 tch = "0.17.0"
+# petgraph: 图数据结构和算法
 petgraph = "0.8.2"
-tokenizers = "0.20"
+# tokenizers: 文本分词器，支持多种预训练模型
+tokenizers = "0.20.0"
 
 # 2025年最新AI库 - Rust 1.90优化
 # 注意：以下库名可能需要调整，因为某些库可能尚未发布或名称不同
-# faer-rs - 高性能线性代数库
+# faer-rs - 高性能线性代数库，专为Rust优化
 faer = "0.22.0"
 # 其他库暂时注释，等待实际发布
 # kornia-rs = "0.1.0"  # 3D计算机视觉高性能库
