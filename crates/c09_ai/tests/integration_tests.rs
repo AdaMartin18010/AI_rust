@@ -139,7 +139,7 @@ async fn test_resource_cleanup() -> Result<()> {
     }
     
     // 清理资源
-    // engine.cleanup()?; // AIEngine没有cleanup方法
+    engine.cleanup()?;
     
     // 验证模块已被清理
     for i in 0..5 {
@@ -260,23 +260,23 @@ async fn test_configuration_validation() -> Result<()> {
 /// 测试状态管理
 #[tokio::test]
 async fn test_state_management() -> Result<()> {
-    let _engine = AIEngine::new();
+    let mut engine = AIEngine::new();
     
     // 设置状态
-    // engine.set_state("processing", "true")?; // AIEngine没有set_state方法
-    // engine.set_state("current_model", "test_model")?; // AIEngine没有set_state方法
+    engine.set_state("processing", "true")?;
+    engine.set_state("current_model", "test_model")?;
     
     // 获取状态
-    // assert_eq!(engine.get_state("processing"), Some("true".to_string())); // AIEngine没有get_state方法
-    // assert_eq!(engine.get_state("current_model"), Some("test_model".to_string())); // AIEngine没有get_state方法
+    assert_eq!(engine.get_state("processing"), Some("true".to_string()));
+    assert_eq!(engine.get_state("current_model"), Some("test_model".to_string()));
     
     // 更新状态
-    // engine.set_state("processing", "false")?; // AIEngine没有set_state方法
-    // assert_eq!(engine.get_state("processing"), Some("false".to_string())); // AIEngine没有get_state方法
+    engine.set_state("processing", "false")?;
+    assert_eq!(engine.get_state("processing"), Some("false".to_string()));
     
     // 删除状态
-    // engine.remove_state("current_model")?; // AIEngine没有remove_state方法
-    // assert_eq!(engine.get_state("current_model"), None); // AIEngine没有get_state方法
+    engine.remove_state("current_model")?;
+    assert_eq!(engine.get_state("current_model"), None);
     
     Ok(())
 }
@@ -284,19 +284,21 @@ async fn test_state_management() -> Result<()> {
 /// 测试事件系统
 #[tokio::test]
 async fn test_event_system() -> Result<()> {
-    let _engine = AIEngine::new();
+    let mut engine = AIEngine::new();
     
-    // 注册事件监听器 - AIEngine没有on_event方法
-    let event_count = 0;
-    // engine.on_event("model_loaded", Box::new(move |_event| {
-    //     event_count += 1;
-    // }))?;
+    // 注册事件监听器
+    let event_count = std::sync::Arc::new(std::sync::atomic::AtomicUsize::new(0));
+    let event_count_clone = event_count.clone();
+    
+    engine.on_event("model_loaded", move |_event| {
+        event_count_clone.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+    })?;
     
     // 触发事件
-    // engine.emit_event("model_loaded", "test_model")?; // AIEngine没有emit_event方法
+    engine.emit_event("model_loaded", "test_model")?;
     
     // 验证事件被处理
-    assert_eq!(event_count, 1);
+    assert_eq!(event_count.load(std::sync::atomic::Ordering::SeqCst), 1);
     
     Ok(())
 }

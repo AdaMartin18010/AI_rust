@@ -39,13 +39,18 @@
 //! ```
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 use thiserror::Error;
 
 // 核心模块
 pub mod machine_learning;
 pub mod neural_networks;
 pub mod config;
+pub mod gpu;
+pub mod model_serving;
+pub mod monitoring;
+pub mod benchmarks;
+pub mod memory;
 pub mod error;
 pub mod logging;
 
@@ -400,6 +405,20 @@ pub struct AIEngine {
     models: HashMap<String, ModelConfig>,
     config: EngineConfig,
     device_manager: DeviceManager,
+    gpu_manager: gpu::GpuManager,             // GPU管理器
+    model_service: model_serving::ModelServiceManager, // 模型服务管理器
+    monitoring_dashboard: monitoring::MonitoringDashboard, // 监控仪表板
+    memory_optimizer: memory::MemoryOptimizer,             // 内存优化器
+    // 现代AI系统核心功能
+    state: HashMap<String, String>,           // 状态管理
+    event_listeners: HashMap<String, Vec<Box<dyn Fn(&str) + Send + Sync>>>, // 事件系统
+    metrics: HashMap<String, f64>,            // 性能指标
+    resource_limits: HashMap<String, usize>,  // 资源限制
+    cache: HashMap<String, Vec<u8>>,          // 缓存系统
+    task_queue: VecDeque<String>,             // 任务队列
+    running: std::sync::atomic::AtomicBool,   // 运行状态
+    created_at: std::time::Instant,           // 创建时间
+    last_activity: std::sync::Mutex<std::time::Instant>, // 最后活动时间
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -480,21 +499,51 @@ impl DeviceManager {
 impl AIEngine {
     /// 创建新的 AI 引擎
     pub fn new() -> Self {
+        let now = std::time::Instant::now();
         Self {
             modules: HashMap::new(),
             models: HashMap::new(),
             config: EngineConfig::default(),
             device_manager: DeviceManager::new(),
+            gpu_manager: gpu::GpuManager::new().unwrap_or_default(),
+            model_service: model_serving::ModelServiceManager::new(),
+            monitoring_dashboard: monitoring::MonitoringDashboard::new(),
+            memory_optimizer: memory::MemoryOptimizer::default(),
+            // 初始化现代AI系统功能
+            state: HashMap::new(),
+            event_listeners: HashMap::new(),
+            metrics: HashMap::new(),
+            resource_limits: HashMap::new(),
+            cache: HashMap::new(),
+            task_queue: VecDeque::new(),
+            running: std::sync::atomic::AtomicBool::new(true),
+            created_at: now,
+            last_activity: std::sync::Mutex::new(now),
         }
     }
 
     /// 使用配置创建 AI 引擎
     pub fn with_config(config: EngineConfig) -> Self {
+        let now = std::time::Instant::now();
         Self {
             modules: HashMap::new(),
             models: HashMap::new(),
             config,
             device_manager: DeviceManager::new(),
+            gpu_manager: gpu::GpuManager::new().unwrap_or_default(),
+            model_service: model_serving::ModelServiceManager::new(),
+            monitoring_dashboard: monitoring::MonitoringDashboard::new(),
+            memory_optimizer: memory::MemoryOptimizer::default(),
+            // 初始化现代AI系统功能
+            state: HashMap::new(),
+            event_listeners: HashMap::new(),
+            metrics: HashMap::new(),
+            resource_limits: HashMap::new(),
+            cache: HashMap::new(),
+            task_queue: VecDeque::new(),
+            running: std::sync::atomic::AtomicBool::new(true),
+            created_at: now,
+            last_activity: std::sync::Mutex::new(now),
         }
     }
 
@@ -570,6 +619,395 @@ impl AIEngine {
     /// 设置设备
     pub fn set_device(&mut self, device: String) -> Result<(), Error> {
         self.device_manager.set_device(device)
+    }
+
+    /// 获取GPU管理器
+    pub fn get_gpu_manager(&self) -> &gpu::GpuManager {
+        &self.gpu_manager
+    }
+
+    /// 获取GPU管理器（可变引用）
+    pub fn get_gpu_manager_mut(&mut self) -> &mut gpu::GpuManager {
+        &mut self.gpu_manager
+    }
+
+    /// 执行GPU加速计算
+    pub fn execute_gpu_computation(&mut self, operation: &str, data: &[f32]) -> Result<Vec<f32>, Error> {
+        let result = self.gpu_manager.execute_gpu_computation(operation, data)?;
+        
+        // 记录到引擎指标中
+        self.record_metric(&format!("gpu_{}_total", operation), 1.0);
+        
+        Ok(result)
+    }
+
+    /// 分配GPU内存
+    pub fn allocate_gpu_memory(&mut self, key: &str, size: usize) -> Result<(), Error> {
+        self.gpu_manager.allocate_memory(key, size)
+    }
+
+    /// 释放GPU内存
+    pub fn deallocate_gpu_memory(&mut self, key: &str) -> Result<(), Error> {
+        self.gpu_manager.deallocate_memory(key)
+    }
+
+    /// 获取GPU内存使用情况
+    pub fn get_gpu_memory_usage(&self) -> HashMap<String, u64> {
+        self.gpu_manager.get_memory_usage()
+    }
+
+    /// 获取GPU性能统计
+    pub fn get_gpu_performance_stats(&self) -> HashMap<String, String> {
+        self.gpu_manager.get_performance_stats()
+    }
+
+    /// 获取模型服务管理器
+    pub fn get_model_service(&self) -> &model_serving::ModelServiceManager {
+        &self.model_service
+    }
+
+    /// 获取模型服务管理器（可变引用）
+    pub fn get_model_service_mut(&mut self) -> &mut model_serving::ModelServiceManager {
+        &mut self.model_service
+    }
+
+    /// 加载模型到服务
+    pub async fn load_model_to_service(&mut self, config: ModelConfig) -> Result<(), Error> {
+        let result = self.model_service.load_model(config.clone()).await;
+        if result.is_ok() {
+            self.models.insert(config.name.clone(), config);
+        }
+        result
+    }
+
+    /// 卸载模型服务
+    pub async fn unload_model_from_service(&mut self, model_name: &str) -> Result<(), Error> {
+        let result = self.model_service.unload_model(model_name).await;
+        if result.is_ok() {
+            self.models.remove(model_name);
+        }
+        result
+    }
+
+    /// 开始服务模型
+    pub async fn start_model_serving(&mut self, model_name: &str) -> Result<(), Error> {
+        self.model_service.start_serving(model_name).await
+    }
+
+    /// 停止服务模型
+    pub async fn stop_model_serving(&mut self, model_name: &str) -> Result<(), Error> {
+        self.model_service.stop_serving(model_name).await
+    }
+
+    /// 执行模型推理
+    pub async fn inference(&mut self, request: model_serving::InferenceRequest) -> Result<model_serving::InferenceResponse, Error> {
+        self.model_service.inference(request).await
+    }
+
+    /// 执行批处理推理
+    pub async fn batch_inference(&mut self, batch_request: model_serving::BatchRequest) -> Result<model_serving::BatchResponse, Error> {
+        self.model_service.batch_inference(batch_request).await
+    }
+
+    /// 获取模型服务统计
+    pub async fn get_model_service_stats(&self) -> HashMap<String, String> {
+        self.model_service.get_service_stats().await
+    }
+
+    // ===== 现代AI系统核心方法 =====
+
+    /// 清理所有资源 - 对标现代AI框架的cleanup方法
+    pub fn cleanup(&mut self) -> Result<(), Error> {
+        tracing::info!("开始清理AI引擎资源");
+        
+        // 停止运行状态
+        self.running.store(false, std::sync::atomic::Ordering::SeqCst);
+        
+        // 清理模块
+        self.modules.clear();
+        
+        // 清理模型
+        self.models.clear();
+        
+        // 清理状态
+        self.state.clear();
+        
+        // 清理事件监听器
+        self.event_listeners.clear();
+        
+        // 清理指标
+        self.metrics.clear();
+        
+        // 清理缓存
+        self.cache.clear();
+        
+        // 清理任务队列
+        self.task_queue.clear();
+        
+        tracing::info!("AI引擎资源清理完成");
+        Ok(())
+    }
+
+    /// 状态管理 - 设置状态
+    pub fn set_state(&mut self, key: &str, value: &str) -> Result<(), Error> {
+        self.state.insert(key.to_string(), value.to_string());
+        
+        // 更新最后活动时间
+        if let Ok(mut last_activity) = self.last_activity.lock() {
+            *last_activity = std::time::Instant::now();
+        }
+        
+        Ok(())
+    }
+
+    /// 状态管理 - 获取状态
+    pub fn get_state(&self, key: &str) -> Option<String> {
+        self.state.get(key).cloned()
+    }
+
+    /// 状态管理 - 删除状态
+    pub fn remove_state(&mut self, key: &str) -> Result<(), Error> {
+        self.state.remove(key);
+        Ok(())
+    }
+
+    /// 事件系统 - 注册事件监听器
+    pub fn on_event<F>(&mut self, event_name: &str, callback: F) -> Result<(), Error>
+    where
+        F: Fn(&str) + Send + Sync + 'static,
+    {
+        let listeners = self.event_listeners.entry(event_name.to_string()).or_insert_with(Vec::new);
+        listeners.push(Box::new(callback));
+        Ok(())
+    }
+
+    /// 事件系统 - 触发事件
+    pub fn emit_event(&self, event_name: &str, data: &str) -> Result<(), Error> {
+        if let Some(listeners) = self.event_listeners.get(event_name) {
+            for listener in listeners {
+                listener(data);
+            }
+        }
+        
+        // 更新最后活动时间
+        if let Ok(mut last_activity) = self.last_activity.lock() {
+            *last_activity = std::time::Instant::now();
+        }
+        
+        Ok(())
+    }
+
+    /// 指标收集 - 记录指标
+    pub fn record_metric(&mut self, name: &str, value: f64) {
+        self.metrics.insert(name.to_string(), value);
+    }
+
+    /// 指标收集 - 获取所有指标
+    pub fn get_metrics(&self) -> HashMap<String, f64> {
+        self.metrics.clone()
+    }
+
+    /// 指标收集 - 获取特定指标
+    pub fn get_metric(&self, name: &str) -> Option<f64> {
+        self.metrics.get(name).copied()
+    }
+
+    /// 资源限制 - 设置资源限制
+    pub fn set_resource_limit(&mut self, resource: &str, limit: usize) -> Result<(), Error> {
+        self.resource_limits.insert(resource.to_string(), limit);
+        Ok(())
+    }
+
+    /// 资源限制 - 获取资源限制
+    pub fn get_resource_limit(&self, resource: &str) -> Option<usize> {
+        self.resource_limits.get(resource).copied()
+    }
+
+    /// 缓存系统 - 设置缓存
+    pub fn set_cache(&mut self, key: &str, data: Vec<u8>) -> Result<(), Error> {
+        // 检查缓存大小限制
+        if self.cache.len() >= self.config.cache_size {
+            // 简单的LRU策略：删除最老的缓存项
+            if let Some(oldest_key) = self.cache.keys().next().cloned() {
+                self.cache.remove(&oldest_key);
+            }
+        }
+        
+        self.cache.insert(key.to_string(), data);
+        Ok(())
+    }
+
+    /// 缓存系统 - 获取缓存
+    pub fn get_cache(&self, key: &str) -> Option<&Vec<u8>> {
+        self.cache.get(key)
+    }
+
+    /// 任务队列 - 添加任务
+    pub fn add_task(&mut self, task: String) -> Result<(), Error> {
+        self.task_queue.push_back(task);
+        Ok(())
+    }
+
+    /// 任务队列 - 获取下一个任务
+    pub fn get_next_task(&mut self) -> Option<String> {
+        self.task_queue.pop_front()
+    }
+
+    /// 任务队列 - 获取队列长度
+    pub fn get_task_queue_length(&self) -> usize {
+        self.task_queue.len()
+    }
+
+    /// 运行状态 - 检查是否运行中
+    pub fn is_running(&self) -> bool {
+        self.running.load(std::sync::atomic::Ordering::SeqCst)
+    }
+
+    /// 运行状态 - 停止引擎
+    pub fn stop(&mut self) {
+        self.running.store(false, std::sync::atomic::Ordering::SeqCst);
+    }
+
+    /// 运行状态 - 启动引擎
+    pub fn start(&mut self) {
+        self.running.store(true, std::sync::atomic::Ordering::SeqCst);
+    }
+
+    /// 版本信息 - 获取引擎版本
+    pub fn version(&self) -> &str {
+        "0.3.0"
+    }
+
+    /// 运行时间 - 获取引擎运行时间
+    pub fn get_uptime(&self) -> std::time::Duration {
+        self.created_at.elapsed()
+    }
+
+    /// 最后活动时间 - 获取最后活动时间
+    pub fn get_last_activity(&self) -> Result<std::time::Duration, Error> {
+        let last_activity = self.last_activity.lock()
+            .map_err(|_| Error::ConfigError("无法获取最后活动时间".to_string()))?;
+        Ok(last_activity.elapsed())
+    }
+
+    /// 系统信息 - 获取引擎统计信息
+    pub fn get_stats(&self) -> HashMap<String, String> {
+        let mut stats = HashMap::new();
+        stats.insert("version".to_string(), self.version().to_string());
+        stats.insert("uptime_seconds".to_string(), self.get_uptime().as_secs().to_string());
+        stats.insert("modules_count".to_string(), self.modules.len().to_string());
+        stats.insert("models_count".to_string(), self.models.len().to_string());
+        stats.insert("state_entries".to_string(), self.state.len().to_string());
+        stats.insert("metrics_count".to_string(), self.metrics.len().to_string());
+        stats.insert("cache_size".to_string(), self.cache.len().to_string());
+        stats.insert("task_queue_length".to_string(), self.task_queue.len().to_string());
+        stats.insert("is_running".to_string(), self.is_running().to_string());
+        stats.insert("current_device".to_string(), self.device_manager.get_current_device().to_string());
+        stats
+    }
+    
+    /// 获取监控仪表板
+    pub fn get_monitoring_dashboard(&self) -> &monitoring::MonitoringDashboard {
+        &self.monitoring_dashboard
+    }
+    
+    /// 获取监控仪表板（可变引用）
+    pub fn get_monitoring_dashboard_mut(&mut self) -> &mut monitoring::MonitoringDashboard {
+        &mut self.monitoring_dashboard
+    }
+    
+    /// 开始监控
+    pub async fn start_monitoring(&self) -> Result<(), Error> {
+        self.monitoring_dashboard.start_monitoring().await
+            .map_err(|e| Error::ConfigError(format!("监控启动失败: {}", e)))
+    }
+    
+    /// 停止监控
+    pub fn stop_monitoring(&self) {
+        self.monitoring_dashboard.stop_monitoring();
+    }
+    
+    /// 记录监控指标
+    pub fn record_monitoring_metric(&self, name: &str, value: f64, labels: Option<HashMap<String, String>>) {
+        self.monitoring_dashboard.record_metric(name, value, labels);
+    }
+    
+    /// 记录请求到监控系统
+    pub fn record_monitoring_request(&self, success: bool, response_time: f64) {
+        self.monitoring_dashboard.record_request(success, response_time);
+    }
+    
+    /// 获取监控仪表板数据
+    pub async fn get_monitoring_data(&self) -> monitoring::DashboardData {
+        self.monitoring_dashboard.get_dashboard_data().await
+    }
+    
+    /// 获取基准测试套件
+    pub fn get_benchmark_suite(&self) -> benchmarks::BenchmarkSuite {
+        benchmarks::BenchmarkSuite::new()
+    }
+    
+    /// 运行性能基准测试
+    pub async fn run_benchmark_test(&self, name: &str, operations: u64, test_fn: impl Fn() -> Result<(), String>) -> benchmarks::BenchmarkResult {
+        let mut suite = benchmarks::BenchmarkSuite::new();
+        suite.run_benchmark(name, operations, || async { test_fn() }).await
+    }
+    
+    /// 运行压力测试
+    pub async fn run_stress_test(&self, config: benchmarks::StressTestConfig, test_fn: impl Fn() -> Result<(), String>) -> benchmarks::StressTestResult {
+        let mut suite = benchmarks::BenchmarkSuite::new();
+        suite.run_stress_test(config, test_fn).await
+    }
+    
+    /// 生成性能报告
+    pub fn generate_performance_report(&self) -> String {
+        let suite = benchmarks::BenchmarkSuite::new();
+        suite.generate_report()
+    }
+    
+    /// 获取内存优化器
+    pub fn get_memory_optimizer(&self) -> &memory::MemoryOptimizer {
+        &self.memory_optimizer
+    }
+    
+    /// 获取内存优化器（可变引用）
+    pub fn get_memory_optimizer_mut(&mut self) -> &mut memory::MemoryOptimizer {
+        &mut self.memory_optimizer
+    }
+    
+    /// 获取内存池
+    pub fn get_memory_pool(&self) -> std::sync::Arc<memory::MemoryPool> {
+        self.memory_optimizer.get_memory_pool()
+    }
+    
+    /// 获取缓存管理器
+    pub fn get_cache_manager(&self) -> std::sync::Arc<memory::CacheManager> {
+        self.memory_optimizer.get_cache_manager()
+    }
+    
+    /// 优化内存使用
+    pub fn optimize_memory(&self) {
+        self.memory_optimizer.optimize();
+    }
+    
+    /// 创建零拷贝缓冲区
+    pub fn create_zero_copy_buffer(&self, key: String, data: Vec<u8>) {
+        self.memory_optimizer.create_zero_copy_buffer(key, data);
+    }
+    
+    /// 获取零拷贝缓冲区
+    pub fn get_zero_copy_buffer(&self, key: &str) -> Option<memory::ZeroCopyBuffer> {
+        self.memory_optimizer.get_zero_copy_buffer(key)
+    }
+    
+    /// 获取内存优化统计信息
+    pub fn get_memory_stats(&self) -> memory::MemoryOptimizerStats {
+        self.memory_optimizer.get_stats()
+    }
+    
+    /// 生成内存优化报告
+    pub fn generate_memory_report(&self) -> String {
+        self.memory_optimizer.generate_report()
     }
 }
 

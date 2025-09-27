@@ -7,7 +7,7 @@ edition = "2024"
 path = "src/lib.rs"
 
 [dependencies]
-anyhow.workspace = true
-serde.workspace = true
+anyhow = { workspace = true }
+serde = { workspace = true }
 
 
