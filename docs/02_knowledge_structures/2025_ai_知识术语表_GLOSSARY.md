@@ -2,6 +2,30 @@
 
 > 说明：本术语表为跨文档统一引用来源，包含定义、属性与关系提示。采用分层（Meta/Domain/Application/Implementation）标注与证据等级（A/B/C）。
 
+## 目录
+
+- [2025 AI-Rust 全局术语表（GLOSSARY）](#2025-ai-rust-全局术语表glossary)
+  - [目录](#目录)
+  - [术语结构模板](#术语结构模板)
+  - [核心术语](#核心术语)
+    - [多模态AI（Multimodal AI）](#多模态aimultimodal-ai)
+    - [代理式系统（Agentic Systems）](#代理式系统agentic-systems)
+    - [知识增强生成（KAG, Knowledge Augmented Generation）](#知识增强生成kag-knowledge-augmented-generation)
+    - [稀疏专家模型（MoE）](#稀疏专家模型moe)
+    - [Agentic Web（代理化Web）](#agentic-web代理化web)
+    - [边缘AI（Edge AI）](#边缘aiedge-ai)
+    - [可观测性（Observability for AI）](#可观测性observability-for-ai)
+  - [策略与治理相关术语（新增）](#策略与治理相关术语新增)
+    - [路由策略（Routing Strategy）](#路由策略routing-strategy)
+    - [一致性筛选（Consistency Filtering）](#一致性筛选consistency-filtering)
+    - [预算护栏（Budget Guardrail）](#预算护栏budget-guardrail)
+    - [追踪ID传播（Trace ID Propagation）](#追踪id传播trace-id-propagation)
+  - [索引（按层级）](#索引按层级)
+    - [KV缓存（KV Cache）](#kv缓存kv-cache)
+    - [量化（Quantization）](#量化quantization)
+    - [重排序（Re-ranking）](#重排序re-ranking)
+    - [金丝雀发布（Canary Release）](#金丝雀发布canary-release)
+
 ## 术语结构模板
 
 - 名称（英文/中文）

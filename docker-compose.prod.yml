@@ -1,5 +1,5 @@
-# AI-Rust项目Docker Compose配置
-# 用于本地开发和测试环境
+# AI-Rust项目生产环境Docker Compose配置
+# 用于生产环境部署
 
 version: '3.8'
 
@@ -12,11 +12,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - RUST_LOG=info
-      - DATABASE_URL=postgresql://ai_rust:password@postgres:5432/ai_rust_db
-      - REDIS_URL=redis://redis:6379
-      - JWT_SECRET=your-secret-key-here
+      - RUST_LOG=warn
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - JWT_SECRET=${JWT_SECRET}
       - API_PORT=8080
+      - ENVIRONMENT=production
     depends_on:
       - postgres
       - redis
@@ -25,7 +26,16 @@ services:
       - ./config:/app/config
     networks:
       - ai-rust-network
-    restart: unless-stopped
+    restart: always
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
@@ -37,9 +47,9 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_DB=ai_rust_db
-      - POSTGRES_USER=ai_rust
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -47,9 +57,17 @@ services:
       - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks:
       - ai-rust-network
-    restart: unless-stopped
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ai_rust -d ai_rust_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -63,7 +81,15 @@ services:
       - redis_data:/data
     networks:
       - ai-rust-network
-    restart: unless-stopped
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -83,11 +109,19 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--web.console.libraries=/etc/prometheus/console_libraries'
       - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=200h'
+      - '--storage.tsdb.retention.time=30d'
       - '--web.enable-lifecycle'
     networks:
       - ai-rust-network
-    restart: unless-stopped
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
   # Grafana仪表板
   grafana:
@@ -95,16 +129,25 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_SECURITY_SECRET_KEY=${GRAFANA_SECRET_KEY}
     volumes:
       - grafana_data:/var/lib/grafana
       - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
       - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
     networks:
       - ai-rust-network
-    restart: unless-stopped
+    restart: always
     depends_on:
       - prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   # Nginx反向代理
   nginx:
@@ -119,7 +162,15 @@ services:
       - ai-rust-api
     networks:
       - ai-rust-network
-    restart: unless-stopped
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
 
 volumes:
   postgres_data:
