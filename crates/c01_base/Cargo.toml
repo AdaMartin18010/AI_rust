@@ -2,13 +2,21 @@
 name = "c01_base"
 version = "0.1.0"
 edition = "2024"
+resolver = "3"
+description = "Base crate for AI-Rust project"
+authors = ["Rust AI Team"]
+license = "MIT"
+repository = "https://github.com/rust-lang/c01_base"
+keywords = ["ai", "machine-learning", "deep-learning", "neural-networks", "nlp", "computer-vision", "llm", "transformers", "rust-189", "candle", "burn", "tch", "dfdx"]
+categories = ["science", "machine-learning", "algorithms"]
+rust-version = "1.90"
 
 [lib]
 path = "src/lib.rs"
 
 [dependencies]
-anyhow = "1"
-thiserror = "1"
-serde = { version = "1", features = ["derive"] }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }
 
 

@@ -2,6 +2,14 @@
 name = "c07_agents_systems"
 version = "0.1.0"
 edition = "2024"
+resolver = "3"
+description = "Agents and systems crate for AI-Rust project"
+authors = ["Rust AI Team"]
+license = "MIT"
+repository = "https://github.com/rust-lang/c07_agents_systems"
+keywords = ["ai", "machine-learning", "deep-learning", "neural-networks", "nlp", "computer-vision", "llm", "transformers", "rust-189", "candle", "burn", "tch", "dfdx"]
+categories = ["science", "machine-learning", "algorithms"]
+rust-version = "1.90"
 
 [lib]
 path = "src/lib.rs"

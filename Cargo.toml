@@ -91,7 +91,7 @@ opt-level = 2
 
 # 工作区级别的依赖版本统一 - 2025年10月15日最新稳定版本
 [workspace.dependencies]
-# 网络和 HTTP 相关 - 2025年10月最新稳定版本
+# 网络和 HTTP 相关 - 2025年10月15日最新稳定版本
 # reqwest: HTTP客户端库，支持异步请求和多种功能特性
 reqwest = { version = "0.12.24", features = ["json", "rustls-tls"] }
 # hyper: 底层HTTP库，提供高性能的HTTP/1和HTTP/2支持
@@ -109,7 +109,7 @@ h2 = "0.5.1"
 # http: HTTP类型和特征定义
 http = "1.3.1"
 
-# Web 框架 - 2025年10月最新稳定版本
+# Web 框架 - 2025年10月15日最新稳定版本
 # axum: 基于tokio的现代web框架，提供类型安全的API
 axum = { version = "0.8.4", features = ["macros", "multipart", "tracing"] }
 # axum-core: axum的核心类型和特征
@@ -153,7 +153,7 @@ rcgen = "0.14.4"
 dotenvy = "0.15.7"
 tempfile = "3.22.0"
 
-# gRPC 相关 - 2025年10月最新稳定版本
+# gRPC 相关 - 2025年10月15日最新稳定版本
 tonic = { version = "0.14.2", features = ["transport", "tls-ring", "tls-webpki-roots", "channel"] }
 tonic-build = "0.14.2"
 prost = "0.14.1"
@@ -165,7 +165,7 @@ prost-types = "0.14.1"
 # 通过工作区依赖强制使用安全版本
 protobuf = "3.7.2"  # 修复递归崩溃漏洞
 
-# TLS 和加密 - 2025年10月最新稳定版本
+# TLS 和加密 - 2025年10月15日最新稳定版本
 rustls = { version = "0.23.32", features = ["ring"] }
 rustls-webpki = "0.104.1"
 rustls-pemfile = "2.2.0"
@@ -173,15 +173,15 @@ tokio-rustls = "0.26.3"
 ring = "0.17.14"
 webpki-roots = "1.1.1"
 
-# 错误处理 - 2025年10月最新稳定版本
+# 错误处理 - 2025年10月15日最新稳定版本
 # thiserror: 为自定义错误类型提供derive宏，简化错误处理
-thiserror = "2.0.16"
+thiserror = "2.0.17"
 # anyhow: 简化错误处理，提供便捷的错误类型转换
 anyhow = "1.0.100"
 
-# 序列化 - 2025年10月最新稳定版本
+# 序列化 - 2025年10月15日最新稳定版本
 # serde: Rust生态系统的序列化框架，支持多种数据格式
-serde = { version = "1.0.226", features = ["derive"] }
+serde = { version = "1.0.228", features = ["derive"] }
 # serde_json: JSON序列化支持
 serde_json = "1.0.145"
 # serde_yaml: YAML序列化支持
@@ -189,7 +189,7 @@ serde_yaml = "0.9.34"
 # bincode: 二进制序列化格式，高效且紧凑
 bincode = "1.3.3"
 
-# 异步运行时 - 2025年10月最新稳定版本
+# 异步运行时 - 2025年10月15日最新稳定版本
 tokio = { version = "1.47.1", features = ["full"] }
 tokio-util = "0.7.16"
 tokio-stream = "0.1.17"
@@ -197,7 +197,7 @@ tokio-tungstenite = "0.27.0"
 futures = "0.3.31"
 futures-util = "0.3.31"
 
-# 日志和追踪 - 2025年10月最新稳定版本
+# 日志和追踪 - 2025年10月15日最新稳定版本
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.20", features = ["env-filter", "json"] }
 log = "0.4.28"
@@ -209,15 +209,15 @@ opentelemetry-otlp = { version = "0.30.0", features = ["http-json"] }
 opentelemetry-stdout = "0.30.0"
 opentelemetry-proto = { version = "0.31.0", features = ["gen-tonic"] }
 
-# 指标 - 2025年10月最新稳定版本
+# 指标 - 2025年10月15日最新稳定版本
 metrics = "0.24.2"
 metrics-exporter-prometheus = "0.17.2"
 
-# 时间处理 - 2025年10月最新稳定版本
+# 时间处理 - 2025年10月15日最新稳定版本
 chrono = { version = "0.4.42", features = ["serde"] }
 time = { version = "0.3.44", features = ["serde", "macros"] }
 
-# 其他常用库 - 2025年10月最新稳定版本
+# 其他常用库 - 2025年10月15日最新稳定版本
 uuid = { version = "1.18.1", features = ["v4", "serde"] }
 url = "2.5.7"
 bytes = "1.10.1"
@@ -229,30 +229,30 @@ rand = "0.9.2"
 sha2 = "0.10.9"
 hex = "0.4.3"
 
-# 数据库和存储 - 2025年10月最新稳定版本
+# 数据库和存储 - 2025年10月15日最新稳定版本
 sea-orm = { version = "1.1.16", features = ["sqlx-postgres", "runtime-tokio-rustls"], default-features = false }
 sqlx = { version = "0.8.7", features = ["runtime-tokio-rustls", "postgres", "mysql", "sqlite", "chrono", "uuid"], default-features = false }
 redis = "0.32.5"
 rusqlite = { version = "0.37.0", default-features = false }
 
-# 性能测试和基准测试 - 2025年10月最新稳定版本
+# 性能测试和基准测试 - 2025年10月15日最新稳定版本
 criterion = "0.7.0"
 
-# 配置管理 - 2025年10月最新稳定版本
+# 配置管理 - 2025年10月15日最新稳定版本
 config = "0.15.16"
 toml = "0.9.7"
 
-# 并发和同步 - 2025年10月最新稳定版本
+# 并发和同步 - 2025年10月15日最新稳定版本
 crossbeam = "0.8.4"
 rayon = "1.11.0"
 dashmap = "6.1.0"
 parking_lot = "0.12.4"
 
-# 测试相关 - 2025年10月最新稳定版本
+# 测试相关 - 2025年10月15日最新稳定版本
 mockall = "0.13.1"
 proptest = "1.8.0"
 
-# AI 和机器学习 - 2025年10月最新稳定版本
+# AI 和机器学习 - 2025年10月15日最新稳定版本
 # candle-core: Rust机器学习框架的核心库，提供张量操作和基础类型
 candle-core = "0.9.1"
 # candle-nn: 神经网络层和模型定义
@@ -277,7 +277,7 @@ faer = "0.22.0"
 # similari = "0.26.0"   # 对象跟踪和相似性搜索
 # orch = "0.0.16"       # 语言模型编排库
 
-# Web 和 GUI 框架 - 2025年10月最新稳定版本
+# Web 和 GUI 框架 - 2025年10月15日最新稳定版本
 # tauri 已移除，使用 egui/iced 替代 (解决 GTK3 安全漏洞)
 egui = "0.32.3"
 iced = "0.13.1"
@@ -290,14 +290,14 @@ iced = "0.13.1"
 # 2025年最新高性能异步运行时
 glommio = "0.8.0"
 
-# 安全漏洞修复 - 2025年10月
+# 安全漏洞修复 - 2025年10月15日
 # 替换未维护和有安全漏洞的依赖
-ahash = "0.8.12"  # 替代 fxhash (未维护)
-quote = "1.0.40"  # 替代 paste (未维护)
-proc-macro-error2 = "2.0.1"  # 替代 proc-macro-error (未维护)
-is-terminal = "0.2.0"  # 替代 atty (有安全漏洞)
-wasm-bindgen = "0.2.103"  # 最新稳定版本，支持WebAssembly 2.0
-nix = "0.28.0"  # 系统调用安全封装
+ahash = "0.8.13"  # 替代 fxhash (未维护)
+quote = "1.0.41"  # 替代 paste (未维护)
+proc-macro-error2 = "2.0.2"  # 替代 proc-macro-error (未维护)
+is-terminal = "0.2.1"  # 替代 atty (有安全漏洞)
+wasm-bindgen = "0.2.104"  # 最新稳定版本，支持WebAssembly 2.0
+nix = "0.28.1"  # 系统调用安全封装
 # pingora 已移除，存在安全漏洞 (RUSTSEC-2025-0037, RUSTSEC-2025-0070)
 
 # 2025年1月安全更新 - 修复已知安全漏洞

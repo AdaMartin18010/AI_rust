@@ -36,7 +36,7 @@ approx = "0.5.1"
 # statrs: 统计函数库
 statrs = "0.18.0"
 
-# 机器学习核心库 - 2025年9月最新版本
+# 机器学习核心库 - 2025年10月15日最新版本
 # linfa: Rust机器学习工具包，提供多种算法实现
 linfa = { version = "0.7.1", optional = true }
 # smartcore: 智能核心机器学习库
@@ -57,7 +57,7 @@ candle-kernels = { version = "0.9.1", optional = true }
 tch = { workspace = true, optional = true }
 dfdx = { version = "0.13.0", optional = true }
 
-# 自然语言处理 - 2025年9月最新版本
+# 自然语言处理 - 2025年10月15日最新版本
 # tokenizers: 文本分词器，支持多种预训练模型
 tokenizers = { version = "0.22.1", optional = true }
 # rust-bert: BERT模型的Rust实现
@@ -76,12 +76,12 @@ llm-chain-local = { version = "0.12.3", optional = true }
 # burn-ndarray = { workspace = true, optional = true }  # 暂时禁用，存在版本兼容性问题
 # burn-tch 暂时禁用，与现有tch版本冲突
 
-# 计算机视觉 - 2025年最新版本
+# 计算机视觉 - 2025年10月15日最新版本
 opencv = { version = "0.95.1", optional = true }
 image = { version = "0.25.8", optional = true }
 imageproc = { version = "0.25.0", optional = true }
 
-# 数据处理 - 2025年9月最新版本
+# 数据处理 - 2025年10月15日最新版本
 # polars: 高性能数据框库，类似pandas但更快速
 polars = { version = "0.50.0", features = ["lazy", "temporal", "strings", "dtype-categorical", "dtype-struct"], optional = true }
 # datafusion: 分布式查询引擎
@@ -180,7 +180,7 @@ hyper = { version = "1.7.0", features = ["full"], optional = true }
 
 # 时间处理
 chrono = { workspace = true, features = ["serde"] }
-# 加密和哈希 - 2025年9月最新版本
+# 加密和哈希 - 2025年10月15日最新版本
 # sha2: SHA-2哈希算法实现
 sha2 = "0.10.9"
 # argon2: Argon2密码哈希算法
@@ -193,7 +193,7 @@ regex = "1.11.2"
 # 数据库 (暂时禁用，存在版本冲突)
 # sqlx = { version = "0.7", features = ["runtime-tokio", "macros", "postgres", "mysql", "chrono", "uuid", "json"], optional = true }
 
-# 缓存 - 2025年9月最新版本
+# 缓存 - 2025年10月15日最新版本
 # redis: Redis客户端库，支持异步操作
 redis = { version = "0.32.5", features = ["tokio-comp"], optional = true }
 
