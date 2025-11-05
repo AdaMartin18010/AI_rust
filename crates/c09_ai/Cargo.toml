@@ -132,7 +132,7 @@ tempfile = { workspace = true }
 
 # AI 特定依赖 - 2025年最新版本
 # 大语言模型支持
-llama-cpp-2 = { version = "0.1.122", optional = true }
+llama-cpp-2 = { version = "0.1.123", optional = true }
 # 图神经网络
 petgraph = { workspace = true, optional = true }
 # 时间序列 - 使用工作区统一版本

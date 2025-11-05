@@ -166,8 +166,9 @@ prost-types = "0.14.1"
 protobuf = "3.7.2"  # 修复递归崩溃漏洞
 
 # TLS 和加密 - 2025年10月15日最新稳定版本
-rustls = { version = "0.23.32", features = ["ring"] }
+rustls = { version = "0.23.35", features = ["ring"] }
 rustls-webpki = "0.104.1"
+rustls-pki-types = "1.13.0"
 rustls-pemfile = "2.2.0"
 tokio-rustls = "0.26.3"
 ring = "0.17.14"
@@ -191,7 +192,7 @@ bincode = "1.3.3"
 
 # 异步运行时 - 2025年10月15日最新稳定版本
 tokio = { version = "1.47.1", features = ["full"] }
-tokio-util = "0.7.16"
+tokio-util = "0.7.17"
 tokio-stream = "0.1.17"
 tokio-tungstenite = "0.27.0"
 futures = "0.3.31"
@@ -221,7 +222,7 @@ time = { version = "0.3.44", features = ["serde", "macros"] }
 uuid = { version = "1.18.1", features = ["v4", "serde"] }
 url = "2.5.7"
 bytes = "1.10.1"
-indexmap = "2.11.4"
+indexmap = "2.12.0"
 once_cell = "1.21.3"
 num_cpus = "1.17.0"
 libc = "0.2.175"
@@ -250,7 +251,7 @@ parking_lot = "0.12.4"
 
 # 测试相关 - 2025年10月15日最新稳定版本
 mockall = "0.13.1"
-proptest = "1.8.0"
+proptest = "1.9.0"
 
 # AI 和机器学习 - 2025年10月15日最新稳定版本
 # candle-core: Rust机器学习框架的核心库，提供张量操作和基础类型
@@ -296,7 +297,7 @@ ahash = "0.8.13"  # 替代 fxhash (未维护)
 quote = "1.0.41"  # 替代 paste (未维护)
 proc-macro-error2 = "2.0.2"  # 替代 proc-macro-error (未维护)
 is-terminal = "0.2.1"  # 替代 atty (有安全漏洞)
-wasm-bindgen = "0.2.104"  # 最新稳定版本，支持WebAssembly 2.0
+wasm-bindgen = "0.2.105"  # 最新稳定版本，支持WebAssembly 2.0
 nix = "0.28.1"  # 系统调用安全封装
 # pingora 已移除，存在安全漏洞 (RUSTSEC-2025-0037, RUSTSEC-2025-0070)
 
