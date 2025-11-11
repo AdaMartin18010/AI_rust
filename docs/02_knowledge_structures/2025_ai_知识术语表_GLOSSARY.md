@@ -25,6 +25,12 @@
     - [量化（Quantization）](#量化quantization)
     - [重排序（Re-ranking）](#重排序re-ranking)
     - [金丝雀发布（Canary Release）](#金丝雀发布canary-release)
+  - [2025年11月新增术语](#2025年11月新增术语)
+    - [AI推理与合作行为（AI Reasoning \& Cooperative Behavior）](#ai推理与合作行为ai-reasoning--cooperative-behavior)
+    - [重训练到重推理转型（Training-to-Inference Shift）](#重训练到重推理转型training-to-inference-shift)
+    - [人形机器人产业化（Humanoid Robot Commercialization）](#人形机器人产业化humanoid-robot-commercialization)
+    - [Rust开源生态建设（Rust Open Source Ecosystem）](#rust开源生态建设rust-open-source-ecosystem)
+    - [蓝河操作系统（BlueOS）](#蓝河操作系统blueos)
 
 ## 术语结构模板
 
@@ -293,3 +299,92 @@
 
 - 反例：监控覆盖不足导致坏版本放量；
 - 边界：小流量下统计功效不足，误判风险升高。
+
+---
+
+## 2025年11月新增术语
+
+### AI推理与合作行为（AI Reasoning & Cooperative Behavior）
+
+- 抽象层级：Domain
+- 定义：具备推理能力的AI模型在协作任务中表现出的行为模式，研究发现推理型AI在协作中更易表现出自私行为（卡内基梅隆大学，2025年11月）。
+- 关键属性：推理步骤数、合作率、自私行为传染性、亲社会行为平衡。
+- 常见关系：Affects(协作效率)、Requires(伦理治理)、Enables(社交AI应用)。
+- 证据等级：A
+
+- 别名：AI协作行为、推理型AI自私性
+- 计量口径：
+  - 合作率：协作任务中的合作行为占比（%）
+  - 推理步骤：生成式推理的步骤数
+  - 行为传染：自私行为在模型间的传播率
+- DAR：Definition｜Attributes{推理步骤、合作率、传染性}｜Relations{Affects,Requires,Enables}
+- 交叉引用：趋势§3.1/§11.1；治理§Z.12
+
+反例与边界：
+
+- 反例：过度推理导致合作率从96%降至20%；
+- 边界：在社交、情感咨询等领域的应用需平衡推理能力与亲社会行为。
+
+### 重训练到重推理转型（Training-to-Inference Shift）
+
+- 抽象层级：Domain
+- 定义：大模型发展从"重训练"（强调模型训练和参数优化）转向"重推理"（强调推理优化、成本控制和实时性能）的趋势（乌镇峰会，2025年11月）。
+- 关键属性：推理优化技术、成本控制、实时性能、边缘部署能力。
+- 常见关系：Enables(边缘AI)、Optimizes(成本/延迟)、Requires(量化/缓存/路由)。
+- 证据等级：A
+
+- 别名：推理优先范式、推理优化时代
+- 计量口径：
+  - 推理成本：$/1k tok（含硬件/能耗分摊）
+  - 实时性能：P95延迟、QPS
+  - 边缘部署率：边缘设备部署占比
+- DAR：Definition｜Attributes{优化技术、成本、性能}｜Relations{Enables,Optimizes,Requires}
+- 交叉引用：趋势§3.1/§5.1；实践§2.2/§3；术语：量化、KV缓存
+
+### 人形机器人产业化（Humanoid Robot Commercialization）
+
+- 抽象层级：Application
+- 定义：人形机器人从实验室走向行业应用的产业化趋势，预计智能机器人产业平均增长50%-100%（宇树科技，2025年11月）。
+- 关键属性：工业出口增长率、应用场景扩展、成本下降、技术成熟度。
+- 常见关系：Enables(智能制造)、Requires(边缘AI/实时控制)、Optimizes(生产效率)。
+- 证据等级：A
+
+- 别名：人形机器人、智能机器人产业化
+- 计量口径：
+  - 产业增长率：年度增长率（%）
+  - 出口增长率：工业机器人出口增长（54.9%）
+  - 应用场景：行业应用覆盖数
+- DAR：Definition｜Attributes{增长率、场景、成本}｜Relations{Enables,Requires,Optimizes}
+- 交叉引用：趋势§6.3/§8.1；实践§5.3
+
+### Rust开源生态建设（Rust Open Source Ecosystem）
+
+- 抽象层级：Domain
+- 定义：Rust语言在开源社区的发展，包括CCF中国开源大会Rust分论坛等生态建设活动（2025年7月/11月）。
+- 关键属性：社区活跃度、编译器优化、教育推广、产业应用。
+- 常见关系：Enables(AI-Rust融合)、Optimizes(系统性能)、Requires(工具链成熟)。
+- 证据等级：A
+
+- 别名：Rust生态、Rust社区发展
+- 计量口径：
+  - 社区活跃度：GitHub stars、贡献者数
+  - 编译器性能：编译时间优化（%）
+  - 产业应用：企业采用率
+- DAR：Definition｜Attributes{活跃度、优化、应用}｜Relations{Enables,Optimizes,Requires}
+- 交叉引用：趋势§4.2/§4.3；实践§1.1
+
+### 蓝河操作系统（BlueOS）
+
+- 抽象层级：Application
+- 定义：由vivo公司研发的基于Rust语言编写的操作系统，主要面向物联网、可穿戴技术和智能手表等领域（2023年11月发布，2025年持续发展）。
+- 关键属性：Rust实现、物联网应用、可穿戴设备、内存安全。
+- 常见关系：Enables(边缘AI)、Demonstrates(Rust系统编程)、Optimizes(安全性)。
+- 证据等级：A
+
+- 别名：BlueOS、vivo蓝河OS
+- 计量口径：
+  - 应用领域：物联网/可穿戴/智能手表
+  - 安全性：内存安全漏洞数
+  - 性能：系统响应时间
+- DAR：Definition｜Attributes{Rust实现、应用领域、安全性}｜Relations{Enables,Demonstrates,Optimizes}
+- 交叉引用：趋势§4.2/§6.2；实践§5.3

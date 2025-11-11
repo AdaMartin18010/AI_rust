@@ -1,5 +1,7 @@
 # Rust AI 系统文档中心
 
+> 对齐声明：术语统一见 `docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md`；指标与报告口径见 `docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §Z.7；性能数据需由 `reports/` CSV 通过 `scripts/repro/` 再生。
+
 ## 📋 模块概述
 
 c19_ai 是一个基于 Rust 1.89 的现代化 AI 和机器学习库，集成了最新的开源 AI 框架和工具，提供高性能、内存安全的 AI 开发体验。涵盖大语言模型、扩散模型、强化学习、图神经网络、时间序列分析等前沿 AI 技术。

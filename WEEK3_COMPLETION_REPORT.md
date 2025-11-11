@@ -1,5 +1,7 @@
 # 📊 Week 3 完成报告
 
+> 对齐声明：本报告中的术语与指标统一遵循 `docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md` 与 `docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §Z.7；性能数据需由 `reports/` CSV 通过 `scripts/repro/` 再生。
+
 ## 📋 概述
 
 **报告时间**: 2025年10月15日  

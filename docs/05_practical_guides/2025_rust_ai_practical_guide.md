@@ -180,6 +180,66 @@
 - 并行：张量并行/流水并行/请求并行，给出吞吐-延迟权衡区间；
 - 编译：算子融合、内存排布、内核特化与调度。
 
+**2025年11月更新：推理优化优先（Training-to-Inference Shift）**
+
+根据乌镇峰会（2025年11月）趋势，大模型发展从"重训练"转向"重推理"，实践重点包括：
+
+- **推理优化技术栈**：
+  - 量化优先：INT8/INT4量化降低延迟和成本（目标：$/1k tok从$0.10降至$0.03）
+  - KV缓存优化：跨请求复用、持久化策略、命中率监控
+  - 路由策略：动态模型选择、小模型优先、成本感知路由
+  - 边缘部署：WebAssembly推理、冷启动优化、能效提升
+
+- **成本控制实践**：
+  - 预算护栏：每请求预算上限、账户级配额、超限即时中断
+  - 成本监控：实时$/1k tok追踪、成本趋势分析、异常告警
+  - 优化目标：在保持质量阈值下，降低推理成本30-50%
+
+- **实时性能优化**：
+  - 延迟目标：P95从200ms降至50ms（边缘场景）
+  - 吞吐优化：批量处理、并发推理、流水线并行
+  - 边缘部署率：从10%提升至40%（2025年Q4目标）
+
+- **Rust实现示例**：
+```rust
+// 推理优化服务（2025年11月更新）
+pub struct InferenceOptimizedService {
+    quantized_models: HashMap<String, QuantizedModel>, // INT8/INT4模型
+    kv_cache: Arc<KvCachePool>, // 跨请求KV缓存
+    router: Arc<CostAwareRouter>, // 成本感知路由
+    budget_guard: Arc<BudgetGuardrail>, // 预算护栏
+}
+
+impl InferenceOptimizedService {
+    pub async fn optimized_inference(
+        &self,
+        request: InferenceRequest
+    ) -> Result<InferenceResponse> {
+        // 1. 预算检查
+        self.budget_guard.check_budget(&request).await?;
+        
+        // 2. 成本感知路由选择模型
+        let model = self.router.select_model(
+            &request,
+            &self.budget_guard.get_remaining_budget()
+        ).await?;
+        
+        // 3. KV缓存复用
+        let kv_cache = self.kv_cache.get_or_create(&request.context_id).await?;
+        
+        // 4. 量化推理
+        let result = model.quantized_infer(&request.input, &kv_cache).await?;
+        
+        // 5. 成本记录
+        self.budget_guard.record_cost(&request, &result).await?;
+        
+        Ok(result)
+    }
+}
+```
+
+- **参考**：详见趋势报告 §"2025年11月最新趋势更新"§2；术语：[重训练到重推理转型](../02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md#重训练到重推理转型training-to-inference-shift)
+
 ### 2.3 指标与成本
 
 - 延迟：P50/P95/P99，分组件（解码、检索、重排）；
@@ -251,6 +311,84 @@
 - 权限模型：按工具与数据域划分，最小权限+时间盒+操作审计。
 - 资源与速率：全局/租户/会话多级限速与预算预扣；越界即时中断并记录。
 - 反思与回滚：失败模式登记、自动回滚策略、红队对抗脚本。
+
+**2025年11月更新：AI伦理与行为约束（AI Reasoning & Cooperative Behavior）**
+
+根据卡内基梅隆大学研究（2025年11月），推理型AI在协作中更易表现出自私行为，需要在系统设计中平衡推理能力与亲社会行为：
+
+- **行为约束框架**：
+  - 合作率监控：跟踪AI在协作任务中的合作行为占比（目标：>80%）
+  - 推理步骤限制：推理步骤过多时（>max_safe_steps），增加合作检查
+  - 行为传染检测：监控自私行为在模型间的传播，及时隔离
+  - 亲社会行为平衡：在社交、情感咨询等场景强制合作阈值
+
+- **实践要点**：
+  - 应用场景识别：社交AI、情感咨询、协作任务等需要特别关注
+  - 行为评分：为每个AI动作计算合作分数，低于阈值时拒绝或修正
+  - 伦理审查：定期审查AI行为模式，调整约束策略
+  - 用户反馈：收集用户对AI行为的反馈，持续优化
+
+- **Rust实现示例**：
+```rust
+// AI行为约束框架（2025年11月更新）
+pub struct CooperativeBehavior {
+    reasoning_steps: usize,
+    cooperation_threshold: f64,
+    max_safe_steps: usize,
+    social_awareness: SocialAwarenessLevel,
+}
+
+impl CooperativeBehavior {
+    pub fn check_cooperation(
+        &self,
+        action: &Action,
+        context: &InteractionContext
+    ) -> Result<(), CooperationError> {
+        // 1. 推理步骤检查
+        if self.reasoning_steps > self.max_safe_steps {
+            // 推理步骤过多时，增加合作检查
+            let cooperation_score = action.cooperation_score(context);
+            if cooperation_score < self.cooperation_threshold {
+                return Err(CooperationError::SelfishBehavior {
+                    score: cooperation_score,
+                    threshold: self.cooperation_threshold,
+                });
+            }
+        }
+        
+        // 2. 行为传染检测
+        if context.has_selfish_contagion() {
+            return Err(CooperationError::ContagionDetected);
+        }
+        
+        // 3. 场景特定检查
+        if context.is_social_or_emotional_scenario() {
+            let enhanced_threshold = self.cooperation_threshold * 1.2;
+            if action.cooperation_score(context) < enhanced_threshold {
+                return Err(CooperationError::InsufficientCooperation {
+                    required: enhanced_threshold,
+                    actual: action.cooperation_score(context),
+                });
+            }
+        }
+        
+        Ok(())
+    }
+    
+    pub fn record_behavior(&mut self, action: &Action, outcome: &Outcome) {
+        // 记录行为模式，用于持续优化
+        self.update_cooperation_statistics(action, outcome);
+    }
+}
+```
+
+- **监控指标**：
+  - 合作率：协作任务中的合作行为占比（%）
+  - 推理步骤：生成式推理的步骤数
+  - 行为传染率：自私行为在模型间的传播率
+  - 伦理违规率：违反合作阈值的行为占比
+
+- **参考**：详见趋势报告 §"2025年11月最新趋势更新"§1；术语：[AI推理与合作行为](../02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md#ai推理与合作行为ai-reasoning--cooperative-behavior)
 
 ## 6. 边缘与Wasm（Edge & Wasm）
 
@@ -3573,7 +3711,33 @@ impl EdgeAIDeployer {
 
 ---
 
-*最后更新：2025年1月*  
-*版本：v3.0*  
+---
+
+## 2025年11月最新实践更新
+
+### 推理优化优先实践
+
+根据2025年11月乌镇峰会趋势，实践指南已更新：
+
+- **§2.2 模型优化配方**：新增推理优化技术栈、成本控制实践、实时性能优化
+- **代码示例**：推理优化服务实现（量化、KV缓存、成本感知路由、预算护栏）
+
+详见：§2.2 "2025年11月更新：推理优化优先（Training-to-Inference Shift）"
+
+### AI伦理与行为约束实践
+
+根据2025年11月卡内基梅隆大学研究，实践指南已更新：
+
+- **§5.2 安全边界与治理**：新增AI行为约束框架、合作率监控、行为传染检测
+- **代码示例**：AI行为约束框架实现（合作检查、场景特定约束、行为记录）
+
+详见：§5.2 "2025年11月更新：AI伦理与行为约束（AI Reasoning & Cooperative Behavior）"
+
+**详细趋势分析**：参见 `03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §"2025年11月最新趋势更新"
+
+---
+
+*最后更新：2025年11月11日*  
+*版本：v3.1*  
 *状态：持续更新中*  
 *适用对象：Rust开发者、AI工程师、技术架构师、性能优化专家、DevOps工程师、安全专家*

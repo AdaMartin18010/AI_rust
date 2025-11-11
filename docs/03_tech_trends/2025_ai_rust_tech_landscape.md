@@ -1,5 +1,7 @@
 # 2025年AI-Rust技术全景图
 
+> 对齐声明：术语统一见 `docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md`；指标与报告口径见 `docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §Z.7；图表需由 `reports/` CSV 通过 `scripts/repro/` 再生。
+
 ## 目录
 
 - [2025年AI-Rust技术全景图](#2025年ai-rust技术全景图)

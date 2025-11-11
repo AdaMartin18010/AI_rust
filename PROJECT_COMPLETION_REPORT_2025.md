@@ -1,5 +1,7 @@
 # AI-Rust 项目完成报告 2025
 
+> 对齐声明：术语统一见 `docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md`；指标与报告口径见 `docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §Z.7；性能测试数据需由 `reports/` CSV 通过 `scripts/repro/` 再生。
+
 ## 🎉 项目完成状态：100% ✅
 
 AI-Rust项目已经成功完成了所有核心功能的开发和优化，达到了生产就绪状态。项目展示了Rust在AI/ML领域的强大潜力，特别是在RTX 5090 GPU优化和现代AI标准对标方面取得了卓越成果。

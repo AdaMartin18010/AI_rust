@@ -1,5 +1,7 @@
 # 2025年Web AI与Rust技术架构图
 
+> 对齐声明：术语统一见 `docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md`；指标与报告口径见 `docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §Z.7；架构图中的性能指标需由 `reports/` CSV 通过 `scripts/repro/` 再生。
+
 ## 目录
 
 - [2025年Web AI与Rust技术架构图](#2025年web-ai与rust技术架构图)

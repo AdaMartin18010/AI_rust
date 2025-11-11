@@ -1,5 +1,7 @@
 # AI-Rust 项目总结
 
+> 对齐声明：术语统一见 `docs/02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md`；指标与报告口径见 `docs/03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md` §Z.7。
+
 ## 🎯 项目概述
 
 **AI-Rust** 是一个使用Rust语言结合成熟开源库学习AI相关技术和原理的实践项目。

@@ -27,9 +27,11 @@
 #### AI技术
 
 - **推理引擎**: [技术全景图](./2025_ai_rust_tech_landscape.md#21-核心框架对比2025年更新)
+- **推理优化**（2025年11月新趋势）: [技术趋势综合报告](../03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md#2-大模型从重训练转向重推理乌镇峰会2025年11月)
 - **多模态AI**: [综合更新报告](./2025_comprehensive_tech_update.md#4-多模态ai发展)
 - **Agentic Web**: [技术全景图](./2025_ai_rust_tech_landscape.md#31-agentic-web架构)
 - **边缘AI**: [技术架构图](./2025_tech_architecture_diagram.md#5-边缘计算与webassembly)
+- **AI伦理与行为**（2025年11月新研究）: [技术趋势综合报告](../03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md#1-ai推理与合作行为研究突破)
 
 #### Rust技术
 
@@ -37,6 +39,8 @@
 - **AI框架**: [技术全景图](./2025_ai_rust_tech_landscape.md#2-rust-ai生态系统现状)
 - **工具链**: [综合更新报告](./2025_comprehensive_tech_update.md#23-2025年新增工具)
 - **性能优化**: [技术趋势更新](./2025_tech_trends_update.md#11-性能优化突破)
+- **开源生态建设**（2025年11月）: [技术趋势综合报告](../03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md#4-rust开源生态建设进展)
+- **产业应用案例**（蓝河OS）: [技术趋势综合报告](../03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md#4-rust开源生态建设进展)
 
 #### Web技术
 
@@ -189,6 +193,28 @@
 - 完善学习路径指南
 - 建立知识体系索引
 
+### 2025年11月
+
+- **AI推理与合作行为研究**：卡内基梅隆大学研究发现推理型AI在协作中更易表现出自私行为
+  - 详见：[技术趋势综合报告](../03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md#2025年11月最新趋势更新)
+  - 术语：[AI推理与合作行为](../02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md#ai推理与合作行为ai-reasoning--cooperative-behavior)
+
+- **大模型范式转变**：从"重训练"转向"重推理"，强调推理优化、成本控制、实时性能
+  - 详见：[技术趋势综合报告](../03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md#2-大模型从重训练转向重推理乌镇峰会2025年11月)
+  - 术语：[重训练到重推理转型](../02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md#重训练到重推理转型training-to-inference-shift)
+
+- **人形机器人产业化**：智能机器人产业平均增长50%-100%，从实验室走向行业应用
+  - 详见：[技术趋势综合报告](../03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md#3-人形机器人产业化加速)
+  - 术语：[人形机器人产业化](../02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md#人形机器人产业化humanoid-robot-commercialization)
+
+- **Rust开源生态建设**：CCF中国开源大会Rust分论坛，vivo蓝河操作系统案例
+  - 详见：[技术趋势综合报告](../03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md#4-rust开源生态建设进展)
+  - 术语：[Rust开源生态建设](../02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md#rust开源生态建设rust-open-source-ecosystem)、[蓝河操作系统](../02_knowledge_structures/2025_ai_知识术语表_GLOSSARY.md#蓝河操作系统blueos)
+
+- **AI硬件领域动态**：英特尔收购SambaNova，AI芯片领域竞争加剧
+  - 详见：[技术趋势综合报告](../03_tech_trends/2025_ai_rust_technology_trends_comprehensive_report.md#5-英特尔收购sambanova2025年11月)
+  - 研究跟踪：[2025年Q4（11月）更新](../06_research_analysis/research_watch.md#2025年q411月更新)
+
 ### 后续更新计划
 
 - 每月技术趋势更新
@@ -214,7 +240,7 @@
 
 ---
 
-*最后更新：2025年1月*  
-*版本：v1.0*  
+*最后更新：2025年11月11日*  
+*版本：v1.1*  
 *状态：持续更新中*  
 *维护者：AI-Rust技术社区*

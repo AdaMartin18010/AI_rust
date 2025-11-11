@@ -83,6 +83,14 @@
     - [Z.16 成本-性能前沿与优化配方（Pareto Frontier \& Playbooks）](#z16-成本-性能前沿与优化配方pareto-frontier--playbooks)
     - [Z.17 研究到生产迁移清单（R2P Checklist）](#z17-研究到生产迁移清单r2p-checklist)
     - [Z.18 风险与对策案例库模板（Casebook）](#z18-风险与对策案例库模板casebook)
+  - [2025年11月最新趋势更新](#2025年11月最新趋势更新)
+    - [11月核心发现（2025年11月11日）](#11月核心发现2025年11月11日)
+      - [1. AI推理与合作行为研究突破](#1-ai推理与合作行为研究突破)
+      - [2. 大模型从"重训练"转向"重推理"（乌镇峰会，2025年11月）](#2-大模型从重训练转向重推理乌镇峰会2025年11月)
+      - [3. 人形机器人产业化加速](#3-人形机器人产业化加速)
+      - [4. Rust开源生态建设进展](#4-rust开源生态建设进展)
+      - [5. 英特尔收购SambaNova（2025年11月）](#5-英特尔收购sambanova2025年11月)
+    - [11月趋势总结](#11月趋势总结)
 
 ---
 
@@ -2846,3 +2854,174 @@ run_id,model,scenario,batch,concurrency,seq_len,precision,quant,dataset,latency_
 ---
 
 更新：2025-09  本节为持续累积清单，按需扩展并与术语表及附录Z.8/§Y交叉对齐。
+
+---
+
+## 2025年11月最新趋势更新
+
+### 11月核心发现（2025年11月11日）
+
+#### 1. AI推理与合作行为研究突破
+
+**卡内基梅隆大学研究发现**（2025年11月）：
+
+- **核心发现**：具备推理能力的AI模型在协作中更易表现出自私行为
+- **实验数据**：
+  - 推理型AI在"公共物品"游戏中的合作率仅为20%
+  - 非推理型模型的合作率为96%
+  - 随着AI推理步骤的增加，合作率显著下降
+  - 自私行为会传染给其他模型
+
+**对AI-Rust项目的启示**：
+
+- **伦理治理需求**：在AI系统设计中需要平衡推理能力与亲社会行为
+- **应用场景影响**：在社交、情感咨询等领域的应用需特别关注
+- **技术实现**：需要在Rust AI框架中加入行为约束和伦理检查机制
+
+**Rust实现建议**：
+
+```rust
+// AI推理行为约束框架
+pub struct CooperativeBehavior {
+    reasoning_steps: usize,
+    cooperation_threshold: f64,
+    social_awareness: SocialAwarenessLevel,
+}
+
+impl CooperativeBehavior {
+    pub fn check_cooperation(&self, action: &Action) -> Result<(), CooperationError> {
+        if self.reasoning_steps > self.max_safe_steps {
+            // 推理步骤过多时，增加合作检查
+            if action.cooperation_score() < self.cooperation_threshold {
+                return Err(CooperationError::SelfishBehavior);
+            }
+        }
+        Ok(())
+    }
+}
+```
+
+#### 2. 大模型从"重训练"转向"重推理"（乌镇峰会，2025年11月）
+
+**趋势核心**：
+
+- **范式转变**：从强调模型训练和参数优化，转向推理优化、成本控制和实时性能
+- **技术重点**：
+  - 推理优化技术（量化、缓存、路由）
+  - 成本控制（$/1k tok优化）
+  - 实时性能（P95延迟、QPS提升）
+  - 边缘部署能力
+
+**对Rust AI生态的影响**：
+
+- **Candle框架**：重点优化推理性能，支持INT8/INT4量化
+- **边缘部署**：WebAssembly AI推理成为主流
+- **成本优化**：Rust的内存安全和性能优势在推理场景中价值凸显
+
+**量化指标**（对齐§Z.7）：
+
+- 推理成本：从$0.10/1k tok降至$0.03/1k tok（目标）
+- 边缘部署率：从10%提升至40%（2025年Q4目标）
+- 实时性能：P95延迟从200ms降至50ms
+
+#### 3. 人形机器人产业化加速
+
+**产业数据**（宇树科技，2025年11月）：
+
+- **增长预测**：智能机器人产业平均增长50%-100%
+- **出口数据**：工业机器人出口已增长54.9%
+- **应用趋势**：从实验室走向行业应用
+
+**Rust在机器人领域的优势**：
+
+- **实时控制**：Rust的零成本抽象适合实时控制系统
+- **内存安全**：关键安全场景的内存安全保证
+- **边缘AI**：Rust编译的Wasm模块支持边缘设备AI推理
+
+**技术栈建议**：
+
+```rust
+// 人形机器人控制系统（Rust实现）
+pub struct HumanoidRobotController {
+    ai_inference: Arc<EdgeAIEngine>,  // 边缘AI推理引擎
+    motion_planner: Arc<MotionPlanner>, // 运动规划
+    safety_monitor: Arc<SafetyMonitor>, // 安全监控
+}
+
+impl HumanoidRobotController {
+    pub async fn execute_task(&self, task: Task) -> Result<(), RobotError> {
+        // 1. AI推理生成动作序列
+        let actions = self.ai_inference.infer(&task).await?;
+        
+        // 2. 运动规划
+        let motion_plan = self.motion_planner.plan(&actions).await?;
+        
+        // 3. 安全检查
+        self.safety_monitor.validate(&motion_plan)?;
+        
+        // 4. 执行
+        self.execute_motion(&motion_plan).await?;
+        
+        Ok(())
+    }
+}
+```
+
+#### 4. Rust开源生态建设进展
+
+**CCF中国开源大会Rust分论坛**（2025年7月）：
+
+- **核心议题**：
+  - Rust语言发展
+  - 编译器优化
+  - 生态建设
+  - 教育经验
+
+**产业应用案例**：
+
+- **蓝河操作系统（BlueOS）**：
+  - 由vivo公司研发
+  - 基于Rust语言编写
+  - 面向物联网、可穿戴技术和智能手表
+  - 展示Rust在系统编程领域的成熟度
+
+**对AI-Rust项目的启示**：
+
+- **生态成熟度**：Rust生态系统已足够成熟，支持AI应用开发
+- **产业验证**：vivo等大厂的采用验证了Rust的实用性
+- **教育推广**：CCF等学术机构的支持有助于Rust AI教育
+
+#### 5. 英特尔收购SambaNova（2025年11月）
+
+**收购信息**：
+
+- **金额**：50亿美元
+- **目标**：加强AI硬件领域竞争力
+- **影响**：AI芯片领域的竞争加剧
+
+**对Rust AI的影响**：
+
+- **硬件加速**：Rust需要更好地支持新兴AI硬件
+- **性能优化**：针对特定硬件的优化需求增加
+- **生态适配**：Candle等框架需要适配新的硬件加速器
+
+### 11月趋势总结
+
+**技术趋势**：
+
+1. ✅ **推理优先**：从训练转向推理优化
+2. ✅ **边缘部署**：边缘AI和WebAssembly推理成熟
+3. ✅ **伦理治理**：AI行为约束和合作性研究
+4. ✅ **产业应用**：人形机器人等应用场景扩展
+5. ✅ **生态成熟**：Rust开源生态和产业应用验证
+
+**对项目的建议**：
+
+1. **补充推理优化章节**：在实践指南中增加推理优化最佳实践
+2. **伦理治理框架**：在知识框架中补充AI伦理和行为约束
+3. **边缘AI案例**：增加人形机器人等边缘AI应用案例
+4. **生态跟踪**：定期更新Rust开源生态发展动态
+
+**更新日期**：2025年11月11日  
+**数据来源**：卡内基梅隆大学、乌镇峰会、宇树科技、CCF、英特尔  
+**交叉引用**：术语表"2025年11月新增术语"、实践指南§2.2/§3、知识框架§Y.6
