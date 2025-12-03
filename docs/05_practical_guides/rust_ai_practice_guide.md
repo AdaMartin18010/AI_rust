@@ -216,15 +216,15 @@ pub fn train_linear_regression() -> Result<(), Box<dyn std::error::Error>> {
     // 生成示例数据
     let x = Array2::random((100, 2), Uniform::new(0.0, 1.0));
     let y = Array1::random(100, Uniform::new(0.0, 1.0));
-    
+
     // 训练模型
     let dataset = Dataset::new(x, y);
     let model = LinearRegression::default().fit(&dataset)?;
-    
+
     // 预测
     let predictions = model.predict(&dataset);
     println!("Predictions: {:?}", predictions);
-    
+
     Ok(())
 }
 ```
@@ -243,13 +243,13 @@ impl MLP {
     pub fn new(vs: VarBuilder, input_dim: usize, hidden_dims: Vec<usize>, output_dim: usize) -> Result<Self> {
         let mut layers = Vec::new();
         let mut prev_dim = input_dim;
-        
+
         for &hidden_dim in &hidden_dims {
             layers.push(linear(prev_dim, hidden_dim, vs.pp("layer"))?);
             prev_dim = hidden_dim;
         }
         layers.push(linear(prev_dim, output_dim, vs.pp("output"))?);
-        
+
         Ok(Self { layers })
     }
 }
@@ -289,7 +289,7 @@ struct PredictResponse {
 async fn predict(Json(payload): Json<PredictRequest>) -> Json<PredictResponse> {
     // 模型推理逻辑
     let prediction = payload.input.iter().sum::<f32>() / payload.input.len() as f32;
-    
+
     Json(PredictResponse {
         prediction,
         confidence: 0.95,
@@ -300,7 +300,7 @@ async fn predict(Json(payload): Json<PredictRequest>) -> Json<PredictResponse> {
 async fn main() {
     let app = Router::new()
         .route("/predict", post(predict));
-    
+
     let listener = TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
@@ -377,9 +377,9 @@ use std::simd::*;
 pub fn simd_vector_add(a: &[f32], b: &[f32]) -> Vec<f32> {
     let chunks = a.chunks_exact(4);
     let b_chunks = b.chunks_exact(4);
-    
+
     let mut result = Vec::new();
-    
+
     // SIMD处理对齐部分
     for (a_chunk, b_chunk) in chunks.zip(b_chunks) {
         let a_simd = f32x4::from_slice(a_chunk);
@@ -387,7 +387,7 @@ pub fn simd_vector_add(a: &[f32], b: &[f32]) -> Vec<f32> {
         let sum = a_simd + b_simd;
         result.extend_from_slice(&sum.to_array());
     }
-    
+
     // 处理剩余元素
     let remainder = a.len() % 4;
     if remainder > 0 {
@@ -395,7 +395,7 @@ pub fn simd_vector_add(a: &[f32], b: &[f32]) -> Vec<f32> {
             result.push(a[i] + b[i]);
         }
     }
-    
+
     result
 }
 ```
@@ -438,13 +438,13 @@ impl MemoryPool {
             buffers: Vec::with_capacity(100),
         }
     }
-    
+
     pub fn get_buffer(&mut self, size: usize) -> BytesMut {
         self.buffers.pop()
             .filter(|b| b.capacity() >= size)
             .unwrap_or_else(|| BytesMut::with_capacity(size))
     }
-    
+
     pub fn return_buffer(&mut self, mut buffer: BytesMut) {
         buffer.clear();
         if self.buffers.len() < 100 {
@@ -466,7 +466,7 @@ unsafe impl GlobalAlloc for OptimizedAllocator {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
         System.alloc(layout)
     }
-    
+
     unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
         System.dealloc(ptr, layout)
     }
@@ -732,7 +732,7 @@ impl WasmMLModel {
     pub fn new(weights: Vec<f32>) -> WasmMLModel {
         WasmMLModel { weights }
     }
-    
+
     #[wasm_bindgen]
     pub fn predict(&self, input: &[f32]) -> f32 {
         // WASM ML 推理

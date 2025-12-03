@@ -46,7 +46,7 @@ cargo build --release
 #### 各Crate编译时间
 
 - `c01_base`: ~2秒
-- `c02_data`: ~3秒  
+- `c02_data`: ~3秒
 - `c03_ml_basics`: ~4秒
 - `c04_dl_fundamentals`: ~3秒
 - `c05_nlp_transformers`: ~3秒
@@ -178,7 +178,7 @@ cargo test
 ### 1. 基准数据集
 
 - 小数据集: 100个样本
-- 中数据集: 1,000个样本  
+- 中数据集: 1,000个样本
 - 大数据集: 10,000个样本
 
 ### 2. 测试场景

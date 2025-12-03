@@ -238,22 +238,22 @@ impl SelfAttention {
         let batch_size = x.dim(0);
         let seq_len = x.dim(1);
         let d_model = x.dim(2);
-        
+
         // 计算Q, K, V
         let q = self.query_projection.forward(x)?;
         let k = self.key_projection.forward(x)?;
         let v = self.value_projection.forward(x)?;
-        
+
         // 缩放点积注意力
         let scale = (d_model as f64).sqrt();
         let scores = q.matmul(&k.transpose(-2, -1)?)? / scale;
         let attention_weights = softmax(&scores, -1)?;
         let attention_weights = self.dropout.forward(&attention_weights)?;
-        
+
         // 加权求和
         let output = attention_weights.matmul(&v)?;
         let output = self.output_projection.forward(&output)?;
-        
+
         Ok(output)
     }
 }
@@ -272,12 +272,12 @@ pub struct MultiHeadAttention {
 impl MultiHeadAttention {
     pub fn forward(&self, x: &Tensor) -> Result<Tensor> {
         let mut outputs = Vec::new();
-        
+
         for head in &self.heads {
             let output = head.forward(x)?;
             outputs.push(output);
         }
-        
+
         // 拼接多头输出
         let concatenated = Tensor::cat(&outputs, -1)?;
         Ok(concatenated)
@@ -315,11 +315,11 @@ impl EncoderLayer {
         // 自注意力 + 残差连接
         let attn_output = self.self_attention.forward(x, mask)?;
         let x = self.layer_norm1.forward(&(x + &attn_output))?;
-        
+
         // 前馈网络 + 残差连接
         let ff_output = self.feed_forward.forward(&x)?;
         let x = self.layer_norm2.forward(&(x + &ff_output))?;
-        
+
         Ok(x)
     }
 }
@@ -335,7 +335,7 @@ pub struct PositionalEncoding {
 impl PositionalEncoding {
     pub fn new(max_len: usize, d_model: usize) -> Self {
         let mut encoding = Tensor::zeros(&[max_len, d_model], Dtype::F32);
-        
+
         for pos in 0..max_len {
             for i in (0..d_model).step_by(2) {
                 let angle = pos as f32 / (10000.0_f32.powf(i as f32 / d_model as f32));
@@ -345,7 +345,7 @@ impl PositionalEncoding {
                 }
             }
         }
-        
+
         Self { encoding }
     }
 }
@@ -369,25 +369,25 @@ pub struct Adam {
 impl Adam {
     pub fn step(&mut self, params: &mut HashMap<String, Tensor>, grads: &HashMap<String, Tensor>) -> Result<()> {
         self.t += 1;
-        
+
         for (name, grad) in grads {
             // 更新一阶矩估计
             let m = self.m.entry(name.clone()).or_insert_with(|| Tensor::zeros_like(grad));
             *m = &*m * self.beta1 + grad * (1.0 - self.beta1);
-            
+
             // 更新二阶矩估计
             let v = self.v.entry(name.clone()).or_insert_with(|| Tensor::zeros_like(grad));
             *v = &*v * self.beta2 + grad.powf(2.0) * (1.0 - self.beta2);
-            
+
             // 偏差修正
             let m_hat = &*m / (1.0 - self.beta1.powi(self.t as i32));
             let v_hat = &*v / (1.0 - self.beta2.powi(self.t as i32));
-            
+
             // 参数更新
             let param = params.get_mut(name).unwrap();
             *param = param - &(m_hat * self.learning_rate / (v_hat.sqrt() + self.epsilon));
         }
-        
+
         Ok(())
     }
 }
@@ -443,7 +443,7 @@ impl CandleEngine {
         let device = Device::Cpu; // 或 Device::Cuda(0)
         let model = load_model(model_path, &device)?;
         let tokenizer = Tokenizer::from_file(&format!("{}/tokenizer.json", model_path))?;
-        
+
         Ok(Self {
             device,
             model,
@@ -451,24 +451,24 @@ impl CandleEngine {
             config,
         })
     }
-    
+
     pub async fn generate(&self, prompt: &str, max_tokens: usize) -> Result<String> {
         let tokens = self.tokenizer.encode(prompt, true)?;
         let mut input_ids = tokens.get_ids().to_vec();
-        
+
         for _ in 0..max_tokens {
             let input_tensor = Tensor::new(&input_ids, &self.device)?;
             let logits = self.model.forward(&input_tensor)?;
-            
+
             // 采样下一个token
             let next_token = self.sample_token(&logits)?;
             input_ids.push(next_token);
-            
+
             if next_token == self.tokenizer.eos_token_id {
                 break;
             }
         }
-        
+
         let generated_text = self.tokenizer.decode(&input_ids, true)?;
         Ok(generated_text)
     }
@@ -493,7 +493,7 @@ impl MemoryOptimizedModel {
             self.model.forward(x)
         }
     }
-    
+
     fn forward_with_gradient_checkpointing(&self, x: &Tensor) -> Result<Tensor> {
         // 实现梯度检查点逻辑
         // 在反向传播时重新计算中间激活值
@@ -520,19 +520,19 @@ pub struct AsyncInferenceService {
 impl AsyncInferenceService {
     pub async fn start(&mut self) -> Result<()> {
         let semaphore = Arc::new(tokio::sync::Semaphore::new(self.max_concurrent));
-        
+
         while let Some(request) = self.request_queue.recv().await {
             let model = self.model.clone();
             let response_sender = self.response_sender.clone();
             let permit = semaphore.clone().acquire_owned().await?;
-            
+
             tokio::spawn(async move {
                 let _permit = permit;
                 let response = model.process_request(&request).await;
                 let _ = response_sender.send(response);
             });
         }
-        
+
         Ok(())
     }
 }
@@ -553,19 +553,19 @@ impl DistributedTrainer {
     pub async fn train_step(&self, batch: &Batch) -> Result<()> {
         // 前向传播
         let loss = self.model.forward(&batch.inputs)?;
-        
+
         // 反向传播
         let gradients = self.model.backward(&loss)?;
-        
+
         // 梯度同步
         self.synchronize_gradients(&gradients).await?;
-        
+
         // 参数更新
         self.optimizer.step(&gradients)?;
-        
+
         Ok(())
     }
-    
+
     async fn synchronize_gradients(&self, gradients: &HashMap<String, Tensor>) -> Result<()> {
         for (name, grad) in gradients {
             // 梯度平均
@@ -595,28 +595,28 @@ impl WebAI {
     #[wasm_bindgen(constructor)]
     pub fn new() -> Result<WebAI, JsValue> {
         console_error_panic_hook::set_once();
-        
+
         let model = CandleEngine::new("model.bin", ModelConfig::default())
             .map_err(|e| JsValue::from_str(&e.to_string()))?;
-        
+
         Ok(WebAI { model })
     }
-    
+
     #[wasm_bindgen]
     pub async fn generate_text(&self, prompt: &str) -> Result<String, JsValue> {
         let result = self.model.generate(prompt, 100)
             .await
             .map_err(|e| JsValue::from_str(&e.to_string()))?;
-        
+
         Ok(result)
     }
-    
+
     #[wasm_bindgen]
     pub async fn classify_image(&self, image_data: &[u8]) -> Result<Vec<f32>, JsValue> {
         let image = self.preprocess_image(image_data)?;
         let predictions = self.model.classify(&image)
             .map_err(|e| JsValue::from_str(&e.to_string()))?;
-        
+
         Ok(predictions)
     }
 }
@@ -666,16 +666,16 @@ impl VisionLanguageModel {
     ) -> Result<String> {
         // 视觉编码
         let image_features = self.vision_encoder.encode(image).await?;
-        
+
         // 文本编码
         let text_features = self.text_encoder.encode(text).await?;
-        
+
         // 多模态融合
         let fused_features = self.fusion_layer.fuse(&image_features, &text_features)?;
-        
+
         // 语言生成
         let response = self.language_model.generate(&fused_features).await?;
-        
+
         Ok(response)
     }
 }
@@ -724,19 +724,19 @@ impl AIAgent {
     pub async fn execute_task(&self, task: &Task) -> Result<TaskResult> {
         // 感知环境
         let observation = self.perception.observe().await?;
-        
+
         // 推理决策
         let decision = self.reasoning.reason(&observation, &task).await?;
-        
+
         // 制定计划
         let plan = self.planning.plan(&decision).await?;
-        
+
         // 执行行动
         let result = self.action.execute(&plan).await?;
-        
+
         // 更新记忆
         self.memory.update(&observation, &decision, &result).await?;
-        
+
         Ok(result)
     }
 }
@@ -755,16 +755,16 @@ impl MultiAgentSystem {
     pub async fn collaborative_task_execution(&self, task: &ComplexTask) -> Result<TaskResult> {
         // 任务分解
         let subtasks = self.decompose_task(task).await?;
-        
+
         // 代理分配
         let assignments = self.assign_agents(&subtasks).await?;
-        
+
         // 并行执行
         let results = self.execute_parallel(&assignments).await?;
-        
+
         // 结果整合
         let final_result = self.integrate_results(&results).await?;
-        
+
         Ok(final_result)
     }
 }
@@ -892,9 +892,9 @@ impl MultiAgentSystem {
 
 ---
 
-*最后更新：2025年1月*  
-*版本：v1.0*  
-*状态：持续更新中*  
+*最后更新：2025年1月*
+*版本：v1.0*
+*状态：持续更新中*
 *适用对象：AI研究人员、Rust开发者、技术决策者*
 
 ---

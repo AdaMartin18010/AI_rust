@@ -350,7 +350,7 @@ enum Commands {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
-    
+
     match cli.command {
         Commands::New { name, template, output } => {
             generate_project(&name, &template, output).await?;
@@ -359,7 +359,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             list_templates().await?;
         }
     }
-    
+
     Ok(())
 }
 
@@ -369,7 +369,7 @@ async fn generate_project(
     output: Option<PathBuf>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let output_dir = output.unwrap_or_else(|| PathBuf::from(name));
-    
+
     match template {
         "ml-basics" => generate_ml_basics(&output_dir).await?,
         "dl-project" => generate_dl_project(&output_dir).await?,
@@ -378,7 +378,7 @@ async fn generate_project(
         "inference-service" => generate_inference_service(&output_dir).await?,
         _ => return Err("Unknown template".into()),
     }
-    
+
     println!("✅ Project '{}' generated successfully!", name);
     Ok(())
 }
@@ -514,7 +514,7 @@ use tempfile::TempDir;
 async fn test_end_to_end_pipeline() {
     let temp_dir = TempDir::new().unwrap();
     let config = Config::from_file("tests/fixtures/config.toml").unwrap();
-    
+
     // 测试完整流程
     let result = run_pipeline(&config, &temp_dir.path()).await;
     assert!(result.is_ok());
@@ -527,7 +527,7 @@ use your_project::*;
 fn benchmark_inference(c: &mut Criterion) {
     let model = load_model("models/test.bin").unwrap();
     let input = generate_test_input();
-    
+
     c.bench_function("inference", |b| {
         b.iter(|| {
             model.predict(black_box(&input))
@@ -559,40 +559,40 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
         components: rustfmt, clippy
-    
+
     - name: Cache cargo registry
       uses: actions/cache@v3
       with:
         path: ~/.cargo/registry
         key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
-    
+
     - name: Cache cargo index
       uses: actions/cache@v3
       with:
         path: ~/.cargo/git
         key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
-    
+
     - name: Cache cargo build
       uses: actions/cache@v3
       with:
         path: target
         key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
-    
+
     - name: Run tests
       run: cargo test --verbose
-    
+
     - name: Run clippy
       run: cargo clippy --all-targets --all-features -- -D warnings
-    
+
     - name: Run fmt
       run: cargo fmt --all -- --check
-    
+
     - name: Run benchmarks
       run: cargo bench --no-run
 ```

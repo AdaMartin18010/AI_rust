@@ -202,13 +202,13 @@ pub trait LearningAlgorithm {
     type Output;
     type Parameters;
     type Error;
-    
-    fn fit(&mut self, 
+
+    fn fit(&mut self,
         training_data: &[(Self::Input, Self::Output)]
     ) -> Result<Self::Parameters, Self::Error>;
-    
-    fn predict(&self, 
-        input: &Self::Input, 
+
+    fn predict(&self,
+        input: &Self::Input,
         parameters: &Self::Parameters
     ) -> Result<Self::Output, Self::Error>;
 }
@@ -347,69 +347,69 @@ graph TD
     A --> D[强化学习]
     A --> E[符号AI]
     A --> F[神经符号AI]
-    
+
     B --> G[监督学习]
     B --> H[无监督学习]
     B --> I[半监督学习]
     B --> J[自监督学习]
-    
+
     C --> K[神经网络]
     C --> L[卷积神经网络]
     C --> M[循环神经网络]
     C --> N[Transformer]
     C --> O[生成模型]
-    
+
     N --> P[注意力机制]
     N --> Q[多头注意力]
     N --> R[位置编码]
     N --> S[层归一化]
-    
+
     P --> T[自注意力]
     P --> U[交叉注意力]
     P --> V[稀疏注意力]
-    
+
     T --> W[大语言模型]
     U --> W
     V --> W
-    
+
     W --> X[GPT系列]
     W --> Y[BERT系列]
     W --> Z[T5系列]
     W --> AA[LLaMA系列]
-    
+
     X --> BB[多模态AI]
     Y --> BB
     Z --> BB
     AA --> BB
-    
+
     BB --> CC[文本-图像]
     BB --> DD[文本-音频]
     BB --> EE[图像-音频]
     BB --> FF[视频理解]
-    
+
     CC --> GG[Agentic Web]
     DD --> GG
     EE --> GG
     FF --> GG
-    
+
     GG --> HH[自主代理]
     GG --> II[多代理系统]
     GG --> JJ[人机协作]
-    
+
     O --> KK[变分自编码器]
     O --> LL[生成对抗网络]
     O --> MM[扩散模型]
     O --> NN[自回归模型]
-    
+
     KK --> OO[表示学习]
     LL --> OO
     MM --> OO
     NN --> OO
-    
+
     F --> PP[知识图谱]
     F --> QQ[逻辑推理]
     F --> RR[规则学习]
-    
+
     PP --> SS[图神经网络]
     QQ --> TT[可微分逻辑]
     RR --> UU[归纳逻辑编程]
@@ -504,19 +504,19 @@ impl AISystem {
     pub async fn process_cycle(&mut self, input: &EnvironmentInput) -> Result<Action, AIError> {
         // 感知阶段
         let perception = self.perception_layer.perceive(input).await?;
-        
+
         // 认知阶段
         let cognition = self.cognition_layer.cognize(&perception).await?;
-        
+
         // 决策阶段
         let decision = self.decision_layer.decide(&cognition).await?;
-        
+
         // 执行阶段
         let action = self.action_layer.execute(&decision).await?;
-        
+
         // 元认知阶段
         self.meta_layer.monitor_and_adapt(&perception, &cognition, &decision, &action).await?;
-        
+
         Ok(action)
     }
 }
@@ -559,19 +559,19 @@ impl CognitiveArchitecture {
     pub fn process_information(&mut self, input: &Information) -> Result<Response, CognitiveError> {
         // 注意力选择
         let attended_input = self.attention_system.select(input)?;
-        
+
         // 工作记忆处理
         let processed_info = self.working_memory.process(&attended_input)?;
-        
+
         // 长期记忆检索
         let relevant_memories = self.long_term_memory.retrieve(&processed_info)?;
-        
+
         // 执行控制
         let response = self.executive_control.control(&processed_info, &relevant_memories)?;
-        
+
         // 学习更新
         self.learning_system.update(&processed_info, &response)?;
-        
+
         Ok(response)
     }
 }
@@ -733,54 +733,54 @@ graph LR
     A --> D[数据处理]
     A --> E[系统编程]
     A --> F[并发编程]
-    
+
     B --> G[candle]
     B --> H[burn]
     B --> I[tch-rs]
     B --> J[linfa]
     B --> K[smartcore]
-    
+
     C --> L[axum]
     C --> M[actix-web]
     C --> N[rocket]
     C --> O[poem]
-    
+
     D --> P[polars]
     D --> Q[ndarray]
     D --> R[serde]
     D --> S[arrow]
-    
+
     E --> T[tokio]
     E --> U[async-std]
     E --> V[std]
     E --> W[libc]
-    
+
     F --> X[rayon]
     F --> Y[crossbeam]
     F --> Z[flume]
     F --> AA[async-channel]
-    
+
     G --> BB[模型推理]
     H --> CC[模型训练]
     I --> DD[PyTorch兼容]
     J --> EE[传统ML]
     K --> FF[算法库]
-    
+
     L --> GG[异步Web服务]
     M --> HH[高性能Web服务]
     N --> II[易用Web服务]
     O --> JJ[现代Web服务]
-    
+
     P --> KK[大数据处理]
     Q --> LL[数值计算]
     R --> MM[序列化]
     S --> NN[列式存储]
-    
+
     T --> OO[异步运行时]
     U --> PP[异步运行时]
     V --> QQ[同步运行时]
     W --> RR[系统调用]
-    
+
     X --> SS[数据并行]
     Y --> TT[无锁并发]
     Z --> UU[异步通道]
@@ -845,19 +845,19 @@ graph LR
     A --> C[Web框架]
     A --> D[数据处理]
     A --> E[系统编程]
-    
+
     B --> F[candle]
     B --> G[burn]
     B --> H[tch-rs]
-    
+
     C --> I[axum]
     C --> J[actix-web]
     C --> K[rocket]
-    
+
     D --> L[polars]
     D --> M[ndarray]
     D --> N[serde]
-    
+
     E --> O[tokio]
     E --> P[async-std]
     E --> Q[std]
@@ -1156,25 +1156,25 @@ pub enum RelationType {
     IsA,           // 是...的一种
     PartOf,        // 是...的一部分
     InstanceOf,    // 是...的实例
-    
+
     // 功能关系
     Causes,        // 导致
     Enables,       // 使能
     Prevents,      // 阻止
     Requires,      // 需要
-    
+
     // 结构关系
     Contains,      // 包含
     Composes,      // 组成
     Connects,      // 连接
     DependsOn,     // 依赖于
-    
+
     // 语义关系
     SimilarTo,     // 类似于
     OppositeTo,    // 与...相反
     RelatedTo,     // 与...相关
     Influences,    // 影响
-    
+
     // 技术关系
     Implements,    // 实现
     Extends,       // 扩展
@@ -1237,7 +1237,7 @@ impl ConceptFeatureExtractor {
         let semantic_features = self.semantic_analyzer.analyze(concept);
         let relationship_features = self.relationship_analyzer.analyze(concept);
         let property_features = self.property_analyzer.analyze(concept);
-        
+
         ConceptFeatures {
             semantic_complexity: semantic_features.complexity,
             relationship_density: relationship_features.density,
@@ -1247,16 +1247,16 @@ impl ConceptFeatureExtractor {
             technical_level: self.calculate_technical_level(concept),
         }
     }
-    
+
     pub fn calculate_concept_similarity(&self, concept1: &Concept, concept2: &Concept) -> f64 {
         let features1 = self.extract_concept_features(concept1);
         let features2 = self.extract_concept_features(concept2);
-        
+
         // 计算特征相似度
         let semantic_sim = self.cosine_similarity(&features1.semantic_vector, &features2.semantic_vector);
         let structural_sim = self.calculate_structural_similarity(concept1, concept2);
         let functional_sim = self.calculate_functional_similarity(concept1, concept2);
-        
+
         // 加权平均
         0.4 * semantic_sim + 0.3 * structural_sim + 0.3 * functional_sim
     }
@@ -1279,10 +1279,10 @@ impl KnowledgeReasoningEngine {
     pub fn infer_new_knowledge(&self, facts: &[Fact], rules: &[Rule]) -> Vec<InferredFact> {
         let mut inferred_facts = Vec::new();
         let mut working_memory = facts.to_vec();
-        
+
         loop {
             let mut new_facts = Vec::new();
-            
+
             for rule in rules {
                 if let Some(new_fact) = self.apply_rule(rule, &working_memory) {
                     if !self.fact_exists(&new_fact, &working_memory) {
@@ -1290,18 +1290,18 @@ impl KnowledgeReasoningEngine {
                     }
                 }
             }
-            
+
             if new_facts.is_empty() {
                 break;
             }
-            
+
             working_memory.extend(new_facts.clone());
             inferred_facts.extend(new_facts);
         }
-        
+
         inferred_facts
     }
-    
+
     pub fn answer_query(&self, query: &Query, knowledge_base: &KnowledgeBase) -> QueryResult {
         match query.query_type {
             QueryType::Factual => self.answer_factual_query(query, knowledge_base),
@@ -1310,7 +1310,7 @@ impl KnowledgeReasoningEngine {
             QueryType::Comparative => self.answer_comparative_query(query, knowledge_base),
         }
     }
-    
+
     pub fn find_concept_path(&self, start: ConceptId, end: ConceptId) -> Option<Vec<ConceptId>> {
         self.dijkstra_search(start, end, &self.concept_graph)
     }
@@ -1360,7 +1360,7 @@ pub fn example_queries() {
         ordering: None,
         limit: None,
     };
-    
+
     // 分析AI算法的性能特征
     let query2 = Query {
         query_type: QueryType::Analytical,
@@ -1425,35 +1425,35 @@ impl KnowledgeVersionControl {
             change_description: description.to_string(),
             parent_versions: vec![],
         };
-        
+
         self.version_history.entry(version.concept.id.clone())
             .or_insert_with(Vec::new)
             .push(version);
-        
+
         version_id
     }
-    
+
     pub fn merge_versions(&mut self, version1: VersionId, version2: VersionId) -> Result<VersionId, MergeError> {
         let concept1 = self.get_version(&version1)?;
         let concept2 = self.get_version(&version2)?;
-        
+
         // 检测冲突
         let conflicts = self.conflict_detector.detect_conflicts(&concept1.concept, &concept2.concept);
-        
+
         if !conflicts.is_empty() {
             return Err(MergeError::ConflictsDetected(conflicts));
         }
-        
+
         // 合并概念
         let merged_concept = self.merge_resolver.merge_concepts(&concept1.concept, &concept2.concept)?;
-        
+
         // 创建新版本
         let version_id = self.create_version(
             merged_concept,
             "system",
             &format!("Merged versions {} and {}", version1, version2)
         );
-        
+
         Ok(version_id)
     }
 }
@@ -1486,7 +1486,7 @@ impl KnowledgeQualityAssessment {
         let consistency = self.consistency_checker.assess(knowledge_base);
         let accuracy = self.accuracy_validator.assess(knowledge_base);
         let relevance = self.relevance_analyzer.assess(knowledge_base);
-        
+
         let metrics = QualityMetrics {
             completeness_score: completeness.score,
             consistency_score: consistency.score,
@@ -1495,7 +1495,7 @@ impl KnowledgeQualityAssessment {
             freshness_score: self.assess_freshness(knowledge_base),
             coverage_score: self.assess_coverage(knowledge_base),
         };
-        
+
         QualityReport {
             overall_score: self.calculate_overall_score(&metrics),
             metrics,
@@ -1503,7 +1503,7 @@ impl KnowledgeQualityAssessment {
             recommendations: self.generate_recommendations(&metrics),
         }
     }
-    
+
     pub fn calculate_overall_score(&self, metrics: &QualityMetrics) -> f64 {
         let weights = [0.2, 0.2, 0.2, 0.15, 0.1, 0.15];
         let scores = [
@@ -1514,7 +1514,7 @@ impl KnowledgeQualityAssessment {
             metrics.freshness_score,
             metrics.coverage_score,
         ];
-        
+
         scores.iter().zip(weights.iter())
             .map(|(score, weight)| score * weight)
             .sum()
@@ -1555,12 +1555,12 @@ impl PersonalizedLearningPath {
     pub fn generate_learning_path(&self, goal: &LearningGoal) -> LearningPath {
         let current_level = self.assess_current_level(goal);
         let target_level = goal.target_level;
-        
+
         // 找到从当前水平到目标水平的最优路径
         let concepts = self.find_required_concepts(goal);
         let dependencies = self.analyze_dependencies(&concepts);
         let optimal_sequence = self.path_optimizer.optimize_sequence(&concepts, &dependencies);
-        
+
         LearningPath {
             goal: goal.clone(),
             sequence: optimal_sequence,
@@ -1569,7 +1569,7 @@ impl PersonalizedLearningPath {
             prerequisites: self.identify_prerequisites(&concepts),
         }
     }
-    
+
     pub fn adapt_path(&mut self, progress: &LearningProgress) -> Option<LearningPath> {
         if self.should_adapt_path(progress) {
             let updated_goal = self.update_goal_based_on_progress(progress);
@@ -1596,20 +1596,20 @@ impl IntelligentContentRecommender {
         let user_preferences = self.analyze_user_preferences(user);
         let current_knowledge = self.assess_current_knowledge(user);
         let learning_goals = self.extract_learning_goals(user);
-        
+
         // 基于内容的推荐
         let content_based = self.content_based_recommendation(&user_preferences, &current_knowledge);
-        
+
         // 基于协同过滤的推荐
         let collaborative = self.collaborative_filtering_recommendation(user);
-        
+
         // 基于知识的推荐
         let knowledge_based = self.knowledge_based_recommendation(&learning_goals, &current_knowledge);
-        
+
         // 混合推荐
         self.hybrid_recommendation(content_based, collaborative, knowledge_based)
     }
-    
+
     pub fn explain_recommendation(&self, recommendation: &ContentRecommendation) -> RecommendationExplanation {
         RecommendationExplanation {
             content_id: recommendation.content_id,
@@ -1641,29 +1641,29 @@ pub struct KnowledgePatternDiscovery {
 impl KnowledgePatternDiscovery {
     pub fn discover_patterns(&self, knowledge_base: &KnowledgeBase) -> Vec<KnowledgePattern> {
         let mut patterns = Vec::new();
-        
+
         // 频繁模式挖掘
         let frequent_patterns = self.pattern_miner.mine_frequent_patterns(knowledge_base);
         patterns.extend(frequent_patterns);
-        
+
         // 关联规则发现
         let association_rules = self.pattern_miner.mine_association_rules(knowledge_base);
         patterns.extend(association_rules.into_iter().map(|rule| KnowledgePattern::AssociationRule(rule)));
-        
+
         // 序列模式发现
         let sequence_patterns = self.pattern_miner.mine_sequence_patterns(knowledge_base);
         patterns.extend(sequence_patterns.into_iter().map(|seq| KnowledgePattern::Sequence(seq)));
-        
+
         // 异常模式检测
         let anomalies = self.anomaly_detector.detect_anomalies(knowledge_base);
         patterns.extend(anomalies.into_iter().map(|anomaly| KnowledgePattern::Anomaly(anomaly)));
-        
+
         patterns
     }
-    
+
     pub fn generate_insights(&self, patterns: &[KnowledgePattern]) -> Vec<KnowledgeInsight> {
         let mut insights = Vec::new();
-        
+
         for pattern in patterns {
             match pattern {
                 KnowledgePattern::Frequent(freq_pattern) => {
@@ -1680,7 +1680,7 @@ impl KnowledgePatternDiscovery {
                 }
             }
         }
-        
+
         insights
     }
 }
@@ -1702,14 +1702,14 @@ impl SemanticEmbeddingEngine {
     pub fn embed_concept(&self, concept: &Concept, context: &Context) -> ConceptEmbedding {
         let concept_features = self.extract_concept_features(concept);
         let context_features = self.extract_context_features(context);
-        
+
         // 使用Transformer编码器生成概念嵌入
         let concept_embedding = self.concept_encoder.encode(&concept_features);
         let context_embedding = self.context_encoder.encode(&context_features);
-        
+
         // 融合概念和上下文信息
         let fused_embedding = self.fuse_embeddings(&concept_embedding, &context_embedding);
-        
+
         ConceptEmbedding {
             concept_id: concept.id.clone(),
             embedding: fused_embedding,
@@ -1717,21 +1717,21 @@ impl SemanticEmbeddingEngine {
             semantic_type: concept.semantic_type.clone(),
         }
     }
-    
+
     pub fn embed_relation(&self, relation: &Relation) -> RelationEmbedding {
         let source_embedding = self.embed_concept(&relation.source, &Context::default());
         let target_embedding = self.embed_concept(&relation.target, &Context::default());
-        
+
         // 关系类型嵌入
         let relation_type_embedding = self.relation_encoder.encode_relation_type(&relation.relation_type);
-        
+
         // 组合嵌入
         let combined_embedding = self.combine_relation_embeddings(
             &source_embedding.embedding,
             &relation_type_embedding,
             &target_embedding.embedding
         );
-        
+
         RelationEmbedding {
             relation_id: relation.id.clone(),
             embedding: combined_embedding,
@@ -1741,17 +1741,17 @@ impl SemanticEmbeddingEngine {
             strength: relation.strength,
         }
     }
-    
+
     pub fn calculate_semantic_similarity(&self, embedding1: &ConceptEmbedding, embedding2: &ConceptEmbedding) -> f64 {
         // 余弦相似度
         let cosine_sim = self.cosine_similarity(&embedding1.embedding, &embedding2.embedding);
-        
+
         // 语义类型相似度
         let type_sim = self.calculate_type_similarity(&embedding1.semantic_type, &embedding2.semantic_type);
-        
+
         // 上下文相似度
         let context_sim = self.calculate_context_similarity(embedding1, embedding2);
-        
+
         // 加权组合
         0.5 * cosine_sim + 0.3 * type_sim + 0.2 * context_sim
     }
@@ -1768,43 +1768,43 @@ pub struct KnowledgeGraphNeuralNetwork {
 impl KnowledgeGraphNeuralNetwork {
     pub fn forward(&self, knowledge_graph: &KnowledgeGraph, query: &Query) -> QueryResult {
         let mut node_embeddings = self.initialize_node_embeddings(knowledge_graph);
-        
+
         // 图卷积层
         for conv_layer in &self.graph_conv_layers {
             node_embeddings = conv_layer.forward(&node_embeddings, &knowledge_graph.adjacency_matrix);
         }
-        
+
         // 注意力层
         for attention_layer in &self.attention_layers {
             node_embeddings = attention_layer.forward(&node_embeddings, &knowledge_graph.relations);
         }
-        
+
         // 读出层
         let graph_embedding = self.readout_layer.forward(&node_embeddings);
-        
+
         // 预测头
         let result = self.prediction_head.forward(&graph_embedding, query);
-        
+
         result
     }
-    
+
     pub fn train(&mut self, training_data: &[TrainingExample]) -> TrainingResult {
         let mut total_loss = 0.0;
         let mut correct_predictions = 0;
-        
+
         for example in training_data {
             let prediction = self.forward(&example.knowledge_graph, &example.query);
             let loss = self.calculate_loss(&prediction, &example.expected_result);
-            
+
             // 反向传播
             self.backward(&loss);
-            
+
             total_loss += loss;
             if self.is_correct_prediction(&prediction, &example.expected_result) {
                 correct_predictions += 1;
             }
         }
-        
+
         TrainingResult {
             average_loss: total_loss / training_data.len() as f64,
             accuracy: correct_predictions as f64 / training_data.len() as f64,
@@ -1826,19 +1826,19 @@ impl KnowledgeGraphReinforcementLearning {
     pub fn train_agent(&mut self, episodes: usize) -> TrainingResult {
         let mut total_rewards = Vec::new();
         let mut success_rate = 0.0;
-        
+
         for episode in 0..episodes {
             let mut state = self.environment.reset();
             let mut episode_reward = 0.0;
             let mut done = false;
-            
+
             while !done {
                 // 选择动作
                 let action = self.agent.select_action(&state, &self.policy_network);
-                
+
                 // 执行动作
                 let (next_state, reward, done) = self.environment.step(action);
-                
+
                 // 存储经验
                 let experience = Experience {
                     state: state.clone(),
@@ -1847,50 +1847,50 @@ impl KnowledgeGraphReinforcementLearning {
                     next_state: next_state.clone(),
                     done,
                 };
-                
+
                 self.agent.store_experience(experience);
-                
+
                 // 更新状态
                 state = next_state;
                 episode_reward += reward;
             }
-            
+
             total_rewards.push(episode_reward);
-            
+
             // 训练网络
             if episode % 10 == 0 {
                 self.update_networks();
             }
-            
+
             // 计算成功率
             if episode_reward > 0.0 {
                 success_rate += 1.0;
             }
         }
-        
+
         TrainingResult {
             average_reward: total_rewards.iter().sum::<f64>() / total_rewards.len() as f64,
             success_rate: success_rate / episodes as f64,
             total_episodes: episodes,
         }
     }
-    
+
     pub fn find_optimal_path(&self, start_concept: ConceptId, target_concept: ConceptId) -> Option<Vec<ConceptId>> {
         let mut state = self.environment.get_state_for_concept(start_concept);
         let mut path = vec![start_concept];
         let mut visited = std::collections::HashSet::new();
         visited.insert(start_concept);
-        
+
         for _ in 0..100 { // 最大步数限制
             let action = self.agent.select_best_action(&state, &self.policy_network);
             let (next_state, _, done) = self.environment.step(action);
-            
+
             if let Some(next_concept) = self.environment.get_concept_from_state(&next_state) {
                 if next_concept == target_concept {
                     path.push(target_concept);
                     return Some(path);
                 }
-                
+
                 if !visited.contains(&next_concept) {
                     path.push(next_concept);
                     visited.insert(next_concept);
@@ -1902,7 +1902,7 @@ impl KnowledgeGraphReinforcementLearning {
                 break;
             }
         }
-        
+
         None
     }
 }
@@ -1918,28 +1918,28 @@ pub struct MultimodalKnowledgeGraph {
 impl MultimodalKnowledgeGraph {
     pub fn process_multimodal_query(&self, query: &MultimodalQuery) -> MultimodalResult {
         let mut results = Vec::new();
-        
+
         // 处理文本查询
         if let Some(text_query) = &query.text {
             let text_result = self.text_knowledge.query(text_query);
             results.push(QueryResult::Text(text_result));
         }
-        
+
         // 处理图像查询
         if let Some(image_query) = &query.image {
             let image_result = self.image_knowledge.query(image_query);
             results.push(QueryResult::Image(image_result));
         }
-        
+
         // 处理音频查询
         if let Some(audio_query) = &query.audio {
             let audio_result = self.audio_knowledge.query(audio_query);
             results.push(QueryResult::Audio(audio_result));
         }
-        
+
         // 多模态融合
         let fused_result = self.fusion_network.fuse_results(&results);
-        
+
         MultimodalResult {
             individual_results: results,
             fused_result,
@@ -1947,14 +1947,14 @@ impl MultimodalKnowledgeGraph {
             explanation: self.generate_explanation(&results, &fused_result),
         }
     }
-    
+
     pub fn learn_cross_modal_relationships(&mut self, training_data: &[MultimodalExample]) {
         for example in training_data {
             // 提取多模态特征
             let text_features = self.text_knowledge.extract_features(&example.text);
             let image_features = self.image_knowledge.extract_features(&example.image);
             let audio_features = self.audio_knowledge.extract_features(&example.audio);
-            
+
             // 学习跨模态关系
             self.fusion_network.learn_relationships(
                 &text_features,
@@ -1977,10 +1977,10 @@ pub struct CausalKnowledgeGraph {
 impl CausalKnowledgeGraph {
     pub fn discover_causal_relationships(&mut self, data: &[Observation]) -> Vec<CausalRelationship> {
         let mut causal_relationships = Vec::new();
-        
+
         // 使用因果发现算法
         let discovered_graph = self.causal_discovery.discover_causal_graph(data);
-        
+
         // 验证因果关系
         for edge in discovered_graph.edges {
             let causal_strength = self.causal_inference.estimate_causal_effect(
@@ -1988,7 +1988,7 @@ impl CausalKnowledgeGraph {
                 &edge.target,
                 data
             );
-            
+
             if causal_strength > 0.1 { // 阈值
                 causal_relationships.push(CausalRelationship {
                     cause: edge.source,
@@ -1998,26 +1998,26 @@ impl CausalKnowledgeGraph {
                 });
             }
         }
-        
+
         causal_relationships
     }
-    
-    pub fn perform_counterfactual_reasoning(&self, 
-        scenario: &Scenario, 
+
+    pub fn perform_counterfactual_reasoning(&self,
+        scenario: &Scenario,
         intervention: &Intervention
     ) -> CounterfactualResult {
         // 构建反事实场景
         let counterfactual_scenario = self.counterfactual_reasoning.construct_counterfactual(
-            scenario, 
+            scenario,
             intervention
         );
-        
+
         // 预测反事实结果
         let counterfactual_outcome = self.causal_inference.predict_outcome(&counterfactual_scenario);
-        
+
         // 计算因果效应
         let causal_effect = self.calculate_causal_effect(scenario, &counterfactual_outcome);
-        
+
         CounterfactualResult {
             original_scenario: scenario.clone(),
             intervention: intervention.clone(),
@@ -2026,14 +2026,14 @@ impl CausalKnowledgeGraph {
             confidence: self.calculate_counterfactual_confidence(&counterfactual_scenario),
         }
     }
-    
+
     pub fn explain_causal_mechanism(&self, cause: &Concept, effect: &Concept) -> CausalExplanation {
         // 找到因果路径
         let causal_paths = self.find_causal_paths(cause, effect);
-        
+
         // 分析因果机制
         let mechanisms = self.analyze_causal_mechanisms(&causal_paths);
-        
+
         // 生成解释
         CausalExplanation {
             cause: cause.clone(),
@@ -2084,9 +2084,9 @@ impl CausalKnowledgeGraph {
 
 ---
 
-*最后更新：2025年1月*  
-*版本：v2.0*  
-*状态：持续更新中*  
+*最后更新：2025年1月*
+*版本：v2.0*
+*状态：持续更新中*
 *适用对象：AI研究人员、技术架构师、Rust开发者、知识工程师、学习设计师*
 
 ---

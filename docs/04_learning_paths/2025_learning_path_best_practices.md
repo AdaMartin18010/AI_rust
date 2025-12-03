@@ -452,10 +452,10 @@ impl EdgeAIInference {
     pub fn new() -> Result<EdgeAIInference, JsValue> {
         let device = Device::Cpu;
         let model = linear(768, 512, &VarBuilder::zeros(Dtype::F32, &device))?;
-        
+
         Ok(EdgeAIInference { model, device })
     }
-    
+
     #[wasm_bindgen]
     pub async fn infer(&self, input: &[f32]) -> Result<Vec<f32>, JsValue> {
         let input_tensor = Tensor::new(input, &self.device)?;
@@ -526,13 +526,13 @@ use thiserror::Error;
 pub enum AppError {
     #[error("AI inference error: {0}")]
     InferenceError(String),
-    
+
     #[error("Model loading error: {0}")]
     ModelLoadingError(String),
-    
+
     #[error("Database error: {0}")]
     DatabaseError(#[from] sqlx::Error),
-    
+
     #[error("IO error: {0}")]
     IoError(#[from] std::io::Error),
 }
@@ -583,20 +583,20 @@ impl AsyncProcessor {
                 // 等待一个任务完成
                 self.task_set.join_next().await;
             }
-            
+
             let task = tokio::spawn(async move {
                 process_item(item).await
             });
-            
+
             self.task_set.spawn(task);
         }
-        
+
         // 等待所有任务完成
         let mut results = Vec::new();
         while let Some(result) = self.task_set.join_next().await {
             results.push(result??);
         }
-        
+
         Ok(results)
     }
 }
@@ -618,17 +618,17 @@ impl MemoryEfficientService {
         if let Some(model) = self.model_cache.lock().unwrap().get(model_id) {
             return Ok(model.clone());
         }
-        
+
         // 加载模型
         let model = self.load_model(model_id).await?;
         let model_arc = Arc::new(model);
-        
+
         // 缓存模型
         self.model_cache.lock().unwrap().insert(
             model_id.to_string(),
             model_arc.clone()
         );
-        
+
         Ok(model_arc)
     }
 }
@@ -649,7 +649,7 @@ mod tests {
         let service = InferenceService::new().await.unwrap();
         let input = vec![1.0, 2.0, 3.0];
         let result = service.infer(&input).await.unwrap();
-        
+
         assert!(!result.is_empty());
         assert!(result.len() > 0);
     }
@@ -671,14 +671,14 @@ mod integration_tests {
     #[tokio::test]
     async fn test_api_endpoint() {
         let app = create_app();
-        
+
         let request = Request::builder()
             .uri("/api/analyze")
             .method("POST")
             .header("content-type", "application/json")
             .body(Body::from(r#"{"text": "test"}"#))
             .unwrap();
-        
+
         let response = app.oneshot(request).await.unwrap();
         assert_eq!(response.status(), StatusCode::OK);
     }
@@ -696,7 +696,7 @@ mod performance_tests {
     fn benchmark_inference(c: &mut Criterion) {
         let rt = tokio::runtime::Runtime::new().unwrap();
         let service = rt.block_on(InferenceService::new()).unwrap();
-        
+
         c.bench_function("inference", |b| {
             b.iter(|| {
                 rt.block_on(async {
@@ -800,7 +800,7 @@ A:
 
 ---
 
-*最后更新：2025年1月*  
-*版本：v1.0*  
-*状态：持续更新中*  
+*最后更新：2025年1月*
+*版本：v1.0*
+*状态：持续更新中*
 *适用对象：Rust和AI开发者、学习者、技术决策者*

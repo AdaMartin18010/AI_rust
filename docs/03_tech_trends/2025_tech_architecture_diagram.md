@@ -35,31 +35,31 @@ graph TB
         A[Web浏览器] --> B[WebAssembly Runtime]
         B --> C[Rust AI推理引擎]
         C --> D[多模态AI处理]
-        
+
         E[React/Vue/Angular] --> F[AI组件库]
         F --> G[实时AI交互]
-        
+
         H[PWA应用] --> I[离线AI功能]
         I --> J[边缘计算]
     end
-    
+
     subgraph "Web框架层 (Web Framework Layer)"
         K[Axum] --> L[异步HTTP服务]
         M[Actix-web] --> N[企业级Web服务]
         O[Rocket] --> P[快速原型开发]
-        
+
         L --> Q[AI中间件]
         N --> Q
         P --> Q
     end
-    
+
     subgraph "AI推理层 (AI Inference Layer)"
         Q --> R[Candle框架]
         Q --> S[Burn框架]
         Q --> T[tch-rs框架]
         Q --> U[ONNX Runtime]
         Q --> V[llama.cpp]
-        
+
         R --> W[轻量级推理]
         S --> X[模块化训练]
         T --> Y[PyTorch兼容]
@@ -214,23 +214,23 @@ impl OptimizedInferenceService {
     ) -> Result<Vec<InferenceResponse>> {
         // 1. 动态批处理
         let batches = self.batch_processor.create_batches(requests).await?;
-        
+
         // 2. 并行处理批次
         let results: Vec<_> = batches.into_iter()
             .map(|batch| self.process_batch(batch))
             .collect::<FuturesUnordered<_>>()
             .collect().await;
-        
+
         Ok(results)
     }
-    
+
     async fn process_batch(&self, batch: Batch) -> InferenceResponse {
         // 3. KV缓存复用
         let kv_cache = self.kv_cache_pool.get_or_create(&batch.context_id).await;
-        
+
         // 4. 量化推理
         let result = self.quantized_model.infer(&batch.inputs, &kv_cache).await;
-        
+
         result
     }
 }
@@ -491,7 +491,7 @@ impl OptimizedInferenceService {
 
 ---
 
-*最后更新：2025年1月*  
-*版本：v1.0*  
-*状态：持续更新中*  
+*最后更新：2025年1月*
+*版本：v1.0*
+*状态：持续更新中*
 *适用对象：系统架构师、技术决策者、开发团队*

@@ -202,35 +202,35 @@ impl OptimizedLinearRegression {
             regularization,
         }
     }
-    
+
     // 使用Cholesky分解加速求解
     pub fn fit_cholesky(&mut self, X: &Array2<f64>, y: &Array1<f64>) -> Result<(), Box<dyn std::error::Error>> {
         let n_samples = X.nrows();
         let n_features = X.ncols();
-        
+
         // 添加偏置项
         let mut X_with_bias = Array2::zeros((n_samples, n_features + 1));
         X_with_bias.slice_mut(s![.., ..n_features]).assign(X);
         X_with_bias.column_mut(n_features).fill(1.0);
-        
+
         // 正则化矩阵
         let mut reg_matrix = Array2::eye(n_features + 1) * self.regularization;
         reg_matrix[[n_features, n_features]] = 0.0; // 不对偏置项正则化
-        
+
         // 计算 (X^T X + λI)^(-1) X^T y
         let XtX = X_with_bias.t().dot(&X_with_bias) + &reg_matrix;
         let Xty = X_with_bias.t().dot(y);
-        
+
         // Cholesky分解求解
         let cholesky = XtX.cholesky()?;
         let weights = cholesky.solve(&Xty)?;
-        
+
         self.weights = weights.slice(s![..n_features]).to_owned();
         self.bias = weights[n_features];
-        
+
         Ok(())
     }
-    
+
     pub fn predict(&self, X: &Array2<f64>) -> Array1<f64> {
         X.dot(&self.weights) + self.bias
     }
@@ -845,18 +845,18 @@ impl LinearRegression {
     pub fn fit(&mut self, X: &Array2<f64>, y: &Array1<f64>) -> Result<(), Box<dyn std::error::Error>> {
         // 添加偏置项
         let X_with_bias = self.add_bias_column(X);
-        
+
         // 计算权重：w = (X^T X)^(-1) X^T y
         let XtX = X_with_bias.t().dot(&X_with_bias);
         let Xty = X_with_bias.t().dot(y);
         let weights = XtX.inv()?.dot(&Xty);
-        
+
         self.weights = weights.slice(s![..-1]).to_owned();
         self.bias = weights[weights.len() - 1];
-        
+
         Ok(())
     }
-    
+
     pub fn predict(&self, X: &Array2<f64>) -> Array1<f64> {
         X.dot(&self.weights) + self.bias
     }
@@ -880,13 +880,13 @@ impl MLP {
     pub fn new(vs: VarBuilder, input_dim: usize, hidden_dims: Vec<usize>, output_dim: usize) -> Result<Self> {
         let mut layers = Vec::new();
         let mut prev_dim = input_dim;
-        
+
         for &hidden_dim in &hidden_dims {
             layers.push(linear(prev_dim, hidden_dim, vs.pp("layer"))?);
             prev_dim = hidden_dim;
         }
         layers.push(linear(prev_dim, output_dim, vs.pp("output"))?);
-        
+
         Ok(Self {
             layers,
             activation: candle_nn::ops::relu,
@@ -928,21 +928,21 @@ pub fn train_model(
             ..Default::default()
         },
     )?;
-    
+
     for epoch in 0..epochs {
         let mut total_loss = 0.0;
-        
+
         for (inputs, targets) in train_data {
             let logits = model.forward(inputs)?;
             let loss = candle_nn::loss::mse(&logits, targets)?;
-            
+
             opt.backward_step(&loss)?;
             total_loss += loss.to_scalar::<f32>()? as f64;
         }
-        
+
         println!("Epoch {}: Loss = {:.4}", epoch + 1, total_loss / train_data.len() as f64);
     }
-    
+
     Ok(())
 }
 ```
@@ -958,7 +958,7 @@ use rayon::prelude::*;
 pub fn parallel_matrix_multiply(a: &Array2<f64>, b: &Array2<f64>) -> Array2<f64> {
     let (m, k) = a.dim();
     let (_, n) = b.dim();
-    
+
     let result: Vec<f64> = (0..m)
         .into_par_iter()
         .flat_map(|i| {
@@ -967,7 +967,7 @@ pub fn parallel_matrix_multiply(a: &Array2<f64>, b: &Array2<f64>) -> Array2<f64>
             })
         })
         .collect();
-    
+
     Array2::from_shape_vec((m, n), result).unwrap()
 }
 ```
@@ -980,15 +980,15 @@ use std::simd::*;
 pub fn simd_dot_product(a: &[f32], b: &[f32]) -> f32 {
     let chunks = a.chunks_exact(4);
     let b_chunks = b.chunks_exact(4);
-    
+
     let mut sum = f32x4::splat(0.0);
-    
+
     for (a_chunk, b_chunk) in chunks.zip(b_chunks) {
         let a_simd = f32x4::from_slice(a_chunk);
         let b_simd = f32x4::from_slice(b_chunk);
         sum += a_simd * b_simd;
     }
-    
+
     sum.reduce_sum()
 }
 ```
@@ -1008,10 +1008,10 @@ mod tests {
         let mut model = LinearRegression::new();
         let X = Array2::from_shape_vec((3, 2), vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]).unwrap();
         let y = Array1::from_vec(vec![3.0, 7.0, 11.0]);
-        
+
         model.fit(&X, &y).unwrap();
         let predictions = model.predict(&X);
-        
+
         for (pred, actual) in predictions.iter().zip(y.iter()) {
             assert_abs_diff_eq!(pred, actual, epsilon = 1e-6);
         }
@@ -1030,7 +1030,7 @@ fn benchmark_linear_regression(c: &mut Criterion) {
             let mut model = LinearRegression::new();
             let X = Array2::random((1000, 10), Uniform::new(0.0, 1.0));
             let y = Array1::random(1000, Uniform::new(0.0, 1.0));
-            
+
             black_box(model.fit(&X, &y).unwrap());
         })
     });

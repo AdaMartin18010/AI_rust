@@ -160,7 +160,7 @@ trait AsyncAIInference<'a> {
     type Input: 'a;
     type Output: 'a;
     type Future: Future<Output = Self::Output> + 'a;
-    
+
     fn infer(&'a self, input: Self::Input) -> Self::Future;
 }
 
@@ -169,7 +169,7 @@ impl<'a> AsyncAIInference<'a> for LinearModel {
     type Input = &'a [f64];
     type Output = f64;
     type Future = Pin<Box<dyn Future<Output = f64> + 'a>>;
-    
+
     fn infer(&'a self, input: Self::Input) -> Self::Future {
         Box::pin(async move {
             // 异步推理逻辑
@@ -209,7 +209,7 @@ println!("置信度: {:.3}", result.confidence);
 fn bench_linear_model(b: &mut Bencher) {
     let model = LinearModel::new(vec![1.0; 1000], 0.0);
     let input = [1.0; 1000];
-    
+
     b.iter(|| {
         // 基准测试逻辑
         model.infer(&input)
@@ -310,7 +310,7 @@ A: 请参考以下步骤：
 
 ---
 
-*最后更新: 2025年1月*  
-*版本: v1.0*  
-*状态: 🟢 最新*  
+*最后更新: 2025年1月*
+*版本: v1.0*
+*状态: 🟢 最新*
 *维护者: AI-Rust开发团队*

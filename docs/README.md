@@ -9,7 +9,7 @@
 **最高优先级文档**，包含对标国际权威标准的完整知识框架：
 
 - `2025_ai_rust_comprehensive_authority_framework.md` - 2025年AI-Rust国际权威知识框架
-- `2025_ai_rust_authority_topic_structure.md` - 2025年AI-Rust权威主题目录结构  
+- `2025_ai_rust_authority_topic_structure.md` - 2025年AI-Rust权威主题目录结构
 - `2025_ai_core_principles_analysis.md` - 2025年AI核心原理与技术实现深度分析
 - `2025_international_authority_topic_structure.md` - 2025年AI-Rust国际权威主题目录结构
 
@@ -127,7 +127,7 @@
 
 ---
 
-*最后更新：2025年11月11日*  
-*版本：v2.1*  
-*状态：已重新组织*  
+*最后更新：2025年11月11日*
+*版本：v2.1*
+*状态：已重新组织*
 *维护者：AI-Rust项目团队*

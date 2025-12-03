@@ -176,16 +176,16 @@ impl AgenticWebService {
     pub async fn execute_task(&self, task: &Task) -> Result<TaskResult> {
         // 1. 任务分解
         let subtasks = self.task_scheduler.decompose_task(task).await?;
-        
+
         // 2. 代理分配
         let assigned_agents = self.agent_registry.assign_agents(&subtasks).await?;
-        
+
         // 3. 并行执行
         let results = self.execute_parallel(&assigned_agents, &subtasks).await?;
-        
+
         // 4. 结果整合
         let final_result = self.integrate_results(&results).await?;
-        
+
         Ok(final_result)
     }
 }
@@ -212,30 +212,30 @@ pub struct MultiModalProcessor {
 }
 
 impl MultiModalProcessor {
-    pub async fn process(&self, 
+    pub async fn process(&self,
         text: Option<&str>,
         image: Option<&[u8]>,
         audio: Option<&[f32]>,
         video: Option<&[u8]>
     ) -> Result<MultiModalEmbedding> {
         let mut embeddings = Vec::new();
-        
+
         if let Some(text) = text {
             embeddings.push(self.text_encoder.encode(text).await?);
         }
-        
+
         if let Some(image) = image {
             embeddings.push(self.image_encoder.encode(image).await?);
         }
-        
+
         if let Some(audio) = audio {
             embeddings.push(self.audio_encoder.encode(audio).await?);
         }
-        
+
         if let Some(video) = video {
             embeddings.push(self.video_encoder.encode(video).await?);
         }
-        
+
         self.fusion_model.fuse(&embeddings).await
     }
 }
@@ -266,16 +266,16 @@ impl AgentTARS {
     pub async fn execute_browser_task(&self, task: &BrowserTask) -> Result<TaskResult> {
         // 1. 视觉理解
         let page_understanding = self.vision_processor.analyze_page(&task.page).await?;
-        
+
         // 2. 工具选择
         let selected_tools = self.tool_integrator.select_tools(&page_understanding).await?;
-        
+
         // 3. 浏览器操作
         let browser_result = self.browser_controller.execute(&selected_tools).await?;
-        
+
         // 4. 命令执行
         let command_result = self.command_executor.execute(&browser_result).await?;
-        
+
         Ok(command_result)
     }
 }
@@ -320,10 +320,10 @@ impl EdgeAIInference {
     pub fn new() -> Result<EdgeAIInference, JsValue> {
         let device = Device::Cpu;
         let model = linear(768, 512, &VarBuilder::zeros(Dtype::F32, &device))?;
-        
+
         Ok(EdgeAIInference { model, device })
     }
-    
+
     #[wasm_bindgen]
     pub async fn infer(&self, input: &[f32]) -> Result<Vec<f32>, JsValue> {
         let input_tensor = Tensor::new(input, &self.device)?;
@@ -437,13 +437,13 @@ impl OptimizedTextGenerator {
     pub async fn generate_batch(&self, requests: Vec<GenerationRequest>) -> Result<Vec<GenerationResponse>> {
         // 1. 动态批处理
         let batches = self.batch_processor.optimize_batches(requests).await?;
-        
+
         // 2. GPU资源调度
         let gpu_allocations = self.gpu_scheduler.allocate_gpus(&batches).await?;
-        
+
         // 3. 并行推理
         let results = self.execute_parallel_inference(&batches, &gpu_allocations).await?;
-        
+
         // 4. 结果整合
         Ok(self.integrate_results(results).await?)
     }
@@ -726,7 +726,7 @@ impl OptimizedTextGenerator {
 
 ---
 
-*最后更新：2025年11月11日*  
-*版本：v1.1*  
-*状态：持续更新中*  
+*最后更新：2025年11月11日*
+*版本：v1.1*
+*状态：持续更新中*
 *适用对象：AI和Rust开发者、技术决策者、研究人员*

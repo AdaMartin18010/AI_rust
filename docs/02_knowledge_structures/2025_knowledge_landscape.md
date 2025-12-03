@@ -157,16 +157,16 @@ impl KnowledgeAugmentedGenerator {
     pub async fn generate(&self, query: &str) -> Result<AugmentedResponse> {
         // 1. 知识检索
         let relevant_knowledge = self.retrieval_system.retrieve(query).await?;
-        
+
         // 2. 上下文构建
         let context = self.build_context(&relevant_knowledge)?;
-        
+
         // 3. LLM生成
         let response = self.llm_engine.generate(&context, query).await?;
-        
+
         // 4. 知识验证
         let verified_response = self.verification_pipeline.verify(&response).await?;
-        
+
         Ok(verified_response)
     }
 }
@@ -211,10 +211,10 @@ impl MultiTaskAttention {
         // 任务特定注意力权重
         let task_embedding = self.task_embeddings.forward(&[task_id])?;
         let attention_weights = self.attention_weights.forward(&task_embedding)?;
-        
+
         // 任务门控机制
         let task_gate = self.task_gates[task_id].forward(&input)?;
-        
+
         // 加权特征融合
         let weighted_features = input * attention_weights * task_gate;
         Ok(weighted_features)
@@ -260,21 +260,21 @@ impl AIServiceRegistry {
     pub async fn call_service(&self, service_name: &str, request: &Request) -> Result<Response> {
         let endpoint = self.services.get(service_name)
             .ok_or_else(|| Error::ServiceNotFound(service_name.to_string()))?;
-        
+
         // 熔断器保护
         if self.circuit_breaker.is_open(service_name) {
             return Err(Error::CircuitBreakerOpen);
         }
-        
+
         // 负载均衡
         let selected_endpoint = self.load_balancer.select(endpoint)?;
-        
+
         // 服务调用
         let response = selected_endpoint.call(request).await?;
-        
+
         // 熔断器状态更新
         self.circuit_breaker.record_success(service_name);
-        
+
         Ok(response)
     }
 }
@@ -490,8 +490,8 @@ impl AIServiceRegistry {
 
 ---
 
-*最后更新：2025年1月*  
-*版本：v1.0*  
+*最后更新：2025年1月*
+*版本：v1.0*
 *状态：持续更新中*
 
 ---

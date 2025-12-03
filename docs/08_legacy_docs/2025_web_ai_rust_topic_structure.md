@@ -160,7 +160,7 @@ pub struct MultiModalProcessor {
 }
 
 impl MultiModalProcessor {
-    pub async fn process(&self, 
+    pub async fn process(&self,
         text: Option<&str>,
         image: Option<&[u8]>,
         audio: Option<&[f32]>,
@@ -356,7 +356,7 @@ impl MultiModalProcessor {
 
 ---
 
-*最后更新：2025年1月*  
-*版本：v1.0*  
-*状态：持续更新中*  
+*最后更新：2025年1月*
+*版本：v1.0*
+*状态：持续更新中*
 *适用对象：AI和Rust开发者、技术决策者、研究人员*

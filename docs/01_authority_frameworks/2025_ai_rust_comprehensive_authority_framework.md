@@ -196,7 +196,7 @@ impl Matrix {
         if self.cols != other.rows {
             return Err(MatrixError::DimensionMismatch);
         }
-        
+
         let mut result = Matrix::zeros(self.rows, other.cols);
         for i in 0..self.rows {
             for j in 0..other.cols {
@@ -254,24 +254,24 @@ pub struct NeuralNetwork {
 impl NeuralNetwork {
     pub fn backward(&self, input: &Tensor, target: &Tensor) -> Result<Vec<Tensor>, NetworkError> {
         let mut gradients = Vec::new();
-        
+
         // 前向传播
         let mut activations = vec![input.clone()];
         for layer in &self.layers {
             let output = layer.forward(&activations.last().unwrap())?;
             activations.push(output);
         }
-        
+
         // 计算损失梯度
         let loss = self.loss_function.compute(&activations.last().unwrap(), target)?;
         let mut grad = self.loss_function.gradient(&activations.last().unwrap(), target)?;
-        
+
         // 反向传播
         for (i, layer) in self.layers.iter().enumerate().rev() {
             grad = layer.backward(&activations[i], &grad)?;
             gradients.push(grad.clone());
         }
-        
+
         gradients.reverse();
         Ok(gradients)
     }
@@ -315,7 +315,7 @@ pub struct UnifiedMultiModalTransformer {
 }
 
 impl UnifiedMultiModalTransformer {
-    pub fn forward(&self, 
+    pub fn forward(&self,
         text_input: &Tensor,
         image_input: &Tensor,
         audio_input: &Tensor
@@ -324,12 +324,12 @@ impl UnifiedMultiModalTransformer {
         let text_features = self.text_encoder.forward(text_input)?;
         let image_features = self.image_encoder.forward(image_input)?;
         let audio_features = self.audio_encoder.forward(audio_input)?;
-        
+
         // 跨模态注意力
         let fused_features = self.cross_modal_attention.forward(
             &text_features, &image_features, &audio_features
         )?;
-        
+
         // 输出预测
         let output = self.output_head.forward(&fused_features)?;
         Ok(output)
@@ -362,19 +362,19 @@ impl WebAgent {
     pub async fn execute_web_task(&self, task: &WebTask) -> Result<TaskResult, AgentError> {
         // 感知Web环境
         let observation = self.perception.observe_web_state().await?;
-        
+
         // 推理决策
         let decision = self.reasoning.reason(&observation, &task).await?;
-        
+
         // 制定行动计划
         let plan = self.planning.plan(&decision).await?;
-        
+
         // 执行Web操作
         let result = self.action.execute_plan(&plan).await?;
-        
+
         // 更新记忆
         self.memory.store_episode(&observation, &decision, &result).await?;
-        
+
         Ok(result)
     }
 }
@@ -427,14 +427,14 @@ impl MixtureOfExperts {
         // 专家路由
         let routing_weights = self.router.forward(input)?;
         let (top_k_indices, top_k_weights) = self.select_top_k(&routing_weights)?;
-        
+
         // 条件计算
         let mut output = Tensor::zeros_like(input);
         for (i, &expert_idx) in top_k_indices.iter().enumerate() {
             let expert_output = self.experts[expert_idx].forward(input)?;
             output = output + &(expert_output * top_k_weights[i]);
         }
-        
+
         Ok(output)
     }
 }
@@ -470,16 +470,16 @@ impl VisionLanguageModel {
     ) -> Result<String, ModelError> {
         // 视觉编码
         let image_features = self.vision_encoder.encode(image).await?;
-        
+
         // 文本编码
         let text_features = self.text_encoder.encode(text).await?;
-        
+
         // 多模态融合
         let fused_features = self.fusion_layer.fuse(&image_features, &text_features)?;
-        
+
         // 语言生成
         let response = self.language_model.generate(&fused_features).await?;
-        
+
         Ok(response)
     }
 }
@@ -535,7 +535,7 @@ impl CandleEngine {
         let device = Device::Cpu; // 或 Device::Cuda(0)
         let model = load_model(model_path, &device)?;
         let tokenizer = Tokenizer::from_file(&format!("{}/tokenizer.json", model_path))?;
-        
+
         Ok(Self {
             device,
             model,
@@ -543,24 +543,24 @@ impl CandleEngine {
             config,
         })
     }
-    
+
     pub async fn generate(&self, prompt: &str, max_tokens: usize) -> Result<String, EngineError> {
         let tokens = self.tokenizer.encode(prompt, true)?;
         let mut input_ids = tokens.get_ids().to_vec();
-        
+
         for _ in 0..max_tokens {
             let input_tensor = Tensor::new(&input_ids, &self.device)?;
             let logits = self.model.forward(&input_tensor)?;
-            
+
             // 采样下一个token
             let next_token = self.sample_token(&logits)?;
             input_ids.push(next_token);
-            
+
             if next_token == self.tokenizer.eos_token_id {
                 break;
             }
         }
-        
+
         let generated_text = self.tokenizer.decode(&input_ids, true)?;
         Ok(generated_text)
     }
@@ -658,27 +658,27 @@ graph TD
     A[AI-Rust知识体系] --> B[理论基础层]
     A --> C[技术实现层]
     A --> D[应用实践层]
-    
+
     B --> E[数学基础]
     B --> F[计算机科学基础]
     B --> G[AI理论基础]
-    
+
     C --> H[编程语言与系统]
     C --> I[AI算法实现]
     C --> J[系统架构]
-    
+
     D --> K[工程实践]
     D --> L[业务应用]
     D --> M[行业应用]
-    
+
     E --> N[线性代数]
     E --> O[概率统计]
     E --> P[优化理论]
-    
+
     H --> Q[Rust语言]
     H --> R[系统编程]
     H --> S[并发编程]
-    
+
     I --> T[机器学习]
     I --> U[深度学习]
     I --> V[大语言模型]
@@ -961,7 +961,7 @@ graph TD
 
 ---
 
-*最后更新：2025年1月*  
-*版本：v1.0*  
-*状态：持续更新中*  
+*最后更新：2025年1月*
+*版本：v1.0*
+*状态：持续更新中*
 *适用对象：AI研究人员、技术架构师、Rust开发者、教育工作者*

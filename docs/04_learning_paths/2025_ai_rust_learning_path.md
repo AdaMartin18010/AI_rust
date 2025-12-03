@@ -112,7 +112,7 @@ impl FileStats {
         let lines = content.lines().count();
         let words = content.split_whitespace().count();
         let chars = content.chars().count();
-        
+
         Ok(FileStats { lines, words, chars })
     }
 }
@@ -182,10 +182,10 @@ impl LinearRegression {
         let device = Device::Cpu;
         let vs = VarBuilder::zeros(Dtype::F32, &device);
         let linear = linear(input_size, output_size, vs)?;
-        
+
         Ok(LinearRegression { linear, device })
     }
-    
+
     pub fn forward(&self, x: &Tensor) -> Result<Tensor, Box<dyn std::error::Error>> {
         self.linear.forward(x)
     }
@@ -225,12 +225,12 @@ impl MLP {
         let vs = VarBuilder::zeros(Dtype::F32, &device);
         let mut layers = Vec::new();
         let mut activations = Vec::new();
-        
+
         for i in 0..layer_sizes.len() - 1 {
             layers.push(linear(layer_sizes[i], layer_sizes[i + 1], vs)?);
             activations.push(Activation::Relu);
         }
-        
+
         Ok(MLP { layers, activations, device })
     }
 }
@@ -266,7 +266,7 @@ impl DataProcessor {
             .collect()?;
         Ok(DataProcessor { df })
     }
-    
+
     pub fn normalize(&mut self, columns: &[&str]) -> Result<(), Box<dyn std::error::Error>> {
         for col in columns {
             let mean = self.df.column(col)?.mean()?;
@@ -302,24 +302,24 @@ impl MultiHeadAttention {
     pub fn forward(&self, x: &Tensor) -> Result<Tensor, Box<dyn std::error::Error>> {
         let batch_size = x.dim(0)?;
         let seq_len = x.dim(1)?;
-        
+
         // 计算Q, K, V
         let q = self.query.forward(x)?;
         let k = self.key.forward(x)?;
         let v = self.value.forward(x)?;
-        
+
         // 重塑为多头格式
         let q = q.reshape((batch_size, seq_len, self.num_heads, self.head_dim))?;
         let k = k.reshape((batch_size, seq_len, self.num_heads, self.head_dim))?;
         let v = v.reshape((batch_size, seq_len, self.num_heads, self.head_dim))?;
-        
+
         // 计算注意力权重
         let scores = q.matmul(&k.transpose(2, 3)?)?;
         let attention_weights = candle_nn::ops::softmax(&scores, 3)?;
-        
+
         // 应用注意力权重
         let attended = attention_weights.matmul(&v)?;
-        
+
         // 重塑并输出
         let output = attended.reshape((batch_size, seq_len, self.num_heads * self.head_dim))?;
         self.output.forward(&output)
@@ -359,20 +359,20 @@ impl DistributedTrainer {
     pub async fn train_epoch(&self, dataloader: &DataLoader) -> Result<f32, Box<dyn std::error::Error>> {
         let mut total_loss = 0.0;
         let mut num_batches = 0;
-        
+
         for batch in dataloader {
             // 前向传播
             let output = self.model.forward(&batch.input)?;
             let loss = self.compute_loss(&output, &batch.target)?;
-            
+
             // 反向传播
             self.optimizer.backward(&loss)?;
             self.optimizer.step()?;
-            
+
             total_loss += loss.to_scalar::<f32>()?;
             num_batches += 1;
         }
-        
+
         Ok(total_loss / num_batches as f32)
     }
 }
@@ -414,7 +414,7 @@ pub async fn inference_handler(
 ) -> Result<Json<InferenceResponse>, StatusCode> {
     let result = model.infer(&request.text).await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
-    
+
     Ok(Json(InferenceResponse {
         result: result.text,
         confidence: result.confidence,
@@ -447,18 +447,18 @@ impl Metrics {
         let request_counter = Counter::new("requests_total", "Total number of requests")?;
         let inference_duration = Histogram::new("inference_duration_seconds", "Inference duration")?;
         let error_counter = Counter::new("errors_total", "Total number of errors")?;
-        
+
         registry.register(Box::new(request_counter.clone()))?;
         registry.register(Box::new(inference_duration.clone()))?;
         registry.register(Box::new(error_counter.clone()))?;
-        
+
         Ok(Metrics {
             request_counter,
             inference_duration,
             error_counter,
         })
     }
-    
+
     #[instrument]
     pub async fn record_inference<F, T>(&self, f: F) -> Result<T, Box<dyn std::error::Error>>
     where
@@ -466,7 +466,7 @@ impl Metrics {
     {
         let timer = self.inference_duration.start_timer();
         self.request_counter.inc();
-        
+
         match f.await {
             Ok(result) => {
                 timer.observe_duration();
@@ -557,10 +557,10 @@ impl EdgeAIInference {
     pub fn new() -> Result<EdgeAIInference, JsValue> {
         let device = Device::Cpu;
         let model = linear(768, 512, &VarBuilder::zeros(Dtype::F32, &device))?;
-        
+
         Ok(EdgeAIInference { model, device })
     }
-    
+
     #[wasm_bindgen]
     pub async fn infer(&self, input: &[f32]) -> Result<Vec<f32>, JsValue> {
         let input_tensor = Tensor::new(input, &self.device)?;
@@ -584,25 +584,25 @@ pub struct MultiModalProcessor {
 }
 
 impl MultiModalProcessor {
-    pub async fn process(&self, 
+    pub async fn process(&self,
         text: Option<&str>,
         image: Option<&[u8]>,
         audio: Option<&[f32]>
     ) -> Result<MultiModalEmbedding, Box<dyn std::error::Error>> {
         let mut embeddings = Vec::new();
-        
+
         if let Some(text) = text {
             embeddings.push(self.text_encoder.encode(text).await?);
         }
-        
+
         if let Some(image) = image {
             embeddings.push(self.image_encoder.encode(image).await?);
         }
-        
+
         if let Some(audio) = audio {
             embeddings.push(self.audio_encoder.encode(audio).await?);
         }
-        
+
         self.fusion_model.fuse(&embeddings).await
     }
 }
@@ -872,7 +872,7 @@ impl MultiModalProcessor {
 
 ---
 
-*最后更新：2025年1月*  
-*版本：v1.0*  
-*状态：持续更新中*  
+*最后更新：2025年1月*
+*版本：v1.0*
+*状态：持续更新中*
 *适用对象：AI和Rust初学者到专业开发者*

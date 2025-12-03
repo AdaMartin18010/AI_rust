@@ -188,62 +188,62 @@ pub struct MetacognitiveSystem {
 impl MetacognitiveSystem {
     pub fn monitor_cognitive_process(&self, process: &CognitiveProcess) -> MonitoringResult {
         let mut monitoring_result = MonitoringResult::new();
-        
+
         // 监控认知负荷
         let cognitive_load = self.assess_cognitive_load(process);
         monitoring_result.cognitive_load = cognitive_load;
-        
+
         // 监控策略有效性
         let strategy_effectiveness = self.evaluate_strategy_effectiveness(process);
         monitoring_result.strategy_effectiveness = strategy_effectiveness;
-        
+
         // 监控学习进度
         let learning_progress = self.assess_learning_progress(process);
         monitoring_result.learning_progress = learning_progress;
-        
+
         // 监控错误模式
         let error_patterns = self.detect_error_patterns(process);
         monitoring_result.error_patterns = error_patterns;
-        
+
         monitoring_result
     }
-    
+
     pub fn regulate_cognitive_strategy(&mut self, monitoring_result: &MonitoringResult) -> StrategyAdjustment {
         let mut adjustment = StrategyAdjustment::new();
-        
+
         // 基于认知负荷调整策略
         if monitoring_result.cognitive_load > 0.8 {
             adjustment.suggest_strategy_simplification();
         }
-        
+
         // 基于策略有效性调整
         if monitoring_result.strategy_effectiveness < 0.6 {
             adjustment.suggest_strategy_change();
         }
-        
+
         // 基于学习进度调整
         if monitoring_result.learning_progress < 0.3 {
             adjustment.suggest_learning_acceleration();
         }
-        
+
         // 基于错误模式调整
         for error_pattern in &monitoring_result.error_patterns {
             adjustment.suggest_error_correction_strategy(error_pattern);
         }
-        
+
         adjustment
     }
-    
+
     pub fn update_self_model(&mut self, experience: &CognitiveExperience) {
         // 更新自我效能感
         self.self_model.update_self_efficacy(experience);
-        
+
         // 更新能力评估
         self.self_model.update_ability_assessment(experience);
-        
+
         // 更新偏好模型
         self.self_model.update_preference_model(experience);
-        
+
         // 更新目标设定
         self.self_model.update_goal_setting(experience);
     }
@@ -262,7 +262,7 @@ impl SelfModel {
         let task_difficulty = task.assess_difficulty();
         let ability_match = self.assess_ability_match(task);
         let motivation_level = self.assess_motivation(task);
-        
+
         PerformancePrediction {
             predicted_success_rate: self.self_efficacy * ability_match * motivation_level,
             confidence: self.calculate_confidence(task_difficulty),
@@ -270,11 +270,11 @@ impl SelfModel {
             estimated_time: self.estimate_completion_time(task),
         }
     }
-    
+
     pub fn update_self_efficacy(&mut self, experience: &CognitiveExperience) {
         let performance_feedback = experience.performance_feedback;
         let attribution = experience.attribution;
-        
+
         // 基于表现反馈更新自我效能感
         let efficacy_change = match attribution {
             Attribution::Internal => performance_feedback * 0.1,
@@ -282,7 +282,7 @@ impl SelfModel {
             Attribution::Stable => performance_feedback * 0.15,
             Attribution::Unstable => performance_feedback * 0.08,
         };
-        
+
         self.self_efficacy = (self.self_efficacy + efficacy_change).clamp(0.0, 1.0);
     }
 }
@@ -303,7 +303,7 @@ impl MonitoringSystem {
             switching_cost: attention_state.switching_cost,
         }
     }
-    
+
     pub fn monitor_memory(&self, memory_state: &MemoryState) -> MemoryMonitoringResult {
         MemoryMonitoringResult {
             working_memory_load: memory_state.working_memory_load,
@@ -312,7 +312,7 @@ impl MonitoringSystem {
             retrieval_success_rate: memory_state.retrieval_success_rate,
         }
     }
-    
+
     pub fn monitor_reasoning(&self, reasoning_state: &ReasoningState) -> ReasoningMonitoringResult {
         ReasoningMonitoringResult {
             logical_consistency: reasoning_state.logical_consistency,
@@ -335,7 +335,7 @@ impl ControlSystem {
         let available_strategies = self.strategy_selector.get_available_strategies(task);
         let mut best_strategy = None;
         let mut best_score = f64::NEG_INFINITY;
-        
+
         for strategy in available_strategies {
             let score = self.evaluate_strategy(&strategy, task, context);
             if score > best_score {
@@ -343,44 +343,44 @@ impl ControlSystem {
                 best_strategy = Some(strategy);
             }
         }
-        
+
         best_strategy.unwrap()
     }
-    
+
     pub fn allocate_cognitive_resources(&self, task: &Task, available_resources: &CognitiveResources) -> ResourceAllocation {
         let mut allocation = ResourceAllocation::new();
-        
+
         // 基于任务需求分配注意力资源
         allocation.attention_allocation = self.calculate_attention_allocation(task);
-        
+
         // 基于任务复杂度分配工作记忆
         allocation.working_memory_allocation = self.calculate_working_memory_allocation(task);
-        
+
         // 基于任务类型分配处理资源
         allocation.processing_allocation = self.calculate_processing_allocation(task);
-        
+
         allocation
     }
-    
+
     pub fn manage_goals(&mut self, current_goals: &[Goal], new_goal: &Goal) -> GoalManagementDecision {
         let mut decision = GoalManagementDecision::new();
-        
+
         // 检查目标冲突
         let conflicts = self.detect_goal_conflicts(current_goals, new_goal);
         if !conflicts.is_empty() {
             decision.suggest_conflict_resolution(conflicts);
         }
-        
+
         // 检查资源约束
         let resource_constraints = self.check_resource_constraints(current_goals, new_goal);
         if resource_constraints.is_constrained() {
             decision.suggest_resource_reallocation(resource_constraints);
         }
-        
+
         // 检查优先级
         let priority_assessment = self.assess_goal_priority(new_goal, current_goals);
         decision.set_priority_recommendation(priority_assessment);
-        
+
         decision
     }
 }
@@ -397,15 +397,15 @@ impl MetacognitiveKnowledgeBase {
     pub fn retrieve_strategy_knowledge(&self, task_type: &str) -> Option<&StrategyKnowledge> {
         self.strategy_knowledge.get(task_type)
     }
-    
+
     pub fn update_strategy_knowledge(&mut self, task_type: String, knowledge: StrategyKnowledge) {
         self.strategy_knowledge.insert(task_type, knowledge);
     }
-    
+
     pub fn retrieve_conditional_knowledge(&self, condition: &str) -> Option<&ConditionalKnowledge> {
         self.conditional_knowledge.get(condition)
     }
-    
+
     pub fn add_conditional_knowledge(&mut self, condition: String, knowledge: ConditionalKnowledge) {
         self.conditional_knowledge.insert(condition, knowledge);
     }
@@ -423,22 +423,22 @@ impl MetacognitiveLearningSystem {
     pub fn learn_from_experience(&mut self, experience: &MetacognitiveExperience) {
         // 学习策略选择
         self.strategy_learner.update_strategy_selection_model(experience);
-        
+
         // 学习监控技能
         self.monitoring_learner.update_monitoring_accuracy(experience);
-        
+
         // 学习控制技能
         self.control_learner.update_control_effectiveness(experience);
-        
+
         // 元学习：学习如何学习
         self.meta_learner.update_learning_strategies(experience);
     }
-    
+
     pub fn transfer_metacognitive_skills(&self, source_domain: &str, target_domain: &str) -> TransferResult {
         let source_skills = self.extract_metacognitive_skills(source_domain);
         let transferable_skills = self.identify_transferable_skills(&source_skills, target_domain);
         let adaptation_required = self.assess_adaptation_requirements(&transferable_skills, target_domain);
-        
+
         TransferResult {
             transferable_skills,
             adaptation_required,
@@ -713,7 +713,7 @@ impl UnifiedCognitiveArchitecture {
         let connectionist_result = self.connectionist_layer.process(input);
         let behavioral_result = self.behavioral_layer.process(input);
         let emergent_result = self.emergent_layer.process(input);
-        
+
         // 整合不同层次的结果
         let integrated_result = self.integration_mechanism.integrate(
             &symbolic_result,
@@ -722,23 +722,23 @@ impl UnifiedCognitiveArchitecture {
             &emergent_result,
             input
         );
-        
+
         integrated_result
     }
-    
+
     pub fn learn_from_experience(&mut self, experience: &Experience) {
         // 符号层学习：规则和知识
         self.symbolic_layer.update_knowledge_base(experience);
-        
+
         // 连接层学习：权重和表示
         self.connectionist_layer.update_weights(experience);
-        
+
         // 行为层学习：策略和动作
         self.behavioral_layer.update_policy(experience);
-        
+
         // 涌现层学习：自组织和适应
         self.emergent_layer.adapt_structure(experience);
-        
+
         // 更新整合机制
         self.integration_mechanism.update_integration_weights(experience);
     }
@@ -752,7 +752,7 @@ pub struct IntegrationMechanism {
 }
 
 impl IntegrationMechanism {
-    pub fn integrate(&self, 
+    pub fn integrate(&self,
         symbolic: &SymbolicResult,
         connectionist: &ConnectionistResult,
         behavioral: &BehavioralResult,
@@ -761,25 +761,25 @@ impl IntegrationMechanism {
     ) -> ProcessingResult {
         // 分析上下文
         let context = self.context_analyzer.analyze(input);
-        
+
         // 计算各层置信度
         let symbolic_confidence = self.calculate_confidence(symbolic, &context);
         let connectionist_confidence = self.calculate_confidence(connectionist, &context);
         let behavioral_confidence = self.calculate_confidence(behavioral, &context);
         let emergent_confidence = self.calculate_confidence(emergent, &context);
-        
+
         // 检测冲突
         let conflicts = self.detect_conflicts(symbolic, connectionist, behavioral, emergent);
-        
+
         // 解决冲突
         let resolved_results = self.conflict_resolver.resolve_conflicts(conflicts);
-        
+
         // 加权整合
         let integrated_result = self.weighted_integration(
             &resolved_results,
             &[symbolic_confidence, connectionist_confidence, behavioral_confidence, emergent_confidence]
         );
-        
+
         ProcessingResult {
             result: integrated_result,
             confidence: self.calculate_overall_confidence(&[symbolic_confidence, connectionist_confidence, behavioral_confidence, emergent_confidence]),
@@ -787,14 +787,14 @@ impl IntegrationMechanism {
             uncertainty: self.assess_uncertainty(&resolved_results),
         }
     }
-    
+
     fn weighted_integration(&self, results: &[ProcessingResult], weights: &[f64]) -> ProcessingResult {
         let mut integrated = ProcessingResult::new();
-        
+
         for (result, weight) in results.iter().zip(weights.iter()) {
             integrated = integrated + (result * *weight);
         }
-        
+
         integrated
     }
 }
@@ -810,22 +810,22 @@ pub struct InformationTheoreticUnification {
 impl InformationTheoreticUnification {
     pub fn unify_ai_paradigms(&self, paradigms: &[AIParadigm]) -> UnifiedParadigm {
         let mut unified = UnifiedParadigm::new();
-        
+
         // 计算各范式的信息内容
         for paradigm in paradigms {
             let information_content = self.calculate_information_content(paradigm);
             let complexity = self.complexity_analyzer.analyze(paradigm);
             let mutual_info = self.calculate_mutual_information(paradigm, &unified);
-            
+
             unified.add_paradigm(paradigm.clone(), information_content, complexity, mutual_info);
         }
-        
+
         // 优化信息瓶颈
         let optimized = self.information_bottleneck.optimize(&unified);
-        
+
         optimized
     }
-    
+
     pub fn calculate_paradigm_entropy(&self, paradigm: &AIParadigm) -> f64 {
         match paradigm {
             AIParadigm::Symbolic(s) => self.entropy_calculator.calculate_symbolic_entropy(s),
@@ -847,19 +847,19 @@ pub struct OptimizationTheoreticUnification {
 impl OptimizationTheoreticUnification {
     pub fn unify_learning_mechanisms(&self, mechanisms: &[LearningMechanism]) -> UnifiedLearningMechanism {
         let mut unified = UnifiedLearningMechanism::new();
-        
+
         // 定义统一目标函数
         let unified_objective = self.define_unified_objective(mechanisms);
-        
+
         // 处理约束条件
         let constraints = self.constraint_handler.extract_constraints(mechanisms);
-        
+
         // 多目标优化
         let optimized_mechanisms = self.optimizer.optimize(&unified_objective, &constraints);
-        
+
         // 分析收敛性
         let convergence_analysis = self.convergence_analyzer.analyze(&optimized_mechanisms);
-        
+
         UnifiedLearningMechanism {
             mechanisms: optimized_mechanisms,
             objective_function: unified_objective,
@@ -867,10 +867,10 @@ impl OptimizationTheoreticUnification {
             convergence_analysis,
         }
     }
-    
+
     fn define_unified_objective(&self, mechanisms: &[LearningMechanism]) -> ObjectiveFunction {
         let mut objectives = Vec::new();
-        
+
         for mechanism in mechanisms {
             match mechanism {
                 LearningMechanism::Symbolic(s) => {
@@ -891,7 +891,7 @@ impl OptimizationTheoreticUnification {
                 }
             }
         }
-        
+
         ObjectiveFunction::MultiObjective(objectives)
     }
 }
@@ -907,19 +907,19 @@ pub struct ProbabilisticUnification {
 impl ProbabilisticUnification {
     pub fn unify_uncertainty_handling(&self, methods: &[UncertaintyMethod]) -> UnifiedUncertaintyMethod {
         let mut unified = UnifiedUncertaintyMethod::new();
-        
+
         // 贝叶斯整合
         let bayesian_integration = self.bayesian_integrator.integrate_methods(methods);
-        
+
         // 不确定性量化
         let uncertainty_quantification = self.uncertainty_quantifier.quantify_uncertainty(methods);
-        
+
         // 概率推理
         let probabilistic_reasoning = self.probabilistic_reasoner.reason_with_uncertainty(methods);
-        
+
         // 信念更新
         let belief_update = self.belief_updater.update_beliefs(methods);
-        
+
         UnifiedUncertaintyMethod {
             bayesian_integration,
             uncertainty_quantification,
@@ -927,7 +927,7 @@ impl ProbabilisticUnification {
             belief_update,
         }
     }
-    
+
     pub fn calculate_paradigm_probability(&self, paradigm: &AIParadigm, evidence: &Evidence) -> f64 {
         match paradigm {
             AIParadigm::Symbolic(s) => self.calculate_symbolic_probability(s, evidence),
@@ -949,7 +949,7 @@ pub struct ComputationalTheoreticUnification {
 impl ComputationalTheoreticUnification {
     pub fn unify_computational_aspects(&self, paradigms: &[AIParadigm]) -> UnifiedComputationalFramework {
         let mut unified = UnifiedComputationalFramework::new();
-        
+
         // 分析计算复杂度
         for paradigm in paradigms {
             let time_complexity = self.complexity_analyzer.analyze_time_complexity(paradigm);
@@ -957,23 +957,23 @@ impl ComputationalTheoreticUnification {
             let computability = self.computability_analyzer.analyze_computability(paradigm);
             let efficiency = self.efficiency_analyzer.analyze_efficiency(paradigm);
             let scalability = self.scalability_analyzer.analyze_scalability(paradigm);
-            
+
             unified.add_paradigm_analysis(paradigm.clone(), time_complexity, space_complexity, computability, efficiency, scalability);
         }
-        
+
         // 计算统一复杂度
         let unified_complexity = self.calculate_unified_complexity(&unified);
-        
+
         // 优化计算效率
         let optimized_framework = self.optimize_computational_efficiency(&unified);
-        
+
         optimized_framework
     }
-    
+
     pub fn compare_paradigm_efficiency(&self, paradigm1: &AIParadigm, paradigm2: &AIParadigm, problem: &Problem) -> EfficiencyComparison {
         let efficiency1 = self.efficiency_analyzer.analyze_efficiency_for_problem(paradigm1, problem);
         let efficiency2 = self.efficiency_analyzer.analyze_efficiency_for_problem(paradigm2, problem);
-        
+
         EfficiencyComparison {
             paradigm1_efficiency: efficiency1,
             paradigm2_efficiency: efficiency2,
@@ -994,19 +994,19 @@ pub struct MetacognitiveUnification {
 impl MetacognitiveUnification {
     pub fn unify_metacognitive_processes(&self, processes: &[MetacognitiveProcess]) -> UnifiedMetacognitiveProcess {
         let mut unified = UnifiedMetacognitiveProcess::new();
-        
+
         // 元学习整合
         let meta_learning_integration = self.meta_learner.integrate_processes(processes);
-        
+
         // 策略选择整合
         let strategy_integration = self.strategy_selector.integrate_strategies(processes);
-        
+
         // 性能监控整合
         let monitoring_integration = self.performance_monitor.integrate_monitoring(processes);
-        
+
         // 适应机制整合
         let adaptation_integration = self.adaptation_engine.integrate_adaptation(processes);
-        
+
         UnifiedMetacognitiveProcess {
             meta_learning: meta_learning_integration,
             strategy_selection: strategy_integration,
@@ -1014,20 +1014,20 @@ impl MetacognitiveUnification {
             adaptation: adaptation_integration,
         }
     }
-    
+
     pub fn optimize_metacognitive_performance(&self, process: &UnifiedMetacognitiveProcess) -> OptimizedMetacognitiveProcess {
         // 优化元学习
         let optimized_meta_learning = self.meta_learner.optimize(&process.meta_learning);
-        
+
         // 优化策略选择
         let optimized_strategy_selection = self.strategy_selector.optimize(&process.strategy_selection);
-        
+
         // 优化性能监控
         let optimized_monitoring = self.performance_monitor.optimize(&process.performance_monitoring);
-        
+
         // 优化适应机制
         let optimized_adaptation = self.adaptation_engine.optimize(&process.adaptation);
-        
+
         OptimizedMetacognitiveProcess {
             meta_learning: optimized_meta_learning,
             strategy_selection: optimized_strategy_selection,
@@ -1079,7 +1079,7 @@ use std::collections::HashMap;
 use rand::Rng;
 
 // PAC学习理论的核心结构
-pub struct PACLearner<H, C, X, Y> 
+pub struct PACLearner<H, C, X, Y>
 where
     H: Hypothesis<X, Y>,
     C: Concept<X, Y>,
@@ -1112,7 +1112,7 @@ where
         let sample_complexity = Self::calculate_sample_complexity(
             vc_dimension, confidence, accuracy
         );
-        
+
         Self {
             hypothesis_space,
             target_concept,
@@ -1122,12 +1122,12 @@ where
             sample_complexity,
         }
     }
-    
+
     // 计算VC维
     fn calculate_vc_dimension(hypothesis_space: &[H]) -> usize {
         // VC维计算：找到能够被假设空间完全打散的最大样本集大小
         let mut max_vc = 0;
-        
+
         for n in 1..=hypothesis_space.len() {
             if Self::can_shatter(hypothesis_space, n) {
                 max_vc = n;
@@ -1135,38 +1135,38 @@ where
                 break;
             }
         }
-        
+
         max_vc
     }
-    
+
     // 检查是否能够打散n个样本
     fn can_shatter(hypothesis_space: &[H], n: usize) -> bool {
         // 生成所有可能的n个样本的标签组合
         let all_labelings = Self::generate_all_labelings(n);
-        
+
         // 检查假设空间是否能够实现所有标签组合
         for labeling in all_labelings {
             if !Self::can_implement_labeling(hypothesis_space, &labeling) {
                 return false;
             }
         }
-        
+
         true
     }
-    
+
     // 计算样本复杂度
     fn calculate_sample_complexity(vc_dim: usize, confidence: f64, accuracy: f64) -> usize {
         let delta = 1.0 - confidence;
         let epsilon = accuracy;
-        
+
         // PAC学习样本复杂度公式
         // m(ε, δ) = O((1/ε)log(1/δ) + VC(H)/ε)
         let term1 = (1.0 / epsilon) * (1.0 / delta).ln();
         let term2 = (vc_dim as f64) / epsilon;
-        
+
         ((term1 + term2) * 10.0) as usize // 乘以常数因子
     }
-    
+
     // PAC学习主算法
     pub fn learn(&self, samples: &[(X, Y)]) -> Result<H, LearningError> {
         // 检查样本数量是否足够
@@ -1176,17 +1176,17 @@ where
                 provided: samples.len(),
             });
         }
-        
+
         // 寻找与样本一致的假设
         let consistent_hypotheses = self.find_consistent_hypotheses(samples);
-        
+
         if consistent_hypotheses.is_empty() {
             return Err(LearningError::NoConsistentHypothesis);
         }
-        
+
         // 选择第一个一致的假设（或使用其他选择策略）
         let hypothesis = consistent_hypotheses[0].clone();
-        
+
         // 验证PAC条件
         if self.verify_pac_conditions(&hypothesis, samples) {
             Ok(hypothesis)
@@ -1194,7 +1194,7 @@ where
             Err(LearningError::PACViolation)
         }
     }
-    
+
     // 寻找与样本一致的假设
     fn find_consistent_hypotheses(&self, samples: &[(X, Y)]) -> Vec<H> {
         self.hypothesis_space
@@ -1203,7 +1203,7 @@ where
             .cloned()
             .collect()
     }
-    
+
     // 检查假设是否与样本一致
     fn is_consistent(&self, hypothesis: &H, samples: &[(X, Y)]) -> bool {
         samples.iter().all(|(x, y)| {
@@ -1211,43 +1211,43 @@ where
             prediction == *y
         })
     }
-    
+
     // 验证PAC条件
     fn verify_pac_conditions(&self, hypothesis: &H, samples: &[(X, Y)]) -> bool {
         // 计算经验误差
         let empirical_error = self.calculate_empirical_error(hypothesis, samples);
-        
+
         // 计算泛化误差上界
         let generalization_bound = self.calculate_generalization_bound(samples.len());
-        
+
         // 检查是否满足PAC条件
         empirical_error <= self.accuracy && generalization_bound <= self.accuracy
     }
-    
+
     // 计算经验误差
     fn calculate_empirical_error(&self, hypothesis: &H, samples: &[(X, Y)]) -> f64 {
         let mut errors = 0;
-        
+
         for (x, y) in samples {
             let prediction = hypothesis.predict(x);
             if prediction != *y {
                 errors += 1;
             }
         }
-        
+
         errors as f64 / samples.len() as f64
     }
-    
+
     // 计算泛化误差上界
     fn calculate_generalization_bound(&self, sample_size: usize) -> f64 {
         let delta = 1.0 - self.confidence;
         let vc_dim = self.vc_dimension as f64;
-        
+
         // 使用VC维理论计算泛化误差上界
-        let term1 = (4.0 / sample_size as f64) * 
+        let term1 = (4.0 / sample_size as f64) *
                    ((2.0 * sample_size as f64 + vc_dim) / vc_dim).ln();
         let term2 = (1.0 / sample_size as f64) * (1.0 / delta).ln();
-        
+
         (term1 + term2).sqrt()
     }
 }
@@ -1289,13 +1289,13 @@ where
     fn predict(&self, input: &X) -> Y {
         let features = input.as_ref();
         let mut sum = self.bias;
-        
+
         for (i, &weight) in self.weights.iter().enumerate() {
             if i < features.len() {
                 sum += weight * features[i];
             }
         }
-        
+
         Y::from(sum)
     }
 }
@@ -1308,10 +1308,10 @@ pub fn pac_learning_example() {
         LinearHypothesis { weights: vec![0.0, 1.0], bias: 0.0 },
         LinearHypothesis { weights: vec![1.0, 1.0], bias: 0.0 },
     ];
-    
+
     // 创建目标概念（简单的OR函数）
     let target_concept = OrConcept;
-    
+
     // 创建PAC学习器
     let learner = PACLearner::new(
         hypothesis_space,
@@ -1319,7 +1319,7 @@ pub fn pac_learning_example() {
         0.95,  // 95%置信度
         0.1,   // 10%误差
     );
-    
+
     // 生成训练样本
     let samples = vec![
         (vec![0.0, 0.0], 0.0),
@@ -1327,7 +1327,7 @@ pub fn pac_learning_example() {
         (vec![1.0, 0.0], 1.0),
         (vec![1.0, 1.0], 1.0),
     ];
-    
+
     // 执行PAC学习
     match learner.learn(&samples) {
         Ok(hypothesis) => {
@@ -1358,13 +1358,13 @@ where
         Y::from(result)
         }
     }
-    
+
     pub fn sample_complexity_bound(&self) -> usize {
         // 计算样本复杂度上界
         let vc_dim = self.hypothesis_space.vc_dimension();
         let epsilon = 1.0 - self.accuracy;
         let delta = 1.0 - self.confidence;
-        
+
         ((vc_dim as f64 * (1.0 / epsilon).ln() + (1.0 / delta).ln()) / epsilon) as usize
     }
 }
@@ -1387,7 +1387,7 @@ impl VCDimension {
     pub fn calculate(&self) -> usize {
         // 计算VC维
         let mut max_shattered = 0;
-        
+
         for sample_size in 1..=self.max_sample_size() {
             if self.can_shatter(sample_size) {
                 max_shattered = sample_size;
@@ -1395,19 +1395,19 @@ impl VCDimension {
                 break;
             }
         }
-        
+
         max_shattered
     }
-    
+
     pub fn generalization_bound(&self, sample_size: usize, confidence: f64) -> f64 {
         let vc_dim = self.calculate() as f64;
         let n = sample_size as f64;
         let delta = 1.0 - confidence;
-        
+
         // Rademacher复杂度泛化界
         let rademacher_complexity = (2.0 * vc_dim * (n + 1.0).ln() / n).sqrt();
         let confidence_term = (2.0 * (1.0 / delta).ln() / n).sqrt();
-        
+
         rademacher_complexity + confidence_term
     }
 }
@@ -1431,7 +1431,7 @@ pub struct BiasVarianceAnalysis {
 impl BiasVarianceAnalysis {
     pub fn analyze(&self) -> BiasVarianceResult {
         let mut predictions = Vec::new();
-        
+
         // 多次训练获得预测分布
         for _ in 0..self.bootstrap_samples {
             let bootstrap_data = self.bootstrap_sample();
@@ -1439,12 +1439,12 @@ impl BiasVarianceAnalysis {
             let pred = model.predict(&self.test_data);
             predictions.push(pred);
         }
-        
+
         // 计算偏差和方差
         let bias = self.calculate_bias(&predictions);
         let variance = self.calculate_variance(&predictions);
         let noise = self.estimate_noise();
-        
+
         BiasVarianceResult {
             bias_squared: bias * bias,
             variance,
@@ -1470,7 +1470,7 @@ impl OverfittingDetector {
     pub fn detect(&self) -> OverfittingStatus {
         let training_trend = self.calculate_trend(&self.training_loss);
         let validation_trend = self.calculate_trend(&self.validation_loss);
-        
+
         match (training_trend, validation_trend) {
             (Trend::Decreasing, Trend::Increasing) => OverfittingStatus::Overfitting,
             (Trend::Decreasing, Trend::Decreasing) => OverfittingStatus::GoodFit,
@@ -1478,16 +1478,16 @@ impl OverfittingDetector {
             _ => OverfittingStatus::Unstable,
         }
     }
-    
+
     pub fn early_stopping(&mut self, current_epoch: usize) -> bool {
         if self.validation_loss.len() < self.early_stopping_patience {
             return false;
         }
-        
+
         let recent_losses = &self.validation_loss[self.validation_loss.len() - self.early_stopping_patience..];
         let best_loss = recent_losses.iter().min_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
         let current_loss = self.validation_loss.last().unwrap();
-        
+
         current_loss > best_loss
     }
 }
@@ -1515,33 +1515,33 @@ impl InformationTheory {
             .map(|&p| -p * p.log(self.base))
             .sum()
     }
-    
+
     pub fn conditional_entropy(&self, x: &[f64], y: &[f64], joint: &[[f64; 2]]) -> f64 {
         let mut conditional_entropy = 0.0;
-        
+
         for i in 0..x.len() {
             for j in 0..y.len() {
                 let p_xy = joint[i][j];
                 let p_y = y[j];
-                
+
                 if p_xy > 0.0 && p_y > 0.0 {
                     let p_x_given_y = p_xy / p_y;
                     conditional_entropy -= p_xy * p_x_given_y.log(self.base);
                 }
             }
         }
-        
+
         conditional_entropy
     }
-    
+
     pub fn mutual_information(&self, x: &[f64], y: &[f64], joint: &[[f64; 2]]) -> f64 {
         let h_x = self.shannon_entropy(x);
         let h_y = self.shannon_entropy(y);
         let h_xy = self.joint_entropy(joint);
-        
+
         h_x + h_y - h_xy
     }
-    
+
     pub fn kl_divergence(&self, p: &[f64], q: &[f64]) -> f64 {
         p.iter().zip(q.iter())
             .filter(|(&&p_val, &&q_val)| p_val > 0.0 && q_val > 0.0)
@@ -1565,29 +1565,29 @@ impl FisherInformationMatrix {
     pub fn calculate(&self, data: &[f64]) -> Matrix {
         let n_params = self.parameters.len();
         let mut fisher_matrix = Matrix::zeros(n_params, n_params);
-        
+
         // 计算费舍尔信息矩阵
         for i in 0..n_params {
             for j in 0..n_params {
                 let mut sum = 0.0;
-                
+
                 for &x in data {
                     let grad_i = self.gradient_i(x, i);
                     let grad_j = self.gradient_j(x, j);
                     sum += grad_i * grad_j;
                 }
-                
+
                 fisher_matrix[[i, j]] = sum / data.len() as f64;
             }
         }
-        
+
         fisher_matrix
     }
-    
+
     pub fn natural_gradient(&self, gradient: &[f64]) -> Vec<f64> {
         let fisher_matrix = self.calculate(&self.training_data);
         let fisher_inverse = fisher_matrix.inverse().unwrap();
-        
+
         fisher_inverse.mul_vector(gradient)
     }
 }
@@ -1605,20 +1605,20 @@ impl InformationDivergence {
         let m: Vec<f64> = p.iter().zip(q.iter())
             .map(|(&p_val, &q_val)| (p_val + q_val) / 2.0)
             .collect();
-        
+
         let kl_pm = self.kl_divergence(p, &m);
         let kl_qm = self.kl_divergence(q, &m);
-        
+
         (kl_pm + kl_qm) / 2.0
     }
-    
+
     pub fn wasserstein_distance(&self, p: &[f64], q: &[f64]) -> f64 {
         // 一维Wasserstein距离的简化实现
         let mut p_sorted = p.to_vec();
         let mut q_sorted = q.to_vec();
         p_sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
         q_sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
-        
+
         p_sorted.iter().zip(q_sorted.iter())
             .map(|(&p_val, &q_val)| (p_val - q_val).abs())
             .sum::<f64>() / p.len() as f64
@@ -1637,26 +1637,26 @@ pub struct InformationBottleneck {
 impl InformationBottleneck {
     pub fn optimize(&self, input: &[f64], output: &[f64]) -> Vec<f64> {
         let mut representation = self.initialize_representation(input);
-        
+
         for iteration in 0..self.max_iterations {
             // 计算互信息
             let mi_input_repr = self.mutual_information(input, &representation);
             let mi_repr_output = self.mutual_information(&representation, output);
-            
+
             // 信息瓶颈目标函数
             let objective = mi_repr_output - self.beta * mi_input_repr;
-            
+
             // 更新表示
             representation = self.update_representation(&representation, objective);
-            
+
             if self.converged(&representation) {
                 break;
             }
         }
-        
+
         representation
     }
-    
+
     fn update_representation(&self, current: &[f64], objective: f64) -> Vec<f64> {
         // 基于信息瓶颈原理更新表示
         current.iter().map(|&x| {
@@ -1691,49 +1691,49 @@ impl MatrixDecomposition {
     pub fn svd(&self) -> Result<(Matrix, Vec<f64>, Matrix), DecompositionError> {
         // 使用Golub-Reinsch算法实现SVD
         let (u, s, v) = self.golub_reinsch_svd()?;
-        
+
         // 验证分解精度
         let reconstructed = &u * &Matrix::diag(&s) * &v.transpose();
         let error = self.matrix.frobenius_norm_diff(&reconstructed);
-        
+
         if error > self.tolerance {
             return Err(DecompositionError::PrecisionError(error));
         }
-        
+
         Ok((u, s, v))
     }
-    
+
     pub fn eigendecomposition(&self) -> Result<(Vec<f64>, Matrix), DecompositionError> {
         // 使用QR算法计算特征值分解
         let (eigenvalues, eigenvectors) = self.qr_eigenvalue_algorithm()?;
-        
+
         // 验证特征值分解
         for (i, &eigenvalue) in eigenvalues.iter().enumerate() {
             let eigenvector = eigenvectors.column(i);
             let av = &self.matrix * &eigenvector;
             let lambda_v = eigenvalue * &eigenvector;
             let error = av.frobenius_norm_diff(&lambda_v);
-            
+
             if error > self.tolerance {
                 return Err(DecompositionError::EigenvalueError(i, error));
             }
         }
-        
+
         Ok((eigenvalues, eigenvectors))
     }
-    
+
     pub fn cholesky_decomposition(&self) -> Result<Matrix, DecompositionError> {
         // Cholesky分解：A = LL^T
         if !self.matrix.is_symmetric() {
             return Err(DecompositionError::NotSymmetric);
         }
-        
+
         if !self.matrix.is_positive_definite() {
             return Err(DecompositionError::NotPositiveDefinite);
         }
-        
+
         let mut l = Matrix::zeros(self.matrix.rows(), self.matrix.cols());
-        
+
         for i in 0..self.matrix.rows() {
             for j in 0..=i {
                 if i == j {
@@ -1745,7 +1745,7 @@ impl MatrixDecomposition {
                 }
             }
         }
-        
+
         Ok(l)
     }
 }
@@ -1764,98 +1764,98 @@ impl<T: Clone + Default> Tensor<T> {
     pub fn new(shape: Vec<usize>) -> Self {
         let size: usize = shape.iter().product();
         let strides = Self::compute_strides(&shape);
-        
+
         Self {
             data: vec![T::default(); size],
             shape,
             strides,
         }
     }
-    
+
     fn compute_strides(shape: &[usize]) -> Vec<usize> {
         let mut strides = vec![1; shape.len()];
-        
+
         for i in (0..shape.len() - 1).rev() {
             strides[i] = strides[i + 1] * shape[i + 1];
         }
-        
+
         strides
     }
-    
+
     pub fn get_index(&self, indices: &[usize]) -> usize {
         indices.iter()
             .zip(self.strides.iter())
             .map(|(&idx, &stride)| idx * stride)
             .sum()
     }
-    
-    pub fn tensor_product(&self, other: &Tensor<T>) -> Tensor<T> 
+
+    pub fn tensor_product(&self, other: &Tensor<T>) -> Tensor<T>
     where T: std::ops::Mul<Output = T> + Clone {
         let new_shape = [&self.shape[..], &other.shape[..]].concat();
         let mut result = Tensor::new(new_shape);
-        
+
         for (i, &self_val) in self.data.iter().enumerate() {
             for (j, &other_val) in other.data.iter().enumerate() {
                 let result_idx = i * other.data.len() + j;
                 result.data[result_idx] = self_val.clone() * other_val.clone();
             }
         }
-        
+
         result
     }
-    
+
     pub fn contraction(&self, dims: &[(usize, usize)]) -> Tensor<T>
     where T: std::ops::Add<Output = T> + Clone + Default {
         // 张量收缩操作
         let mut new_shape = self.shape.clone();
         let mut to_remove = Vec::new();
-        
+
         for &(dim1, dim2) in dims {
             if dim1 >= self.shape.len() || dim2 >= self.shape.len() {
                 panic!("Invalid dimension for contraction");
             }
-            
+
             if self.shape[dim1] != self.shape[dim2] {
                 panic!("Dimensions must match for contraction");
             }
-            
+
             to_remove.push(dim1.max(dim2));
             to_remove.push(dim1.min(dim2));
         }
-        
+
         to_remove.sort();
         to_remove.dedup();
-        
+
         for &dim in to_remove.iter().rev() {
             new_shape.remove(dim);
         }
-        
+
         let mut result = Tensor::new(new_shape);
-        
+
         // 执行收缩计算
         for i in 0..self.data.len() {
             let indices = self.linear_to_multi_index(i);
             let mut should_contract = true;
-            
+
             for &(dim1, dim2) in dims {
                 if indices[dim1] != indices[dim2] {
                     should_contract = false;
                     break;
                 }
             }
-            
+
             if should_contract {
                 let result_indices: Vec<usize> = indices.iter()
                     .enumerate()
                     .filter(|&(i, _)| !to_remove.contains(&i))
                     .map(|(_, &idx)| idx)
                     .collect();
-                
+
                 let result_idx = result.get_index(&result_indices);
                 result.data[result_idx] = result.data[result_idx].clone() + self.data[i].clone();
             }
         }
-        
+
         result
     }
 }
@@ -1877,7 +1877,7 @@ impl MatrixManifold {
             metric: Box::new(|x, y| x.frobenius_inner_product(y)),
         }
     }
-    
+
     pub fn grassmann_manifold(n: usize, p: usize) -> Self {
         // Grassmann流形：Gr(n,p) = {span(X) : X ∈ St(n,p)}
         Self {
@@ -1885,20 +1885,20 @@ impl MatrixManifold {
             metric: Box::new(|x, y| x.frobenius_inner_product(y)),
         }
     }
-    
+
     pub fn retraction(&self, x: &Matrix, v: &Matrix) -> Matrix {
         // 收缩映射：将切向量映射回流形
         let qr = (&x + v).qr_decomposition();
         qr.q
     }
-    
+
     pub fn vector_transport(&self, x: &Matrix, y: &Matrix, v: &Matrix) -> Matrix {
         // 向量传输：将切向量从x传输到y
         let retraction = self.retraction(x, v);
         let projection = self.project_to_tangent_space(y, &retraction);
         projection
     }
-    
+
     fn project_to_tangent_space(&self, x: &Matrix, v: &Matrix) -> Matrix {
         // 投影到切空间
         let projection = v - &x * &x.transpose() * v;
@@ -1922,28 +1922,28 @@ impl BayesianInference {
         // 贝叶斯更新：P(θ|D) ∝ P(D|θ)P(θ)
         let log_prior = self.prior.log_probability();
         let log_likelihood = self.likelihood.log_probability(data);
-        
+
         // 使用MCMC采样后验分布
         let posterior_samples = self.metropolis_hastings(data, 10000);
-        
+
         Box::new(EmpiricalDistribution::from_samples(posterior_samples))
     }
-    
+
     pub fn metropolis_hastings(&self, data: &[f64], n_samples: usize) -> Vec<f64> {
         let mut samples = Vec::with_capacity(n_samples);
         let mut current = self.prior.sample();
-        
+
         for _ in 0..n_samples {
             let proposal = self.propose(current);
             let acceptance_ratio = self.calculate_acceptance_ratio(current, proposal, data);
-            
+
             if acceptance_ratio > rand::random::<f64>() {
                 current = proposal;
             }
-            
+
             samples.push(current);
         }
-        
+
         samples
     }
 }
@@ -1962,24 +1962,24 @@ impl VariationalInference {
         // 最小化KL散度：KL(q||p)
         let mut params = self.variational_family.initial_parameters();
         let learning_rate = 0.01;
-        
+
         for iteration in 0..1000 {
             let gradient = self.compute_elbo_gradient(&params, data);
             params = self.update_parameters(params, &gradient, learning_rate);
-            
+
             if self.converged(&params) {
                 break;
             }
         }
-        
+
         params
     }
-    
+
     pub fn compute_elbo(&self, params: &VariationalParameters, data: &[f64]) -> f64 {
         // Evidence Lower Bound (ELBO)
         let expected_log_likelihood = self.expected_log_likelihood(params, data);
         let kl_divergence = self.kl_divergence(params);
-        
+
         expected_log_likelihood - kl_divergence
     }
 }
@@ -2000,45 +2000,45 @@ impl ConvexOptimizer {
     pub fn gradient_descent(&self, initial_point: &[f64]) -> Vec<f64> {
         let mut x = initial_point.to_vec();
         let learning_rate = 0.01;
-        
+
         for iteration in 0..1000 {
             let gradient = self.objective.gradient(&x);
             let new_x: Vec<f64> = x.iter()
                 .zip(gradient.iter())
                 .map(|(&xi, &gi)| xi - learning_rate * gi)
                 .collect();
-            
+
             if self.converged(&x, &new_x) {
                 break;
             }
-            
+
             x = new_x;
         }
-        
+
         x
     }
-    
+
     pub fn newton_method(&self, initial_point: &[f64]) -> Vec<f64> {
         let mut x = initial_point.to_vec();
-        
+
         for iteration in 0..100 {
             let gradient = self.objective.gradient(&x);
             let hessian = self.objective.hessian(&x);
             let hessian_inv = hessian.inverse().unwrap();
-            
+
             let newton_step = &hessian_inv * &gradient;
             let new_x: Vec<f64> = x.iter()
                 .zip(newton_step.iter())
                 .map(|(&xi, &step)| xi - step)
                 .collect();
-            
+
             if self.converged(&x, &new_x) {
                 break;
             }
-            
+
             x = new_x;
         }
-        
+
         x
     }
 }
@@ -2056,50 +2056,50 @@ pub struct GlobalOptimizer {
 impl GlobalOptimizer {
     pub fn genetic_algorithm(&self) -> Vec<f64> {
         let mut population = self.initialize_population();
-        
+
         for generation in 0..100 {
             // 评估适应度
             let fitness_scores: Vec<f64> = population.iter()
                 .map(|individual| -self.objective.evaluate(individual))
                 .collect();
-            
+
             // 选择
             let selected = self.tournament_selection(&population, &fitness_scores);
-            
+
             // 交叉和变异
             let offspring = self.crossover_and_mutation(&selected);
-            
+
             // 更新种群
             population = self.update_population(population, offspring);
         }
-        
+
         self.get_best_individual(&population)
     }
-    
+
     pub fn simulated_annealing(&self, initial_point: &[f64]) -> Vec<f64> {
         let mut current = initial_point.to_vec();
         let mut best = current.clone();
         let mut temperature = 1.0;
         let cooling_rate = 0.95;
-        
+
         for iteration in 0..10000 {
             let neighbor = self.generate_neighbor(&current);
             let current_energy = self.objective.evaluate(&current);
             let neighbor_energy = self.objective.evaluate(&neighbor);
-            
+
             let delta_energy = neighbor_energy - current_energy;
-            
+
             if delta_energy < 0.0 || rand::random::<f64>() < (-delta_energy / temperature).exp() {
                 current = neighbor;
-                
+
                 if self.objective.evaluate(&current) < self.objective.evaluate(&best) {
                     best = current.clone();
                 }
             }
-            
+
             temperature *= cooling_rate;
         }
-        
+
         best
     }
 }
@@ -2125,16 +2125,16 @@ impl Tensor {
             grad_fn: None,
         }
     }
-    
+
     pub fn matmul(&self, other: &Tensor) -> Tensor {
         // 矩阵乘法
         assert_eq!(self.shape.len(), 2);
         assert_eq!(other.shape.len(), 2);
         assert_eq!(self.shape[1], other.shape[0]);
-        
+
         let result_shape = vec![self.shape[0], other.shape[1]];
         let mut result = Tensor::new(result_shape, self.requires_grad || other.requires_grad);
-        
+
         for i in 0..self.shape[0] {
             for j in 0..other.shape[1] {
                 let mut sum = 0.0;
@@ -2144,21 +2144,21 @@ impl Tensor {
                 result.set([i, j], sum);
             }
         }
-        
+
         if result.requires_grad {
             result.grad_fn = Some(Box::new(MatMulGradient::new(self.clone(), other.clone())));
         }
-        
+
         result
     }
-    
+
     pub fn backward(&mut self, gradient: Option<Tensor>) {
         if !self.requires_grad {
             return;
         }
-        
+
         let grad = gradient.unwrap_or_else(|| Tensor::ones_like(self));
-        
+
         if let Some(ref grad_fn) = self.grad_fn {
             let input_grads = grad_fn.backward(&grad);
             // 递归计算梯度
@@ -2183,7 +2183,7 @@ impl GradientFunction for MatMulGradient {
     fn backward(&self, grad_output: &Tensor) -> Vec<(Tensor, Tensor)> {
         let grad_input1 = grad_output.matmul(&self.input2.transpose());
         let grad_input2 = self.input1.transpose().matmul(grad_output);
-        
+
         vec![(self.input1.clone(), grad_input1), (self.input2.clone(), grad_input2)]
     }
 }
@@ -2198,19 +2198,19 @@ impl ComputationalGraph {
     pub fn forward(&mut self, inputs: &[Tensor]) -> Tensor {
         // 前向传播
         let mut current = inputs[0].clone();
-        
+
         for i in 1..inputs.len() {
             current = current.matmul(&inputs[i]);
         }
-        
+
         self.nodes.push(current.clone());
         current
     }
-    
+
     pub fn backward(&mut self, loss: Tensor) {
         // 反向传播
         let mut grad = loss;
-        
+
         for i in (0..self.nodes.len()).rev() {
             self.nodes[i].backward(Some(grad));
             grad = self.nodes[i].gradient().unwrap();
@@ -2234,7 +2234,7 @@ impl NumericalStability {
         let condition_number = self.compute_condition_number(matrix);
         let rank = self.compute_rank(matrix);
         let determinant = self.compute_determinant(matrix);
-        
+
         StabilityReport {
             condition_number,
             rank,
@@ -2243,20 +2243,20 @@ impl NumericalStability {
             is_singular: rank < matrix.rows().min(matrix.cols()),
         }
     }
-    
+
     pub fn compute_condition_number(&self, matrix: &Matrix) -> f64 {
         let svd = matrix.svd();
         let singular_values = svd.1;
         let max_sv = singular_values.iter().fold(0.0, |a, &b| a.max(b));
         let min_sv = singular_values.iter().fold(f64::INFINITY, |a, &b| a.min(b));
-        
+
         if min_sv < self.machine_epsilon {
             f64::INFINITY
         } else {
             max_sv / min_sv
         }
     }
-    
+
     pub fn regularize_matrix(&self, matrix: &Matrix, lambda: f64) -> Matrix {
         // Tikhonov正则化：A + λI
         let identity = Matrix::identity(matrix.rows());
@@ -2278,13 +2278,13 @@ impl HighPrecisionArithmetic {
         let result = a + b;
         result.round(self.precision)
     }
-    
+
     pub fn big_float_mul(&self, a: &BigFloat, b: &BigFloat) -> BigFloat {
         // 高精度浮点数乘法
         let result = a * b;
         result.round(self.precision)
     }
-    
+
     pub fn stable_sigmoid(&self, x: f64) -> f64 {
         // 数值稳定的sigmoid函数
         if x >= 0.0 {
@@ -2294,13 +2294,13 @@ impl HighPrecisionArithmetic {
             exp_x / (1.0 + exp_x)
         }
     }
-    
+
     pub fn stable_softmax(&self, x: &[f64]) -> Vec<f64> {
         // 数值稳定的softmax函数
         let max_x = x.iter().fold(f64::NEG_INFINITY, |a, &b| a.max(b));
         let exp_x: Vec<f64> = x.iter().map(|&xi| (xi - max_x).exp()).collect();
         let sum_exp: f64 = exp_x.iter().sum();
-        
+
         exp_x.iter().map(|&exp_xi| exp_xi / sum_exp).collect()
     }
 }
@@ -2310,7 +2310,7 @@ impl Tensor {
         // 张量矩阵乘法
         self.batch_matmul(other)
     }
-    
+
 pub fn reshape(&mut self, new_shape: Vec<usize>) -> Result<(), TensorError> {
         // 张量重塑
         self.validate_shape(&new_shape)?;
@@ -2334,11 +2334,11 @@ pub struct NeuralNetwork {
 impl NeuralNetwork {
     pub fn forward(&self, input: &Tensor) -> Result<Tensor, NetworkError> {
         let mut activation = input.clone();
-        
+
         for layer in &self.layers {
             activation = layer.forward(&activation)?;
         }
-        
+
         Ok(activation)
     }
 }
@@ -2348,8 +2348,8 @@ impl NeuralNetwork {
 
 ```rust
 impl NeuralNetwork {
-    pub fn backward(&self, 
-        input: &Tensor, 
+    pub fn backward(&self,
+        input: &Tensor,
         target: &Tensor
     ) -> Result<Vec<Tensor>, NetworkError> {
         // 前向传播
@@ -2358,18 +2358,18 @@ impl NeuralNetwork {
             let output = layer.forward(activations.last().unwrap())?;
             activations.push(output);
         }
-        
+
         // 计算损失梯度
         let loss = self.compute_loss(activations.last().unwrap(), target)?;
         let mut gradient = self.loss_gradient(activations.last().unwrap(), target)?;
-        
+
         // 反向传播
         let mut gradients = Vec::new();
         for (i, layer) in self.layers.iter().enumerate().rev() {
             gradient = layer.backward(&activations[i], &gradient)?;
             gradients.push(gradient.clone());
         }
-        
+
         gradients.reverse();
         Ok(gradients)
     }
@@ -2392,7 +2392,7 @@ impl ActivationFunction for ReLU {
     fn forward(&self, x: &Tensor) -> Tensor {
         x.map(|val| val.max(0.0))
     }
-    
+
     fn backward(&self, x: &Tensor, grad: &Tensor) -> Tensor {
         x.zip_with(grad, |x_val, grad_val| {
             if x_val > 0.0 { grad_val } else { 0.0 }
@@ -2406,7 +2406,7 @@ impl ActivationFunction for Sigmoid {
     fn forward(&self, x: &Tensor) -> Tensor {
         x.map(|val| 1.0 / (1.0 + (-val).exp()))
     }
-    
+
     fn backward(&self, x: &Tensor, grad: &Tensor) -> Tensor {
         let sigmoid_x = self.forward(x);
         sigmoid_x.zip_with(grad, |s, g| s * (1.0 - s) * g)
@@ -2429,11 +2429,11 @@ impl Dropout {
         if !self.training {
             return x.clone();
         }
-        
+
         let mask = x.map(|_| {
             if rand::random::<f64>() < self.rate { 0.0 } else { 1.0 / (1.0 - self.rate) }
         });
-        
+
         x * mask
     }
 }
@@ -2456,11 +2456,11 @@ impl BatchNorm {
         if training {
             let mean = x.mean(0);
             let var = x.var(0);
-            
+
             // 更新运行统计
             self.running_mean = self.momentum * &self.running_mean + (1.0 - self.momentum) * &mean;
             self.running_var = self.momentum * &self.running_var + (1.0 - self.momentum) * &var;
-            
+
             let normalized = (x - &mean) / (var + self.eps).sqrt();
             Ok(&self.gamma * &normalized + &self.beta)
         } else {
@@ -2494,29 +2494,29 @@ impl SelfAttention {
         let batch_size = x.dim(0);
         let seq_len = x.dim(1);
         let d_model = x.dim(2);
-        
+
         // 计算Q, K, V
         let q = self.query_projection.forward(x)?;
         let k = self.key_projection.forward(x)?;
         let v = self.value_projection.forward(x)?;
-        
+
         // 缩放点积注意力
         let scores = q.matmul(&k.transpose(-2, -1)?)? / self.scale_factor;
-        
+
         // 应用掩码
         let scores = if let Some(mask) = mask {
             scores + mask * (-1e9)
         } else {
             scores
         };
-        
+
         let attention_weights = softmax(&scores, -1)?;
         let attention_weights = self.dropout.forward(&attention_weights)?;
-        
+
         // 加权求和
         let output = attention_weights.matmul(&v)?;
         let output = self.output_projection.forward(&output)?;
-        
+
         Ok(output)
     }
 }
@@ -2535,12 +2535,12 @@ pub struct MultiHeadAttention {
 impl MultiHeadAttention {
     pub fn forward(&self, x: &Tensor, mask: Option<&Tensor>) -> Result<Tensor, AttentionError> {
         let mut outputs = Vec::new();
-        
+
         for head in &self.heads {
             let output = head.forward(x, mask)?;
             outputs.push(output);
         }
-        
+
         // 拼接多头输出
         let concatenated = Tensor::cat(&outputs, -1)?;
         Ok(concatenated)
@@ -2560,7 +2560,7 @@ pub struct SinusoidalPositionalEncoding {
 impl SinusoidalPositionalEncoding {
     pub fn new(max_len: usize, d_model: usize) -> Self {
         let mut encoding = Tensor::zeros(&[max_len, d_model]);
-        
+
         for pos in 0..max_len {
             for i in (0..d_model).step_by(2) {
                 let angle = pos as f64 / (10000.0_f64.powf(i as f64 / d_model as f64));
@@ -2570,7 +2570,7 @@ impl SinusoidalPositionalEncoding {
                 }
             }
         }
-        
+
         Self { encoding }
     }
 }
@@ -2591,12 +2591,12 @@ impl MaskedLanguageModel {
     pub fn forward(&self, input_ids: &Tensor, labels: &Tensor) -> Result<f64, ModelError> {
         let outputs = self.model.forward(input_ids)?;
         let logits = outputs.last_hidden_state();
-        
+
         // 计算掩码位置的损失
         let mask_positions = input_ids.eq(self.mask_token_id);
         let masked_logits = logits.select(&mask_positions);
         let masked_labels = labels.select(&mask_positions);
-        
+
         let loss = cross_entropy_loss(&masked_logits, &masked_labels)?;
         Ok(loss)
     }
@@ -2619,14 +2619,14 @@ pub struct CrossModalAttention {
 }
 
 impl CrossModalAttention {
-    pub fn forward(&self, 
-        text_features: &Tensor, 
+    pub fn forward(&self,
+        text_features: &Tensor,
         image_features: &Tensor
     ) -> Result<Tensor, AttentionError> {
         // 投影到共同空间
         let text_proj = self.text_projection.forward(text_features)?;
         let image_proj = self.image_projection.forward(image_features)?;
-        
+
         // 跨模态注意力
         let attended_features = self.attention.forward(&text_proj, Some(&image_proj))?;
         Ok(attended_features)
@@ -2652,8 +2652,8 @@ pub struct MultimodalFusion {
 }
 
 impl MultimodalFusion {
-    pub fn fuse(&self, 
-        text_features: &Tensor, 
+    pub fn fuse(&self,
+        text_features: &Tensor,
         image_features: &Tensor
     ) -> Result<Tensor, FusionError> {
         match self.strategy {
@@ -2696,30 +2696,30 @@ pub struct Adam {
 }
 
 impl Adam {
-    pub fn step(&mut self, 
-        params: &mut HashMap<String, Tensor>, 
+    pub fn step(&mut self,
+        params: &mut HashMap<String, Tensor>,
         grads: &HashMap<String, Tensor>
     ) -> Result<(), OptimizationError> {
         self.t += 1;
-        
+
         for (name, grad) in grads {
             // 更新一阶矩估计
             let m = self.m.entry(name.clone()).or_insert_with(|| Tensor::zeros_like(grad));
             *m = &*m * self.beta1 + grad * (1.0 - self.beta1);
-            
+
             // 更新二阶矩估计
             let v = self.v.entry(name.clone()).or_insert_with(|| Tensor::zeros_like(grad));
             *v = &*v * self.beta2 + grad.powf(2.0) * (1.0 - self.beta2);
-            
+
             // 偏差修正
             let m_hat = &*m / (1.0 - self.beta1.powi(self.t as i32));
             let v_hat = &*v / (1.0 - self.beta2.powi(self.t as i32));
-            
+
             // 参数更新
             let param = params.get_mut(name).unwrap();
             *param = param - &(m_hat * self.learning_rate / (v_hat.sqrt() + self.epsilon));
         }
-        
+
         Ok(())
     }
 }
@@ -2780,7 +2780,7 @@ pub fn simd_matmul(a: &[f32], b: &[f32], c: &mut [f32], m: usize, n: usize, k: u
         for j in 0..n {
             let mut sum = f32x8::splat(0.0);
             let mut k_idx = 0;
-            
+
             // SIMD向量化计算
             while k_idx + 8 <= k {
                 let a_vec = f32x8::from_slice(&a[i * k + k_idx..]);
@@ -2788,14 +2788,14 @@ pub fn simd_matmul(a: &[f32], b: &[f32], c: &mut [f32], m: usize, n: usize, k: u
                 sum += a_vec * b_vec;
                 k_idx += 8;
             }
-            
+
             // 处理剩余元素
             let mut scalar_sum = sum.reduce_sum();
             while k_idx < k {
                 scalar_sum += a[i * k + k_idx] * b[k_idx * n + j];
                 k_idx += 1;
             }
-            
+
             c[i * n + j] = scalar_sum;
         }
     }
@@ -2819,7 +2819,7 @@ impl MemoryPool {
             pool_sizes: vec![64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768],
         }
     }
-    
+
     pub fn allocate(&mut self, size: usize) -> Vec<f32> {
         let pool_idx = self.find_pool_index(size);
         if let Some(mut buffer) = self.pools[pool_idx].pop() {
@@ -2829,7 +2829,7 @@ impl MemoryPool {
             vec![0.0; size]
         }
     }
-    
+
     pub fn deallocate(&mut self, buffer: Vec<f32>) {
         let size = buffer.capacity();
         let pool_idx = self.find_pool_index(size);
@@ -2858,19 +2858,19 @@ pub struct AsyncInferenceService {
 impl AsyncInferenceService {
     pub async fn start(&mut self) -> Result<(), ServiceError> {
         let semaphore = Arc::new(tokio::sync::Semaphore::new(self.max_concurrent));
-        
+
         while let Some(request) = self.request_queue.recv().await {
             let model = self.model.clone();
             let response_sender = self.response_sender.clone();
             let permit = semaphore.clone().acquire_owned().await?;
-            
+
             tokio::spawn(async move {
                 let _permit = permit;
                 let response = model.process_request(&request).await;
                 let _ = response_sender.send(response);
             });
         }
-        
+
         Ok(())
     }
 }
@@ -2898,21 +2898,21 @@ impl NeuralArchitectureSearch {
         constraints: &Constraints,
     ) -> Result<Architecture, NSError> {
         let mut population = self.initialize_population();
-        
+
         for generation in 0..self.max_generations {
             // 评估当前种群
             let fitness_scores = self.evaluate_population(&population, task)?;
-            
+
             // 选择优秀个体
             let selected = self.selection(&population, &fitness_scores);
-            
+
             // 交叉和变异
             let offspring = self.crossover_and_mutation(&selected)?;
-            
+
             // 更新种群
             population = self.update_population(population, offspring);
         }
-        
+
         Ok(self.get_best_architecture(&population))
     }
 }
@@ -2930,21 +2930,21 @@ pub struct DifferentiableNAS {
 impl DifferentiableNAS {
     pub fn forward(&self, input: &Tensor) -> Result<Tensor, NSError> {
         let mut x = input.clone();
-        
+
         for layer in &self.supernet.layers {
             // 计算架构权重
             let arch_weights = softmax(&self.architecture_parameters, self.temperature);
-            
+
             // 加权组合不同操作
             let mut output = Tensor::zeros_like(&x);
             for (op, weight) in layer.operations.iter().zip(arch_weights.iter()) {
                 let op_output = op.forward(&x)?;
                 output = &output + &(op_output * *weight);
             }
-            
+
             x = output;
         }
-        
+
         Ok(x)
     }
 }
@@ -2965,28 +2965,28 @@ impl FederatedAveraging {
     pub async fn federated_round(&mut self) -> Result<(), FedError> {
         // 1. 选择参与的客户端
         let selected_clients = self.select_clients();
-        
+
         // 2. 分发全局模型
         for client_id in &selected_clients {
             self.distribute_model(*client_id).await?;
         }
-        
+
         // 3. 客户端本地训练
         let mut client_updates = Vec::new();
         for client_id in &selected_clients {
             let update = self.client_training(*client_id).await?;
             client_updates.push((*client_id, update));
         }
-        
+
         // 4. 聚合更新
         let aggregated_update = self.aggregate_updates(&client_updates)?;
-        
+
         // 5. 更新全局模型
         self.update_global_model(&aggregated_update)?;
-        
+
         Ok(())
     }
-    
+
     fn aggregate_updates(&self, updates: &[(ClientId, ModelUpdate)]) -> Result<ModelUpdate, FedError> {
         match self.aggregation_strategy {
             AggregationStrategy::FedAvg => self.fedavg_aggregation(updates),
@@ -3012,34 +3012,34 @@ pub struct ElasticWeightConsolidation {
 impl ElasticWeightConsolidation {
     pub fn compute_fisher_information(&mut self, dataset: &Dataset) -> Result<(), EWCError> {
         let mut fisher = HashMap::new();
-        
+
         for (input, target) in dataset {
             let output = self.model.forward(input)?;
             let loss = self.compute_loss(&output, target)?;
-            
+
             // 计算梯度
             let gradients = self.compute_gradients(&loss)?;
-            
+
             // 累积Fisher信息矩阵
             for (param_name, grad) in gradients {
                 let entry = fisher.entry(param_name).or_insert_with(|| Tensor::zeros_like(&grad));
                 *entry = &*entry + &grad.powf(2.0);
             }
         }
-        
+
         // 归一化
         let dataset_size = dataset.len() as f32;
         for (_, fisher_val) in fisher.iter_mut() {
             *fisher_val = &*fisher_val / dataset_size;
         }
-        
+
         self.fisher_information = fisher;
         Ok(())
     }
-    
+
     pub fn ewc_loss(&self, current_loss: f32) -> f32 {
         let mut ewc_penalty = 0.0;
-        
+
         for (param_name, fisher) in &self.fisher_information {
             if let Some(importance) = self.importance_weights.get(param_name) {
                 if let Some(old_param) = self.get_old_parameter(param_name) {
@@ -3050,7 +3050,7 @@ impl ElasticWeightConsolidation {
                 }
             }
         }
-        
+
         current_loss + self.lambda * ewc_penalty
     }
 }
@@ -3072,34 +3072,34 @@ pub struct VariationalQuantumEigensolver {
 impl VariationalQuantumEigensolver {
     pub fn optimize_ground_state(&mut self, hamiltonian: &Hamiltonian) -> Result<f64, VQEError> {
         let mut parameters = self.ansatz.initial_parameters();
-        
+
         for iteration in 0..self.max_iterations {
             // 计算期望值
             let expectation_value = self.compute_expectation_value(&parameters, hamiltonian)?;
-            
+
             // 计算梯度
             let gradients = self.compute_parameter_shift_gradients(&parameters, hamiltonian)?;
-            
+
             // 更新参数
             parameters = self.classical_optimizer.step(parameters, &gradients)?;
-            
+
             if iteration % 10 == 0 {
                 println!("Iteration {}: Energy = {:.6}", iteration, expectation_value);
             }
         }
-        
+
         Ok(self.compute_expectation_value(&parameters, hamiltonian)?)
     }
-    
+
     fn compute_expectation_value(&self, params: &[f64], hamiltonian: &Hamiltonian) -> Result<f64, VQEError> {
         let mut expectation = 0.0;
-        
+
         for (pauli_string, coefficient) in hamiltonian.terms() {
             let circuit = self.ansatz.build_circuit(params, pauli_string)?;
             let measurement = self.quantum_circuit.execute(&circuit)?;
             expectation += coefficient * measurement.expectation_value();
         }
-        
+
         Ok(expectation)
     }
 }
@@ -3119,40 +3119,40 @@ impl QuantumApproximateOptimizationAlgorithm {
     pub fn solve(&self) -> Result<Solution, QAOAError> {
         let mut best_solution = None;
         let mut best_energy = f64::NEG_INFINITY;
-        
+
         // 参数优化
         let mut params = self.initial_parameters();
-        
+
         for iteration in 0..self.max_iterations {
             // 构建QAOA电路
             let circuit = self.build_qaoa_circuit(&params)?;
-            
+
             // 执行量子电路
             let measurement = self.execute_circuit(&circuit)?;
-            
+
             // 计算期望能量
             let energy = self.compute_energy(&measurement)?;
-            
+
             if energy > best_energy {
                 best_energy = energy;
                 best_solution = Some(measurement.to_solution());
             }
-            
+
             // 更新参数
             params = self.optimize_parameters(params, energy)?;
         }
-        
+
         Ok(best_solution.unwrap())
     }
-    
+
     fn build_qaoa_circuit(&self, params: &[f64]) -> Result<QuantumCircuit, QAOAError> {
         let mut circuit = QuantumCircuit::new(self.problem.num_qubits());
-        
+
         // 初始态制备
         for i in 0..self.problem.num_qubits() {
             circuit.add_gate(QuantumGate::H(i));
         }
-        
+
         // QAOA层
         for layer in 0..self.p {
             // 问题哈密顿量
@@ -3166,13 +3166,13 @@ impl QuantumApproximateOptimizationAlgorithm {
                     circuit.add_gate(QuantumGate::CNOT(qubits[0], qubits[1]));
                 }
             }
-            
+
             // 混合哈密顿量
             for i in 0..self.problem.num_qubits() {
                 circuit.add_gate(QuantumGate::RX(i, params[2 * layer + 1]));
             }
         }
-        
+
         Ok(circuit)
     }
 }
@@ -3195,19 +3195,19 @@ impl NeuralSymbolicReasoner {
     pub fn reason(&self, query: &Query) -> Result<Answer, ReasoningError> {
         // 1. 神经编码
         let neural_embedding = self.neural_encoder.encode(&query.entities)?;
-        
+
         // 2. 符号推理
         let symbolic_result = self.symbolic_engine.reason(&query.logic_formula)?;
-        
+
         // 3. 神经符号融合
         let fused_result = self.fuse_results(&neural_embedding, &symbolic_result)?;
-        
+
         // 4. 答案生成
         let answer = self.generate_answer(&fused_result)?;
-        
+
         Ok(answer)
     }
-    
+
     fn fuse_results(&self, neural: &Tensor, symbolic: &SymbolicResult) -> Result<Tensor, ReasoningError> {
         // 注意力机制融合
         let attention_weights = self.compute_attention_weights(neural, symbolic)?;
@@ -3229,37 +3229,37 @@ pub struct DifferentiableLogicProgram {
 impl DifferentiableLogicProgram {
     pub fn forward(&self, facts: &[Fact]) -> Result<Vec<f32>, LogicError> {
         let mut knowledge_base = KnowledgeBase::new();
-        
+
         // 添加事实
         for fact in facts {
             knowledge_base.add_fact(fact);
         }
-        
+
         // 应用规则
         let mut results = Vec::new();
         for rule in &self.rules {
             let rule_result = self.apply_rule(rule, &knowledge_base)?;
             results.push(rule_result);
         }
-        
+
         Ok(results)
     }
-    
+
     fn apply_rule(&self, rule: &LogicRule, kb: &KnowledgeBase) -> Result<f32, LogicError> {
         let mut rule_confidence = 1.0;
-        
+
         // 检查前提条件
         for premise in &rule.premises {
             let premise_confidence = self.evaluate_premise(premise, kb)?;
             rule_confidence *= premise_confidence;
         }
-        
+
         // 应用神经组件
         if let Some(neural_comp) = self.neural_components.get(&rule.name) {
             let neural_output = neural_comp.forward(&rule.inputs)?;
             rule_confidence *= neural_output;
         }
-        
+
         Ok(rule_confidence)
     }
 }
@@ -3287,22 +3287,22 @@ pub struct FairnessMetrics {
 impl FairnessMetrics {
     pub fn calculate_demographic_parity(&self, predictions: &[f64], groups: &[usize]) -> f64 {
         let mut group_stats = HashMap::new();
-        
+
         for (pred, group) in predictions.iter().zip(groups.iter()) {
             let entry = group_stats.entry(*group).or_insert(Vec::new());
             entry.push(*pred);
         }
-        
+
         let mut parity_scores = Vec::new();
         for (_, predictions) in group_stats {
             let positive_rate = predictions.iter().filter(|&&p| p > 0.5).count() as f64 / predictions.len() as f64;
             parity_scores.push(positive_rate);
         }
-        
+
         // 计算方差作为公平性指标
         let mean = parity_scores.iter().sum::<f64>() / parity_scores.len() as f64;
         let variance = parity_scores.iter().map(|&x| (x - mean).powi(2)).sum::<f64>() / parity_scores.len() as f64;
-        
+
         1.0 / (1.0 + variance) // 方差越小，公平性越高
     }
 }
@@ -3325,7 +3325,7 @@ impl ExplainabilityEngine {
         let feature_importance = self.explainer.compute_feature_importance(input)?;
         let decision_path = self.explainer.trace_decision_path(input)?;
         let counterfactual = self.explainer.generate_counterfactual(input, prediction)?;
-        
+
         Explanation {
             prediction,
             feature_importance,
@@ -3334,23 +3334,23 @@ impl ExplainabilityEngine {
             confidence: self.calculate_confidence(input),
         }
     }
-    
+
     pub fn generate_human_readable_explanation(&self, explanation: &Explanation) -> String {
         let mut explanation_text = String::new();
-        
+
         explanation_text.push_str(&format!("预测结果: {:.2}\n", explanation.prediction));
         explanation_text.push_str(&format!("置信度: {:.2}%\n", explanation.confidence * 100.0));
-        
+
         explanation_text.push_str("关键特征影响:\n");
         for (feature, importance) in &explanation.feature_importance {
             explanation_text.push_str(&format!("- {}: {:.3}\n", feature, importance));
         }
-        
+
         explanation_text.push_str("决策路径:\n");
         for step in &explanation.decision_path {
             explanation_text.push_str(&format!("- {}\n", step));
         }
-        
+
         explanation_text
     }
 }
@@ -3373,22 +3373,22 @@ impl PrivacyPreservingML {
     pub fn add_noise_to_gradient(&self, gradient: &Tensor) -> Tensor {
         let sensitivity = self.calculate_sensitivity(gradient);
         let noise_scale = sensitivity / self.epsilon;
-        
+
         let noise = self.mechanism.generate_noise(noise_scale, gradient.shape());
         gradient + noise
     }
-    
+
     pub fn private_aggregation(&self, gradients: &[Tensor]) -> Tensor {
         let mut aggregated = Tensor::zeros(gradients[0].shape());
-        
+
         for gradient in gradients {
             let noisy_gradient = self.add_noise_to_gradient(gradient);
             aggregated = aggregated + noisy_gradient;
         }
-        
+
         aggregated / gradients.len() as f64
     }
-    
+
     pub fn calculate_privacy_loss(&self, num_queries: usize) -> f64 {
         // 组合定理：多次查询的隐私损失累积
         num_queries as f64 * self.epsilon
@@ -3421,29 +3421,29 @@ impl AccountabilityFramework {
             context: context.clone(),
             responsible_party: self.identify_responsible_party(decision),
         };
-        
+
         self.audit_log.lock().unwrap().push(audit_entry);
         Ok(())
     }
-    
+
     pub fn assess_decision_risk(&self, decision: &Decision) -> RiskAssessment {
         let mut risk_factors = Vec::new();
-        
+
         // 评估决策影响
         if decision.confidence < 0.8 {
             risk_factors.push(RiskFactor::LowConfidence);
         }
-        
+
         // 评估潜在偏见
         if self.detect_bias(&decision.input) {
             risk_factors.push(RiskFactor::PotentialBias);
         }
-        
+
         // 评估安全影响
         if self.assess_safety_impact(decision) > 0.7 {
             risk_factors.push(RiskFactor::HighSafetyImpact);
         }
-        
+
         RiskAssessment {
             risk_level: self.calculate_risk_level(&risk_factors),
             risk_factors,
@@ -3472,37 +3472,37 @@ impl AdversarialAttack {
         let perturbation = self.epsilon * gradient.sign();
         input + perturbation
     }
-    
+
     pub fn pgd_attack(&self, model: &dyn Model, input: &Tensor, target: &Tensor) -> Tensor {
         let mut adversarial = input.clone();
-        
+
         for _ in 0..self.max_iterations {
             let gradient = model.compute_gradient(&adversarial, target);
             let perturbation = self.epsilon * gradient.sign();
             adversarial = adversarial + perturbation;
-            
+
             // 投影到允许的扰动范围内
             adversarial = self.project_to_ball(adversarial, input, self.epsilon);
         }
-        
+
         adversarial
     }
-    
+
     pub fn carlini_wagner_attack(&self, model: &dyn Model, input: &Tensor, target: &Tensor) -> Tensor {
         // C&W攻击的简化实现
         let mut best_perturbation = None;
         let mut best_loss = f64::INFINITY;
-        
+
         for c in [0.1, 1.0, 10.0, 100.0] {
             let perturbation = self.optimize_perturbation(model, input, target, c);
             let loss = self.compute_attack_loss(model, &perturbation, target);
-            
+
             if loss < best_loss {
                 best_loss = loss;
                 best_perturbation = Some(perturbation);
             }
         }
-        
+
         best_perturbation.unwrap()
     }
 }
@@ -3518,7 +3518,7 @@ pub struct AdversarialTraining {
 }
 
 impl AdversarialTraining {
-    pub async fn train_with_adversarial_examples(&self, 
+    pub async fn train_with_adversarial_examples(&self,
         training_data: &[(Tensor, Tensor)],
         epochs: usize
     ) -> Result<()> {
@@ -3526,40 +3526,40 @@ impl AdversarialTraining {
             for (input, target) in training_data {
                 // 生成对抗样本
                 let adversarial_input = self.attack_generator.generate(input, target);
-                
+
                 // 同时训练原始样本和对抗样本
                 let original_loss = self.model.lock().unwrap().compute_loss(input, target);
                 let adversarial_loss = self.model.lock().unwrap().compute_loss(&adversarial_input, target);
-                
+
                 let total_loss = original_loss + self.defense_strength * adversarial_loss;
-                
+
                 // 反向传播
                 self.model.lock().unwrap().backward(&total_loss);
                 self.model.lock().unwrap().update_parameters();
             }
         }
-        
+
         Ok(())
     }
-    
+
     pub fn evaluate_robustness(&self, test_data: &[(Tensor, Tensor)]) -> RobustnessMetrics {
         let mut total_attacks = 0;
         let mut successful_attacks = 0;
         let mut total_perturbation = 0.0;
-        
+
         for (input, target) in test_data {
             let adversarial = self.attack_generator.generate(input, target);
             let original_pred = self.model.lock().unwrap().predict(input);
             let adversarial_pred = self.model.lock().unwrap().predict(&adversarial);
-            
+
             total_attacks += 1;
             if original_pred != adversarial_pred {
                 successful_attacks += 1;
             }
-            
+
             total_perturbation += self.compute_perturbation_magnitude(input, &adversarial);
         }
-        
+
         RobustnessMetrics {
             attack_success_rate: successful_attacks as f64 / total_attacks as f64,
             average_perturbation: total_perturbation / total_attacks as f64,
@@ -3580,11 +3580,11 @@ pub struct ModelSecurityVerifier {
 impl ModelSecurityVerifier {
     pub fn verify_model_safety(&self, model: &dyn Model) -> SecurityReport {
         let mut report = SecurityReport::new();
-        
+
         for property in &self.safety_properties {
             let mut property_satisfied = true;
             let mut counterexamples = Vec::new();
-            
+
             for method in &self.verification_methods {
                 match method.verify_property(model, property) {
                     VerificationResult::Satisfied => {
@@ -3599,18 +3599,18 @@ impl ModelSecurityVerifier {
                     }
                 }
             }
-            
+
             if !property_satisfied {
                 report.add_violated_property(property.clone(), counterexamples);
             }
         }
-        
+
         report
     }
-    
+
     pub fn generate_security_certificate(&self, model: &dyn Model) -> SecurityCertificate {
         let report = self.verify_model_safety(model);
-        
+
         SecurityCertificate {
             model_id: model.get_id(),
             verification_date: SystemTime::now(),
@@ -3643,26 +3643,26 @@ impl AIGovernanceFramework {
             compliance_framework: self.build_compliance_framework(),
         }
     }
-    
+
     pub fn review_ai_system(&self, system: &AISystem) -> GovernanceReview {
         let mut review = GovernanceReview::new();
-        
+
         // 伦理审查
         let ethics_review = self.ethics_committee.review_system(system);
         review.add_ethics_assessment(ethics_review);
-        
+
         // 技术审查
         let technical_review = self.technical_committee.review_system(system);
         review.add_technical_assessment(technical_review);
-        
+
         // 合规审查
         let compliance_review = self.audit_committee.review_compliance(system);
         review.add_compliance_assessment(compliance_review);
-        
+
         // 综合评估
         review.calculate_overall_score();
         review.generate_recommendations();
-        
+
         review
     }
 }
@@ -3687,27 +3687,27 @@ impl MicroserviceAIArchitecture {
     pub async fn process_request(&self, request: &AIRequest) -> Result<AIResponse> {
         // 负载均衡
         let service_instance = self.load_balancer.select_service(&request.service_type)?;
-        
+
         // 并行处理
         let (model_result, data_result) = tokio::try_join!(
             self.model_service.load_model(&request.model_id),
             self.data_service.prepare_data(&request.data)
         )?;
-        
+
         // 推理处理
         let inference_result = self.inference_service.process(
             &model_result,
             &data_result,
             &request.parameters
         ).await?;
-        
+
         // 监控记录
         self.monitoring_service.record_inference(
             &request,
             &inference_result,
             SystemTime::now()
         ).await?;
-        
+
         Ok(AIResponse {
             result: inference_result,
             metadata: self.generate_metadata(&request, &inference_result),
@@ -3729,32 +3729,32 @@ pub struct EdgeAIArchitecture {
 impl EdgeAIArchitecture {
     pub async fn deploy_model_to_edge(&self, model: &Model, edge_node_id: &str) -> Result<()> {
         let edge_node = self.find_edge_node(edge_node_id)?;
-        
+
         // 模型压缩和优化
         let optimized_model = self.optimize_model_for_edge(model, &edge_node.capabilities)?;
-        
+
         // 部署到边缘节点
         edge_node.deploy_model(optimized_model).await?;
-        
+
         // 更新模型注册表
         self.model_distributor.register_model_deployment(edge_node_id, model.id())?;
-        
+
         Ok(())
     }
-    
+
     pub async fn coordinate_inference(&self, request: &InferenceRequest) -> Result<InferenceResponse> {
         // 选择最佳边缘节点
         let best_node = self.select_optimal_edge_node(request)?;
-        
+
         // 执行边缘推理
         let edge_result = best_node.execute_inference(request).await?;
-        
+
         // 如果边缘推理不满足要求，回退到云端
         if !self.is_result_satisfactory(&edge_result, request) {
             let cloud_result = self.cloud_coordinator.execute_inference(request).await?;
             return Ok(cloud_result);
         }
-        
+
         Ok(edge_result)
     }
 }
@@ -3778,7 +3778,7 @@ impl FaultTolerantAISystem {
         if !self.health_monitor.is_healthy(&self.primary_model) {
             return self.failover_to_backup(input).await;
         }
-        
+
         // 执行主模型推理
         match self.primary_model.predict(input).await {
             Ok(result) => {
@@ -3796,7 +3796,7 @@ impl FaultTolerantAISystem {
             }
         }
     }
-    
+
     async fn failover_to_backup(&self, input: &Tensor) -> Result<Tensor> {
         for backup_model in &self.backup_models {
             if self.health_monitor.is_healthy(backup_model) {
@@ -3806,7 +3806,7 @@ impl FaultTolerantAISystem {
                 }
             }
         }
-        
+
         Err(AIError::AllModelsFailed)
     }
 }
@@ -3825,27 +3825,27 @@ pub struct AIPerformanceMonitor {
 impl AIPerformanceMonitor {
     pub async fn monitor_system_performance(&self) -> Result<()> {
         let metrics = self.metrics_collector.collect_all_metrics().await?;
-        
+
         // 性能分析
         let analysis = self.performance_analyzer.analyze_metrics(&metrics)?;
-        
+
         // 检查性能阈值
         if analysis.has_performance_issues() {
             self.alert_manager.send_alert(&analysis.issues).await?;
-            
+
             // 自动优化
             if analysis.can_auto_optimize() {
                 self.optimization_engine.optimize_system(&analysis).await?;
             }
         }
-        
+
         Ok(())
     }
-    
+
     pub fn generate_performance_report(&self, time_range: TimeRange) -> PerformanceReport {
         let metrics = self.metrics_collector.get_metrics_for_range(time_range);
         let analysis = self.performance_analyzer.analyze_metrics(&metrics);
-        
+
         PerformanceReport {
             time_range,
             overall_performance_score: analysis.overall_score,
@@ -3896,9 +3896,9 @@ impl AIPerformanceMonitor {
 
 ---
 
-*最后更新：2025年1月*  
-*版本：v3.0*  
-*状态：持续更新中*  
+*最后更新：2025年1月*
+*版本：v3.0*
+*状态：持续更新中*
 *适用对象：AI研究人员、Rust开发者、技术架构师、量子计算研究者、AI伦理专家、系统架构师*
 
 ## 附录F：定义-属性-关系与论证层次（Definitions, Properties, Relations, Argumentation）

@@ -1,0 +1,220 @@
+name: CD
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # 构建和推送Docker镜像
+  build-and-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
+
+  # 部署到开发环境
+  deploy-dev:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: development
+      url: https://dev.ai-rust.example.com
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_DEV }}
+      
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl set image deployment/ai-rust \
+            ai-rust=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            -n development
+          kubectl rollout status deployment/ai-rust -n development
+      
+      - name: Run smoke tests
+        run: |
+          kubectl run smoke-test \
+            --image=curlimages/curl:latest \
+            --restart=Never \
+            --rm -i \
+            -n development \
+            -- curl -f http://ai-rust-service:8080/health
+
+  # 部署到测试环境
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: staging
+      url: https://staging.ai-rust.example.com
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_STAGING }}
+      
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl set image deployment/ai-rust \
+            ai-rust=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            -n staging
+          kubectl rollout status deployment/ai-rust -n staging
+      
+      - name: Run integration tests
+        run: |
+          kubectl run integration-test \
+            --image=your-org/integration-tests:latest \
+            --restart=Never \
+            --rm -i \
+            -n staging \
+            -- /run-tests.sh http://ai-rust-service:8080
+
+  # 部署到生产环境
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build-and-push, deploy-staging]
+    if: startsWith(github.ref, 'refs/tags/v')
+    environment:
+      name: production
+      url: https://ai-rust.example.com
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_PROD }}
+      
+      - name: Create backup
+        run: |
+          kubectl get deployment ai-rust -n production -o yaml > backup-$(date +%Y%m%d-%H%M%S).yaml
+      
+      - name: Deploy to Kubernetes (Blue-Green)
+        run: |
+          # 创建新版本deployment (green)
+          kubectl apply -f k8s/deployment-green.yaml -n production
+          
+          # 等待新版本就绪
+          kubectl rollout status deployment/ai-rust-green -n production
+          
+          # 切换流量到新版本
+          kubectl patch service ai-rust-service \
+            -n production \
+            -p '{"spec":{"selector":{"version":"green"}}}'
+          
+          # 等待确认
+          sleep 60
+          
+          # 删除旧版本 (blue)
+          kubectl delete deployment ai-rust-blue -n production || true
+          
+          # 重命名green为blue
+          kubectl get deployment ai-rust-green -n production -o yaml | \
+            sed 's/ai-rust-green/ai-rust-blue/g' | \
+            sed 's/version: green/version: blue/g' | \
+            kubectl apply -f -
+          kubectl delete deployment ai-rust-green -n production
+      
+      - name: Run production smoke tests
+        run: |
+          kubectl run smoke-test \
+            --image=curlimages/curl:latest \
+            --restart=Never \
+            --rm -i \
+            -n production \
+            -- curl -f http://ai-rust-service:8080/health
+      
+      - name: Notify deployment
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: 'Deployed version ${{ github.ref_name }} to production'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        if: always()
+
+  # 回滚
+  rollback:
+    name: Rollback Production
+    runs-on: ubuntu-latest
+    if: failure()
+    needs: deploy-production
+    environment:
+      name: production
+    steps:
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_PROD }}
+      
+      - name: Rollback deployment
+        run: |
+          kubectl rollout undo deployment/ai-rust -n production
+          kubectl rollout status deployment/ai-rust -n production
+      
+      - name: Notify rollback
+        uses: 8398a7/action-slack@v3
+        with:
+          status: 'warning'
+          text: 'Rolled back deployment in production'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}

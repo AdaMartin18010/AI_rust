@@ -157,16 +157,16 @@ use nalgebra::{DVector, DMatrix, SVD};
 pub fn vector_space_operations() {
     let v1 = Array1::from_vec(vec![1.0, 2.0, 3.0]);
     let v2 = Array1::from_vec(vec![4.0, 5.0, 6.0]);
-    
+
     // 向量加法
     let sum = &v1 + &v2;
-    
+
     // 标量乘法
     let scaled = 2.0 * &v1;
-    
+
     // 内积
     let dot_product = v1.dot(&v2);
-    
+
     println!("向量和: {:?}", sum);
     println!("标量积: {:?}", scaled);
     println!("内积: {}", dot_product);
@@ -204,27 +204,27 @@ pub fn eigenvalue_decomposition() -> Result<(), Box<dyn std::error::Error>> {
         -2.0, 4.0, -2.0,
         1.0, -2.0, 4.0
     ]);
-    
+
     // 对称特征值分解
     let eigen = SymmetricEigen::new(matrix);
     let eigenvalues = eigen.eigenvalues;
     let eigenvectors = eigen.eigenvectors;
-    
+
     println!("特征值: {:?}", eigenvalues);
     println!("特征向量矩阵:\n{}", eigenvectors);
-    
+
     // 验证：Av = λv
     for i in 0..eigenvalues.len() {
         let lambda = eigenvalues[i];
         let v = eigenvectors.column(i);
         let av = &matrix * &v;
         let lambda_v = lambda * &v;
-        
+
         println!("验证 Av = λv (第{}个特征值):", i+1);
         println!("Av: {:?}", av);
         println!("λv: {:?}", lambda_v);
     }
-    
+
     Ok(())
 }
 ```
@@ -597,7 +597,7 @@ mod tests {
         let a = DMatrix::from_row_slice(2, 2, &[1.0, 2.0, 3.0, 4.0]);
         let b = DMatrix::from_row_slice(2, 2, &[5.0, 6.0, 7.0, 8.0]);
         let c = &a * &b;
-        
+
         assert_abs_diff_eq!(c[(0, 0)], 19.0, epsilon = 1e-6);
     }
 }
