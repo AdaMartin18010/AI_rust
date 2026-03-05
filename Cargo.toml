@@ -299,6 +299,10 @@ proc-macro-error2 = "2.0.2"  # 替代 proc-macro-error (未维护)
 is-terminal = "0.2.1"  # 替代 atty (有安全漏洞)
 wasm-bindgen = "0.2.105"  # 最新稳定版本，支持WebAssembly 2.0
 nix = "0.28.1"  # 系统调用安全封装
+
+# 2026年3月安全更新 - 修复RUSTSEC漏洞
+# lru: 修复内存安全问题 (RUSTSEC-2026-0002)
+lru = ">=0.12.6"
 # pingora 已移除，存在安全漏洞 (RUSTSEC-2025-0037, RUSTSEC-2025-0070)
 
 # 2025年1月安全更新 - 修复已知安全漏洞
