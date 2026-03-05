@@ -5,7 +5,7 @@
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use uuid::Uuid;
 use chrono::{DateTime, Utc};
 use tokio::sync::mpsc;
@@ -343,7 +343,7 @@ impl TrainingPipelineManager {
     }
 
     /// 加载检查点
-    pub async fn load_checkpoint(&mut self, job_id: &str, checkpoint_path: &PathBuf) -> Result<()> {
+    pub async fn load_checkpoint(&mut self, job_id: &str, checkpoint_path: &Path) -> Result<()> {
         if let Some(job) = self.jobs.get_mut(job_id) {
             self.checkpoint_manager.load_checkpoint(job, checkpoint_path.to_str().unwrap()).await?;
         }

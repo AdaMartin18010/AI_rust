@@ -522,6 +522,12 @@ pub struct OrmTransaction {
     is_active: bool,
 }
 
+impl Default for OrmTransaction {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl OrmTransaction {
     pub fn new() -> Self {
         Self {

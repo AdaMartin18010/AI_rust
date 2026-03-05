@@ -413,12 +413,11 @@ impl InferenceEngine {
     /// 计算置信度
     fn calculate_confidence(&self, output: &serde_json::Value) -> Option<f64> {
         // 简单的置信度计算逻辑
-        if let Some(predictions) = output.get("predictions") {
-            if let Some(prediction) = predictions.get(0) {
-                if let Some(confidence) = prediction.get("confidence") {
-                    return confidence.as_f64();
-                }
-            }
+        if let Some(predictions) = output.get("predictions")
+            && let Some(prediction) = predictions.get(0)
+            && let Some(confidence) = prediction.get("confidence")
+        {
+            return confidence.as_f64();
         }
         None
     }

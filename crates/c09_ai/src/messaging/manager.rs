@@ -212,7 +212,7 @@ impl MessagingManager {
         
         let producer = Arc::new(MessageProducer::new("producer".to_string()));
 
-        let producer_id = producer.get_id().clone();
+        let producer_id = *producer.get_id();
         {
             let mut producers = self.producers.write().await;
             producers.insert(producer_id.to_string(), producer.clone());
@@ -228,7 +228,7 @@ impl MessagingManager {
         
         let consumer = Arc::new(MessageConsumer::new("consumer".to_string()));
 
-        let consumer_id = consumer.get_id().clone();
+        let consumer_id = *consumer.get_id();
         {
             let mut consumers = self.consumers.write().await;
             consumers.insert(consumer_id.to_string(), consumer.clone());

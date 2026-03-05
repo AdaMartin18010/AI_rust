@@ -310,38 +310,38 @@ impl DataSchema {
     fn validate_field_constraint(&self, value: &serde_json::Value, constraint: &FieldConstraint) -> Result<(), String> {
         match constraint {
             FieldConstraint::MinLength(min) => {
-                if let Some(s) = value.as_str() {
-                    if s.len() < *min {
-                        return Err(format!("String length {} is less than minimum {}", s.len(), min));
-                    }
+                if let Some(s) = value.as_str()
+                    && s.len() < *min
+                {
+                    return Err(format!("String length {} is less than minimum {}", s.len(), min));
                 }
             }
             FieldConstraint::MaxLength(max) => {
-                if let Some(s) = value.as_str() {
-                    if s.len() > *max {
-                        return Err(format!("String length {} exceeds maximum {}", s.len(), max));
-                    }
+                if let Some(s) = value.as_str()
+                    && s.len() > *max
+                {
+                    return Err(format!("String length {} exceeds maximum {}", s.len(), max));
                 }
             }
             FieldConstraint::MinValue(min) => {
-                if let Some(n) = value.as_f64() {
-                    if n < *min {
-                        return Err(format!("Value {} is less than minimum {}", n, min));
-                    }
+                if let Some(n) = value.as_f64()
+                    && n < *min
+                {
+                    return Err(format!("Value {} is less than minimum {}", n, min));
                 }
             }
             FieldConstraint::MaxValue(max) => {
-                if let Some(n) = value.as_f64() {
-                    if n > *max {
-                        return Err(format!("Value {} exceeds maximum {}", n, max));
-                    }
+                if let Some(n) = value.as_f64()
+                    && n > *max
+                {
+                    return Err(format!("Value {} exceeds maximum {}", n, max));
                 }
             }
             FieldConstraint::Pattern(pattern) => {
-                if let Some(s) = value.as_str() {
-                    if !regex::Regex::new(pattern).unwrap().is_match(s) {
-                        return Err(format!("Value '{}' does not match pattern '{}'", s, pattern));
-                    }
+                if let Some(s) = value.as_str()
+                    && !regex::Regex::new(pattern).unwrap().is_match(s)
+                {
+                    return Err(format!("Value '{}' does not match pattern '{}'", s, pattern));
                 }
             }
             FieldConstraint::Enum(allowed_values) => {
@@ -350,17 +350,17 @@ impl DataSchema {
                 }
             }
             FieldConstraint::Range(min, max) => {
-                if let Some(n) = value.as_f64() {
-                    if n < *min || n > *max {
-                        return Err(format!("Value {} is not in range [{}, {}]", n, min, max));
-                    }
+                if let Some(n) = value.as_f64()
+                    && (n < *min || n > *max)
+                {
+                    return Err(format!("Value {} is not in range [{}, {}]", n, min, max));
                 }
             }
             FieldConstraint::NotEmpty => {
-                if let Some(s) = value.as_str() {
-                    if s.trim().is_empty() {
-                        return Err("String cannot be empty".to_string());
-                    }
+                if let Some(s) = value.as_str()
+                    && s.trim().is_empty()
+                {
+                    return Err("String cannot be empty".to_string());
                 }
             }
             _ => {} // 其他约束的实现
@@ -391,18 +391,17 @@ impl DataSchema {
                 // 暂时跳过实现
             }
             Constraint::ConditionalRequired(condition_field, required_field, expected_value) => {
-                if let Some(condition_value) = data.get(condition_field) {
-                    if condition_value == expected_value {
-                        if data.get(required_field).is_none() {
-                            errors.push(ValidationError {
-                                field: Some(required_field.clone()),
-                                code: "CONDITIONAL_REQUIRED_FIELD_MISSING".to_string(),
-                                message: format!("Field '{}' is required when '{}' equals {:?}", required_field, condition_field, expected_value),
-                                severity: ErrorSeverity::Medium,
-                                context: HashMap::new(),
-                            });
-                        }
-                    }
+                if let Some(condition_value) = data.get(condition_field)
+                    && condition_value == expected_value
+                    && data.get(required_field).is_none()
+                {
+                    errors.push(ValidationError {
+                        field: Some(required_field.clone()),
+                        code: "CONDITIONAL_REQUIRED_FIELD_MISSING".to_string(),
+                        message: format!("Field '{}' is required when '{}' equals {:?}", required_field, condition_field, expected_value),
+                        severity: ErrorSeverity::Medium,
+                        context: HashMap::new(),
+                    });
                 }
             }
             _ => {} // 其他约束的实现

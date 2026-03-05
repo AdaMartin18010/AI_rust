@@ -57,6 +57,12 @@ pub struct MonitoringDashboard {
     start_time: Instant,
 }
 
+impl Default for MonitoringDashboard {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl MonitoringDashboard {
     /// 创建新的监控仪表板
     pub fn new() -> Self {
@@ -101,10 +107,10 @@ impl MonitoringDashboard {
             metrics.entry(name.to_string()).or_insert_with(Vec::new).push(metric);
             
             // 保留最近1000个指标
-            if let Some(metric_list) = metrics.get_mut(name) {
-                if metric_list.len() > 1000 {
-                    metric_list.remove(0);
-                }
+            if let Some(metric_list) = metrics.get_mut(name)
+                && metric_list.len() > 1000
+            {
+                metric_list.remove(0);
             }
         }
     }

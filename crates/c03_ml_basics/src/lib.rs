@@ -43,8 +43,8 @@ pub fn kmeans_1d(data: &[f64], k: usize, max_iter: usize) -> Option<Vec<f64>> {
     let data_max = data.iter().fold(f64::NEG_INFINITY, |a, &b| a.max(b));
     
     // 初始化聚类中心
-    for i in 0..k {
-        centers[i] = data_min + (data_max - data_min) * i as f64 / (k - 1) as f64;
+    for (i, center) in centers.iter_mut().enumerate() {
+        *center = data_min + (data_max - data_min) * i as f64 / (k - 1) as f64;
     }
     
     for _ in 0..max_iter {

@@ -86,9 +86,9 @@ impl DenseLayer {
         let mut biases = vec![0.0; output_size];
         
         // 简单的随机初始化（实际应用中应使用更好的随机数生成器）
-        for i in 0..output_size {
-            for j in 0..input_size {
-                weights[i][j] = (i as f64 * 0.1 + j as f64 * 0.01) * xavier_std;
+        for (i, weight_row) in weights.iter_mut().enumerate() {
+            for (j, weight) in weight_row.iter_mut().enumerate() {
+                *weight = (i as f64 * 0.1 + j as f64 * 0.01) * xavier_std;
             }
             biases[i] = (i as f64 * 0.01) * xavier_std;
         }
@@ -108,12 +108,12 @@ impl DenseLayer {
         
         let mut outputs = vec![0.0; self.output_size];
         
-        for i in 0..self.output_size {
+        for (i, output) in outputs.iter_mut().enumerate() {
             let mut sum = self.biases[i];
-            for j in 0..self.input_size {
-                sum += self.weights[i][j] * inputs[j];
+            for (j, input) in inputs.iter().enumerate() {
+                sum += self.weights[i][j] * input;
             }
-            outputs[i] = sum;
+            *output = sum;
         }
         
         Some(outputs)
@@ -177,7 +177,7 @@ impl GradientDescent {
         Self { learning_rate }
     }
     
-    pub fn update_weights(&self, weights: &mut Vec<Vec<f64>>, gradients: &[Vec<f64>]) {
+    pub fn update_weights(&self, weights: &mut [Vec<f64>], gradients: &[Vec<f64>]) {
         for (weight_row, grad_row) in weights.iter_mut().zip(gradients.iter()) {
             for (weight, &grad) in weight_row.iter_mut().zip(grad_row.iter()) {
                 *weight -= self.learning_rate * grad;
@@ -185,7 +185,7 @@ impl GradientDescent {
         }
     }
     
-    pub fn update_biases(&self, biases: &mut Vec<f64>, gradients: &[f64]) {
+    pub fn update_biases(&self, biases: &mut [f64], gradients: &[f64]) {
         for (bias, &grad) in biases.iter_mut().zip(gradients.iter()) {
             *bias -= self.learning_rate * grad;
         }

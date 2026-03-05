@@ -165,46 +165,48 @@ impl ModelRegistry {
         self.models
             .values()
             .filter(|model| {
-                if let Some(name) = &filter.name {
-                    if !model.name.contains(name) {
-                        return false;
-                    }
+                if let Some(name) = &filter.name
+                    && !model.name.contains(name)
+                {
+                    return false;
                 }
 
-                if let Some(model_type) = &filter.model_type {
-                    if std::mem::discriminant(&model.model_type) != std::mem::discriminant(model_type) {
-                        return false;
-                    }
+                if let Some(model_type) = &filter.model_type
+                    && std::mem::discriminant(&model.model_type)
+                        != std::mem::discriminant(model_type)
+                {
+                    return false;
                 }
 
-                if let Some(framework) = &filter.framework {
-                    if std::mem::discriminant(&model.framework) != std::mem::discriminant(framework) {
-                        return false;
-                    }
+                if let Some(framework) = &filter.framework
+                    && std::mem::discriminant(&model.framework)
+                        != std::mem::discriminant(framework)
+                {
+                    return false;
                 }
 
-                if let Some(status) = &filter.status {
-                    if std::mem::discriminant(&model.status) != std::mem::discriminant(status) {
-                        return false;
-                    }
+                if let Some(status) = &filter.status
+                    && std::mem::discriminant(&model.status) != std::mem::discriminant(status)
+                {
+                    return false;
                 }
 
-                if let Some(tags) = &filter.tags {
-                    if !tags.iter().any(|tag| model.tags.contains(tag)) {
-                        return false;
-                    }
+                if let Some(tags) = &filter.tags
+                    && !tags.iter().any(|tag| model.tags.contains(tag))
+                {
+                    return false;
                 }
 
-                if let Some(created_after) = &filter.created_after {
-                    if model.created_at < *created_after {
-                        return false;
-                    }
+                if let Some(created_after) = &filter.created_after
+                    && model.created_at < *created_after
+                {
+                    return false;
                 }
 
-                if let Some(created_before) = &filter.created_before {
-                    if model.created_at > *created_before {
-                        return false;
-                    }
+                if let Some(created_before) = &filter.created_before
+                    && model.created_at > *created_before
+                {
+                    return false;
                 }
 
                 true
@@ -327,12 +329,12 @@ impl ModelRegistry {
 
         let mut entries = tokio::fs::read_dir(&metadata_dir).await?;
         while let Some(entry) = entries.next_entry().await? {
-            if let Some(extension) = entry.path().extension() {
-                if extension == "json" {
-                    let metadata_content = tokio::fs::read_to_string(entry.path()).await?;
-                    let model_entry: ModelEntry = serde_json::from_str(&metadata_content)?;
-                    self.models.insert(model_entry.id.clone(), model_entry);
-                }
+            if let Some(extension) = entry.path().extension()
+                && extension == "json"
+            {
+                let metadata_content = tokio::fs::read_to_string(entry.path()).await?;
+                let model_entry: ModelEntry = serde_json::from_str(&metadata_content)?;
+                self.models.insert(model_entry.id.clone(), model_entry);
             }
         }
 

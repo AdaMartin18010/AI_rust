@@ -89,6 +89,12 @@ pub struct TrainingJobManager {
     running_jobs: Mutex<HashMap<String, tokio::task::JoinHandle<()>>>,
 }
 
+impl Default for TrainingJobManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl TrainingJobManager {
     /// 创建新的训练任务管理器
     pub fn new() -> Self {
@@ -261,6 +267,7 @@ impl TrainingJobManager {
 
             if matches!(job.status, JobStatus::Paused) {
                 // 等待恢复
+                #[allow(clippy::while_immutable_condition)]
                 while matches!(job.status, JobStatus::Paused) {
                     tokio::time::sleep(Duration::from_millis(100)).await;
                 }

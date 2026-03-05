@@ -217,20 +217,19 @@ impl AuthManager {
         let user = self.get_user_by_username(&request.username).await?;
 
         // 检查用户是否被锁定
-        if user.is_locked {
-            if let Some(locked_until) = user.locked_until {
-                if Utc::now() < locked_until {
-                    return Ok(LoginResponse {
-                        success: false,
-                        token: None,
-                        refresh_token: None,
-                        user: None,
-                        expires_at: None,
-                        message: "Account is locked".to_string(),
-                        requires_two_factor: false,
-                    });
-                }
-            }
+        if user.is_locked
+            && let Some(locked_until) = user.locked_until
+            && Utc::now() < locked_until
+        {
+            return Ok(LoginResponse {
+                success: false,
+                token: None,
+                refresh_token: None,
+                user: None,
+                expires_at: None,
+                message: "Account is locked".to_string(),
+                requires_two_factor: false,
+            });
         }
 
         // 验证密码
@@ -261,20 +260,19 @@ impl AuthManager {
         }
 
         // 验证双因素认证码
-        if user.two_factor_enabled {
-            if let Some(code) = request.two_factor_code {
-                if !self.verify_two_factor_code(&user, &code)? {
-                    return Ok(LoginResponse {
-                        success: false,
-                        token: None,
-                        refresh_token: None,
-                        user: None,
-                        expires_at: None,
-                        message: "Invalid two-factor code".to_string(),
-                        requires_two_factor: true,
-                    });
-                }
-            }
+        if user.two_factor_enabled
+            && let Some(code) = request.two_factor_code
+            && !self.verify_two_factor_code(&user, &code)?
+        {
+            return Ok(LoginResponse {
+                success: false,
+                token: None,
+                refresh_token: None,
+                user: None,
+                expires_at: None,
+                message: "Invalid two-factor code".to_string(),
+                requires_two_factor: true,
+            });
         }
 
         // 重置失败登录次数
@@ -287,7 +285,7 @@ impl AuthManager {
         // 创建会话
         let session = Session {
             id: Uuid::new_v4(),
-            user_id: user.id.clone(),
+            user_id: user.id,
             token: token.clone(),
             refresh_token: refresh_token.clone(),
             expires_at: Utc::now() + chrono::Duration::from_std(self.config.jwt_expiry).unwrap_or_default(),

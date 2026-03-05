@@ -776,7 +776,7 @@ impl AIEngine {
     where
         F: Fn(&str) + Send + Sync + 'static,
     {
-        let listeners = self.event_listeners.entry(event_name.to_string()).or_insert_with(Vec::new);
+        let listeners = self.event_listeners.entry(event_name.to_string()).or_default();
         listeners.push(Box::new(callback));
         Ok(())
     }

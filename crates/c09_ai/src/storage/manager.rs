@@ -168,6 +168,12 @@ pub enum BatchOperationType {
     UpdateMetadata,
 }
 
+impl Default for StorageManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl StorageManager {
     /// 创建新的存储管理器
     pub fn new() -> Self {
@@ -234,7 +240,7 @@ impl StorageManager {
             size: request.data.len() as u64,
             content_type: request.content_type,
             metadata: request.metadata,
-            tags: request.tags.map(|tags| tags.into_iter().map(|(k, v)| format!("{}:{}", k, v)).collect()).unwrap_or_else(|| Vec::new()),
+            tags: request.tags.map(|tags| tags.into_iter().map(|(k, v)| format!("{}:{}", k, v)).collect()).unwrap_or_default(),
             storage_class: request.storage_class,
             encryption: request.encryption.map(|e| e.to_string()),
             created_at: Utc::now(),
@@ -375,7 +381,7 @@ impl StorageManager {
         for key in &operation.keys {
             match operation.operation_type {
                 BatchOperationType::Delete => {
-                    match backend.delete(&key).await {
+                    match backend.delete(key).await {
                         Ok(_) => results.push(BatchItemResult {
                             key: key.clone(),
                             success: true,
@@ -392,7 +398,7 @@ impl StorageManager {
                 }
                 BatchOperationType::Copy => {
                     if let Some(dest) = &operation.destination {
-                        match backend.copy(&key, &format!("{}/{}", dest, key)).await {
+                        match backend.copy(key, &format!("{}/{}", dest, key)).await {
                             Ok(_) => results.push(BatchItemResult {
                                 key: key.clone(),
                                 success: true,
@@ -468,7 +474,7 @@ impl StorageManager {
         };
 
         for (name, backend) in backends.iter() {
-            let is_healthy = self.check_backend_health(backend).await;
+            let is_healthy = self.check_backend_health(backend.as_ref()).await;
             
             if is_healthy {
                 status.healthy_backends += 1;
@@ -550,7 +556,7 @@ impl StorageManager {
     }
 
     /// 检查后端健康状态
-    async fn check_backend_health(&self, _backend: &Box<dyn StorageBackend + Send + Sync>) -> bool {
+    async fn check_backend_health(&self, _backend: &(dyn StorageBackend + Send + Sync)) -> bool {
         // 简单的健康检查：总是返回true
         true
     }

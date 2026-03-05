@@ -1,3 +1,5 @@
+#![allow(clippy::module_inception)]
+
 // 神经网络模块
 pub mod neural_networks;
 

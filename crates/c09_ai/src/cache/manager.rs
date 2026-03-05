@@ -261,10 +261,10 @@ impl CacheManager {
             let mut results = HashMap::new();
             
             for key in keys {
-                if key.contains(pattern) {
-                    if let Some(value) = cache.get(&key).await {
-                        results.insert(key, value.data);
-                    }
+                if key.contains(pattern)
+                    && let Some(value) = cache.get(&key).await
+                {
+                    results.insert(key, value.data);
                 }
             }
             
@@ -319,12 +319,11 @@ impl CacheManager {
             let mut expired_keys = Vec::new();
 
             for key in keys {
-                if let Some(value) = cache.get(&key).await {
-                    if let Some(expires_at) = value.expires_at {
-                        if expires_at < Instant::now() {
-                            expired_keys.push(key);
-                        }
-                    }
+                if let Some(value) = cache.get(&key).await
+                    && let Some(expires_at) = value.expires_at
+                    && expires_at < Instant::now()
+                {
+                    expired_keys.push(key);
                 }
             }
 

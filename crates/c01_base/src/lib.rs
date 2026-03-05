@@ -23,6 +23,12 @@ impl RunningAverage {
     }
 }
 
+impl Default for RunningAverage {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

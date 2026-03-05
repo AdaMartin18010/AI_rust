@@ -1,3 +1,5 @@
+#![allow(clippy::module_inception)]
+
 // 机器学习模块
 pub mod machine_learning;
 

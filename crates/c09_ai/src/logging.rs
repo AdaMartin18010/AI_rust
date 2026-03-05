@@ -19,19 +19,24 @@ pub enum LogLevel {
     Fatal = 5,
 }
 
-impl LogLevel {
+impl std::str::FromStr for LogLevel {
+    type Err = ();
+
     /// 从字符串创建日志级别
-    pub fn from_str(level: &str) -> Option<Self> {
+    fn from_str(level: &str) -> Result<Self, Self::Err> {
         match level.to_lowercase().as_str() {
-            "trace" => Some(LogLevel::Trace),
-            "debug" => Some(LogLevel::Debug),
-            "info" => Some(LogLevel::Info),
-            "warn" | "warning" => Some(LogLevel::Warn),
-            "error" => Some(LogLevel::Error),
-            "fatal" => Some(LogLevel::Fatal),
-            _ => None,
+            "trace" => Ok(LogLevel::Trace),
+            "debug" => Ok(LogLevel::Debug),
+            "info" => Ok(LogLevel::Info),
+            "warn" | "warning" => Ok(LogLevel::Warn),
+            "error" => Ok(LogLevel::Error),
+            "fatal" => Ok(LogLevel::Fatal),
+            _ => Err(()),
         }
     }
+}
+
+impl LogLevel {
     
     /// 转换为字符串
     pub fn as_str(&self) -> &'static str {

@@ -168,7 +168,7 @@ impl BenchmarkSuite {
             
             // 模拟并发请求
             for _ in 0..config.concurrent_users {
-                if total_requests % (config.requests_per_second as u64) == 0 {
+                if total_requests.is_multiple_of(config.requests_per_second as u64) {
                     let request_start = Instant::now();
                     
                     match test_fn() {

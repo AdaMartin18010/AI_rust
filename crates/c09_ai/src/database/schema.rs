@@ -45,6 +45,12 @@ impl Migration {
     }
 }
 
+impl Default for SchemaManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl SchemaManager {
     pub fn new() -> Self {
         Self {

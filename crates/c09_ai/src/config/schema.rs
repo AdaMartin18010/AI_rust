@@ -153,9 +153,15 @@ pub struct AppConfig {
     pub logging: LoggingConfig,
 }
 
+impl Default for AppConfig {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AppConfig {
     /// 创建默认配置
-    pub fn default() -> Self {
+    pub fn new() -> Self {
         Self {
             server: ServerConfig {
                 host: "0.0.0.0".to_string(),
@@ -204,11 +210,5 @@ impl AppConfig {
                 max_files: 10,
             },
         }
-    }
-}
-
-impl Default for AppConfig {
-    fn default() -> Self {
-        Self::default()
     }
 }

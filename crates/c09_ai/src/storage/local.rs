@@ -186,26 +186,24 @@ impl StorageBackend for LocalStorage {
         // 遍历目录
         let mut entries = tokio::fs::read_dir(&self.base_path).await?;
         while let Some(entry) = entries.next_entry().await? {
-            if let Some(limit) = limit {
-                if count >= limit {
-                    break;
-                }
+            if let Some(limit) = limit && count >= limit {
+                break;
             }
             
             let path = entry.path();
-            if let Some(file_name) = path.file_name().and_then(|n| n.to_str()) {
-                if file_name.starts_with(prefix) {
-                    let metadata = entry.metadata().await?;
-                    if metadata.is_file() {
-                        items.push(ListItem {
-                            key: file_name.to_string(),
-                            size: metadata.len(),
-                            last_modified: metadata.modified()?.into(),
-                            etag: format!("{:x}", md5::compute(file_name.as_bytes())),
-                            storage_class: "STANDARD".to_string(),
-                        });
-                        count += 1;
-                    }
+            if let Some(file_name) = path.file_name().and_then(|n| n.to_str())
+                && file_name.starts_with(prefix)
+            {
+                let metadata = entry.metadata().await?;
+                if metadata.is_file() {
+                    items.push(ListItem {
+                        key: file_name.to_string(),
+                        size: metadata.len(),
+                        last_modified: metadata.modified()?.into(),
+                        etag: format!("{:x}", md5::compute(file_name.as_bytes())),
+                        storage_class: "STANDARD".to_string(),
+                    });
+                    count += 1;
                 }
             }
         }

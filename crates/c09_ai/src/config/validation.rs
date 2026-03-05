@@ -44,41 +44,36 @@ impl ConfigValidator {
         value: &str,
         rules: &ValidationRules,
     ) -> Result<(), ConfigError> {
-        if let Some(min_len) = rules.min_length {
-            if value.len() < min_len {
-                return Err(ConfigError::ValidationFailed {
-                    message: format!("配置项 '{}' 长度不能少于 {} 个字符", key, min_len),
-                });
-            }
+        if let Some(min_len) = rules.min_length && value.len() < min_len {
+            return Err(ConfigError::ValidationFailed {
+                message: format!("配置项 '{}' 长度不能少于 {} 个字符", key, min_len),
+            });
         }
 
-        if let Some(max_len) = rules.max_length {
-            if value.len() > max_len {
-                return Err(ConfigError::ValidationFailed {
-                    message: format!("配置项 '{}' 长度不能超过 {} 个字符", key, max_len),
-                });
-            }
+        if let Some(max_len) = rules.max_length && value.len() > max_len {
+            return Err(ConfigError::ValidationFailed {
+                message: format!("配置项 '{}' 长度不能超过 {} 个字符", key, max_len),
+            });
         }
 
-        if let Some(pattern) = &rules.pattern {
-            if !regex::Regex::new(pattern)
+        if let Some(pattern) = &rules.pattern
+            && !regex::Regex::new(pattern)
                 .map_err(|e| ConfigError::ValidationFailed {
                     message: format!("正则表达式错误: {}", e),
                 })?
                 .is_match(value)
-            {
-                return Err(ConfigError::ValidationFailed {
-                    message: format!("配置项 '{}' 格式不正确", key),
-                });
-            }
+        {
+            return Err(ConfigError::ValidationFailed {
+                message: format!("配置项 '{}' 格式不正确", key),
+            });
         }
 
-        if let Some(allowed_values) = &rules.allowed_values {
-            if !allowed_values.contains(&ConfigValue::String(value.to_string())) {
-                return Err(ConfigError::ValidationFailed {
-                    message: format!("配置项 '{}' 的值不在允许的范围内", key),
-                });
-            }
+        if let Some(allowed_values) = &rules.allowed_values
+            && !allowed_values.contains(&ConfigValue::String(value.to_string()))
+        {
+            return Err(ConfigError::ValidationFailed {
+                message: format!("配置项 '{}' 的值不在允许的范围内", key),
+            });
         }
 
         Ok(())
@@ -90,28 +85,24 @@ impl ConfigValidator {
         value: i64,
         rules: &ValidationRules,
     ) -> Result<(), ConfigError> {
-        if let Some(min) = rules.min_value {
-            if value < min {
-                return Err(ConfigError::ValidationFailed {
-                    message: format!("配置项 '{}' 的值不能小于 {}", key, min),
-                });
-            }
+        if let Some(min) = rules.min_value && value < min {
+            return Err(ConfigError::ValidationFailed {
+                message: format!("配置项 '{}' 的值不能小于 {}", key, min),
+            });
         }
 
-        if let Some(max) = rules.max_value {
-            if value > max {
-                return Err(ConfigError::ValidationFailed {
-                    message: format!("配置项 '{}' 的值不能大于 {}", key, max),
-                });
-            }
+        if let Some(max) = rules.max_value && value > max {
+            return Err(ConfigError::ValidationFailed {
+                message: format!("配置项 '{}' 的值不能大于 {}", key, max),
+            });
         }
 
-        if let Some(allowed_values) = &rules.allowed_values {
-            if !allowed_values.contains(&ConfigValue::Integer(value)) {
-                return Err(ConfigError::ValidationFailed {
-                    message: format!("配置项 '{}' 的值不在允许的范围内", key),
-                });
-            }
+        if let Some(allowed_values) = &rules.allowed_values
+            && !allowed_values.contains(&ConfigValue::Integer(value))
+        {
+            return Err(ConfigError::ValidationFailed {
+                message: format!("配置项 '{}' 的值不在允许的范围内", key),
+            });
         }
 
         Ok(())
@@ -123,28 +114,24 @@ impl ConfigValidator {
         value: f64,
         rules: &ValidationRules,
     ) -> Result<(), ConfigError> {
-        if let Some(min) = rules.min_value {
-            if value < min as f64 {
-                return Err(ConfigError::ValidationFailed {
-                    message: format!("配置项 '{}' 的值不能小于 {}", key, min),
-                });
-            }
+        if let Some(min) = rules.min_value && value < min as f64 {
+            return Err(ConfigError::ValidationFailed {
+                message: format!("配置项 '{}' 的值不能小于 {}", key, min),
+            });
         }
 
-        if let Some(max) = rules.max_value {
-            if value > max as f64 {
-                return Err(ConfigError::ValidationFailed {
-                    message: format!("配置项 '{}' 的值不能大于 {}", key, max),
-                });
-            }
+        if let Some(max) = rules.max_value && value > max as f64 {
+            return Err(ConfigError::ValidationFailed {
+                message: format!("配置项 '{}' 的值不能大于 {}", key, max),
+            });
         }
 
-        if let Some(allowed_values) = &rules.allowed_values {
-            if !allowed_values.contains(&ConfigValue::Float(value)) {
-                return Err(ConfigError::ValidationFailed {
-                    message: format!("配置项 '{}' 的值不在允许的范围内", key),
-                });
-            }
+        if let Some(allowed_values) = &rules.allowed_values
+            && !allowed_values.contains(&ConfigValue::Float(value))
+        {
+            return Err(ConfigError::ValidationFailed {
+                message: format!("配置项 '{}' 的值不在允许的范围内", key),
+            });
         }
 
         Ok(())
@@ -156,20 +143,16 @@ impl ConfigValidator {
         value: &[ConfigValue],
         rules: &ValidationRules,
     ) -> Result<(), ConfigError> {
-        if let Some(min_items) = rules.min_items {
-            if value.len() < min_items {
-                return Err(ConfigError::ValidationFailed {
-                    message: format!("配置项 '{}' 的数组长度不能少于 {} 个元素", key, min_items),
-                });
-            }
+        if let Some(min_items) = rules.min_items && value.len() < min_items {
+            return Err(ConfigError::ValidationFailed {
+                message: format!("配置项 '{}' 的数组长度不能少于 {} 个元素", key, min_items),
+            });
         }
 
-        if let Some(max_items) = rules.max_items {
-            if value.len() > max_items {
-                return Err(ConfigError::ValidationFailed {
-                    message: format!("配置项 '{}' 的数组长度不能超过 {} 个元素", key, max_items),
-                });
-            }
+        if let Some(max_items) = rules.max_items && value.len() > max_items {
+            return Err(ConfigError::ValidationFailed {
+                message: format!("配置项 '{}' 的数组长度不能超过 {} 个元素", key, max_items),
+            });
         }
 
         // 验证数组中的每个元素

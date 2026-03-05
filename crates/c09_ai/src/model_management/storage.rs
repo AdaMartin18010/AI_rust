@@ -197,12 +197,12 @@ impl ModelStorage {
         let mut entries = fs::read_dir(&records_dir).await?;
 
         while let Some(entry) = entries.next_entry().await? {
-            if let Some(extension) = entry.path().extension() {
-                if extension == "json" {
-                    let content = fs::read_to_string(entry.path()).await?;
-                    if let Ok(model) = serde_json::from_str::<StoredModel>(&content) {
-                        models.push(model);
-                    }
+            if let Some(extension) = entry.path().extension()
+                && extension == "json"
+            {
+                let content = fs::read_to_string(entry.path()).await?;
+                if let Ok(model) = serde_json::from_str::<StoredModel>(&content) {
+                    models.push(model);
                 }
             }
         }

@@ -645,23 +645,12 @@ impl Repository for DatasetRepository {
 }
 
 /// 模型统计信息
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ModelStats {
     pub total_models: usize,
     pub models_by_framework: HashMap<String, usize>,
     pub models_by_status: HashMap<String, usize>,
     pub total_size_bytes: u64,
-}
-
-impl Default for ModelStats {
-    fn default() -> Self {
-        Self {
-            total_models: 0,
-            models_by_framework: HashMap::new(),
-            models_by_status: HashMap::new(),
-            total_size_bytes: 0,
-        }
-    }
 }
 
 /// 推理统计信息
@@ -685,7 +674,7 @@ impl Default for InferenceStats {
 }
 
 /// 数据集统计信息
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct DatasetStats {
     pub total_datasets: usize,
     pub datasets_by_format: HashMap<String, usize>,
@@ -693,13 +682,4 @@ pub struct DatasetStats {
     pub public_datasets: usize,
 }
 
-impl Default for DatasetStats {
-    fn default() -> Self {
-        Self {
-            total_datasets: 0,
-            datasets_by_format: HashMap::new(),
-            total_size_bytes: 0,
-            public_datasets: 0,
-        }
-    }
-}
+

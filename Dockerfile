@@ -2,7 +2,7 @@
 # 多阶段构建，优化镜像大小和安全性
 
 # 构建阶段
-FROM rust:1.90-slim as builder
+FROM rust:1.94-slim as builder
 
 # 安装系统依赖
 RUN apt-get update && apt-get install -y \

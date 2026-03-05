@@ -9,7 +9,7 @@ license = "MIT"
 repository = "https://github.com/rust-lang/c03_ml_basics"
 keywords = ["ai", "machine-learning", "deep-learning", "neural-networks", "nlp", "computer-vision", "llm", "transformers", "rust-189", "candle", "burn", "tch", "dfdx"]
 categories = ["science", "machine-learning", "algorithms"]
-rust-version = "1.90"
+rust-version = "1.94"
 
 [lib]
 path = "src/lib.rs"

@@ -175,12 +175,12 @@ impl WebSocketManager {
         }
 
         // 更新最后ping时间
-        if matches!(message.message_type, super::message::WebSocketMessageType::Ping) {
-            if let Some(sender_id) = &message.sender_id {
-                let mut connections = self.connections.write().await;
-                if let Some(conn_info) = connections.get_mut(sender_id) {
-                    conn_info.update_ping();
-                }
+        if matches!(message.message_type, super::message::WebSocketMessageType::Ping)
+            && let Some(sender_id) = &message.sender_id
+        {
+            let mut connections = self.connections.write().await;
+            if let Some(conn_info) = connections.get_mut(sender_id) {
+                conn_info.update_ping();
             }
         }
 

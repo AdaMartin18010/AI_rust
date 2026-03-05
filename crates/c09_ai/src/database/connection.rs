@@ -403,7 +403,7 @@ impl QueryBuilder {
         
         query.push_str("SELECT ");
         if self.columns.is_empty() {
-            query.push_str("*");
+            query.push('*');
         } else {
             query.push_str(&self.columns.join(", "));
         }

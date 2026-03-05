@@ -73,12 +73,12 @@ impl Default for SimpleTokenizer {
 pub fn positional_encoding(seq_len: usize, d_model: usize) -> Vec<Vec<f64>> {
     let mut pe = vec![vec![0.0; d_model]; seq_len];
     
-    for pos in 0..seq_len {
-        for i in 0..d_model {
+    for (pos, pe_row) in pe.iter_mut().enumerate() {
+        for (i, val) in pe_row.iter_mut().enumerate() {
             if i % 2 == 0 {
-                pe[pos][i] = (pos as f64 / 10000.0_f64.powf(i as f64 / d_model as f64)).sin();
+                *val = (pos as f64 / 10000.0_f64.powf(i as f64 / d_model as f64)).sin();
             } else {
-                pe[pos][i] = (pos as f64 / 10000.0_f64.powf((i - 1) as f64 / d_model as f64)).cos();
+                *val = (pos as f64 / 10000.0_f64.powf((i - 1) as f64 / d_model as f64)).cos();
             }
         }
     }
@@ -222,7 +222,7 @@ impl TransformerEncoderLayer {
         // 残差连接和层归一化（简化）
         for i in 0..input.len() {
             for j in 0..self.d_model {
-                output[i][j] = output[i][j] + ff_output[i][j];
+                output[i][j] += ff_output[i][j];
             }
         }
         
@@ -238,8 +238,8 @@ pub fn text_embedding(text: &str, vocab_size: usize, d_model: usize) -> Vec<Vec<
     // 简单的词嵌入（实际中应该使用预训练的嵌入）
     for (i, token) in tokens.iter().enumerate() {
         let hash = token.len() as u32;
-        for j in 0..d_model {
-            embeddings[i][j] = ((hash + j as u32) as f64 / vocab_size as f64) * 2.0 - 1.0;
+        for (j, val) in embeddings[i].iter_mut().enumerate() {
+            *val = ((hash + j as u32) as f64 / vocab_size as f64) * 2.0 - 1.0;
         }
     }
     

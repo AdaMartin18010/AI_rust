@@ -9,7 +9,7 @@ license = "MIT"
 repository = "https://github.com/rust-lang/c09_ai"
 keywords = ["ai", "machine-learning", "deep-learning", "neural-networks", "nlp", "computer-vision", "llm", "transformers", "rust-189", "candle", "burn", "tch", "dfdx"]
 categories = ["science", "machine-learning", "algorithms"]
-rust-version = "1.90"
+rust-version = "1.94"
 
 # AI/ML CPU指令集优化配置在根Cargo.toml中统一管理
 
@@ -302,7 +302,7 @@ path = "examples/basic_ml.rs"
 [[example]]
 name = "deep_learning"
 path = "examples/deep_learning.rs"
-required-features = ["candle", "burn", "dfdx"]
+required-features = ["candle", "dfdx"]
 
 [[example]]
 name = "nlp_pipeline"

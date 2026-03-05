@@ -198,7 +198,7 @@ impl TransactionManager {
     /// 清理已完成的事务
     pub async fn cleanup_completed_transactions(&self) -> Result<()> {
         let mut active_transactions = self.active_transactions.write().await;
-        let completed_statuses = vec![
+        let completed_statuses = [
             TransactionStatus::Committed,
             TransactionStatus::RolledBack,
             TransactionStatus::Failed,
@@ -215,8 +215,10 @@ impl TransactionManager {
     pub async fn get_transaction_stats(&self) -> TransactionStats {
         let active_transactions = self.active_transactions.read().await;
         
-        let mut stats = TransactionStats::default();
-        stats.total_transactions = active_transactions.len();
+        let mut stats = TransactionStats {
+            total_transactions: active_transactions.len(),
+            ..Default::default()
+        };
         
         for transaction in active_transactions.values() {
             match transaction.status {
@@ -233,7 +235,7 @@ impl TransactionManager {
 }
 
 /// 事务统计信息
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct TransactionStats {
     pub total_transactions: usize,
     pub created_count: usize,
@@ -241,19 +243,6 @@ pub struct TransactionStats {
     pub committed_count: usize,
     pub rolled_back_count: usize,
     pub failed_count: usize,
-}
-
-impl Default for TransactionStats {
-    fn default() -> Self {
-        Self {
-            total_transactions: 0,
-            created_count: 0,
-            started_count: 0,
-            committed_count: 0,
-            rolled_back_count: 0,
-            failed_count: 0,
-        }
-    }
 }
 
 /// 事务构建器

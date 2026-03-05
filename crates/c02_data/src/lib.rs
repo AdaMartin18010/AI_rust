@@ -56,7 +56,7 @@ pub fn calculate_stats(values: &[f64]) -> Option<DataStats> {
     
     let count = values.len();
     let mean = values.iter().sum::<f64>() / count as f64;
-    let median = if count % 2 == 0 {
+    let median = if count.is_multiple_of(2) {
         (sorted[count / 2 - 1] + sorted[count / 2]) / 2.0
     } else {
         sorted[count / 2]
@@ -114,10 +114,10 @@ pub fn create_bins(values: &[f64], num_bins: usize) -> Option<Vec<(f64, f64, usi
     let bin_width = (max - min) / num_bins as f64;
     let mut bins = vec![(0.0, 0.0, 0); num_bins];
     
-    for i in 0..num_bins {
+    for (i, bin) in bins.iter_mut().enumerate() {
         let start = min + i as f64 * bin_width;
         let end = if i == num_bins - 1 { max } else { start + bin_width };
-        bins[i] = (start, end, 0);
+        *bin = (start, end, 0);
     }
     
     for &value in values {

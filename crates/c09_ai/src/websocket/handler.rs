@@ -141,11 +141,11 @@ impl WebSocketHandler {
 
         // 调用注册的消息处理器
         let handlers = self.message_handlers.read().await;
-        if let Some(handler) = handlers.get(&message.message_type) {
-            if let Some(response) = handler(message.clone())? {
-                // 发送响应消息
-                self.send_message(response).await?;
-            }
+        if let Some(handler) = handlers.get(&message.message_type)
+            && let Some(response) = handler(message.clone())?
+        {
+            // 发送响应消息
+            self.send_message(response).await?;
         }
 
         // 根据消息类型进行特殊处理

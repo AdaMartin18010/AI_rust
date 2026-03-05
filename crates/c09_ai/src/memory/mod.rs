@@ -71,7 +71,7 @@ pub struct MemoryPool {
 }
 
 /// 内存池统计信息
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct MemoryPoolStats {
     pub total_blocks: usize,
     pub allocated_blocks: usize,
@@ -82,22 +82,6 @@ pub struct MemoryPoolStats {
     pub deallocation_count: u64,
     pub cache_hits: u64,
     pub cache_misses: u64,
-}
-
-impl Default for MemoryPoolStats {
-    fn default() -> Self {
-        Self {
-            total_blocks: 0,
-            allocated_blocks: 0,
-            free_blocks: 0,
-            total_memory: 0,
-            used_memory: 0,
-            allocation_count: 0,
-            deallocation_count: 0,
-            cache_hits: 0,
-            cache_misses: 0,
-        }
-    }
 }
 
 impl MemoryPool {
@@ -120,22 +104,22 @@ impl MemoryPool {
         let mut stats = self.stats.lock().unwrap();
         
         // 查找合适大小的内存块
-        if let Some(block_list) = blocks.get_mut(&size) {
-            if let Some(block) = block_list.iter_mut().find(|b| !b.allocated) {
-                block.allocated = true;
-                block.last_used = Instant::now();
-                stats.allocated_blocks += 1;
-                stats.used_memory += size;
-                stats.allocation_count += 1;
-                stats.cache_hits += 1;
-                
-                return Some(block.data.clone());
-            }
+        if let Some(block_list) = blocks.get_mut(&size)
+            && let Some(block) = block_list.iter_mut().find(|b| !b.allocated)
+        {
+            block.allocated = true;
+            block.last_used = Instant::now();
+            stats.allocated_blocks += 1;
+            stats.used_memory += size;
+            stats.allocation_count += 1;
+            stats.cache_hits += 1;
+            
+            return Some(block.data.clone());
         }
         
         // 如果没有找到合适的块，创建新的
         let new_block = MemoryBlock::new(size);
-        blocks.entry(size).or_insert_with(Vec::new).push(new_block.clone());
+        blocks.entry(size).or_default().push(new_block.clone());
         
         stats.total_blocks += 1;
         stats.allocated_blocks += 1;
@@ -152,14 +136,14 @@ impl MemoryPool {
         let mut blocks = self.blocks.write().unwrap();
         let mut stats = self.stats.lock().unwrap();
         
-        if let Some(block_list) = blocks.get_mut(&size) {
-            if let Some(block) = block_list.iter_mut().find(|b| b.allocated) {
-                block.allocated = false;
-                block.last_used = Instant::now();
-                stats.allocated_blocks -= 1;
-                stats.used_memory -= size;
-                stats.deallocation_count += 1;
-            }
+        if let Some(block_list) = blocks.get_mut(&size)
+            && let Some(block) = block_list.iter_mut().find(|b| b.allocated)
+        {
+            block.allocated = false;
+            block.last_used = Instant::now();
+            stats.allocated_blocks -= 1;
+            stats.used_memory -= size;
+            stats.deallocation_count += 1;
         }
     }
     
@@ -176,11 +160,7 @@ impl MemoryPool {
         for (size, block_list) in blocks.iter_mut() {
             let original_len = block_list.len();
             block_list.retain(|block| {
-                if !block.allocated && block.is_expired(Duration::from_secs(300)) {
-                    false
-                } else {
-                    true
-                }
+                block.allocated || !block.is_expired(Duration::from_secs(300))
             });
             
             let cleaned = original_len - block_list.len();
@@ -203,7 +183,7 @@ impl MemoryPool {
         
         for _ in 0..initial_blocks {
             let block = MemoryBlock::new(self.config.block_size);
-            blocks.entry(self.config.block_size).or_insert_with(Vec::new).push(block);
+            blocks.entry(self.config.block_size).or_default().push(block);
         }
         
         stats.total_blocks = initial_blocks;
@@ -319,30 +299,33 @@ impl CacheManager {
         let mut cache = self.cache.write().unwrap();
         let mut stats = self.stats.lock().unwrap();
         
-        if let Some(entry) = cache.get_mut(key) {
-            // 检查是否过期
-            if let Some(ttl) = entry.ttl {
-                if entry.created_at.elapsed() > ttl {
+        match cache.get_mut(key) {
+            Some(entry) => {
+                // 检查是否过期
+                if let Some(ttl) = entry.ttl
+                    && entry.created_at.elapsed() > ttl
+                {
                     cache.remove(key);
                     stats.eviction_count += 1;
                     stats.miss_count += 1;
                     return None;
                 }
+                
+                // 更新访问信息
+                entry.last_accessed = Instant::now();
+                entry.access_count += 1;
+                stats.hit_count += 1;
+                
+                // 更新命中率
+                stats.hit_rate = stats.hit_count as f64 / (stats.hit_count + stats.miss_count) as f64;
+                
+                Some(entry.data.clone())
             }
-            
-            // 更新访问信息
-            entry.last_accessed = Instant::now();
-            entry.access_count += 1;
-            stats.hit_count += 1;
-            
-            // 更新命中率
-            stats.hit_rate = stats.hit_count as f64 / (stats.hit_count + stats.miss_count) as f64;
-            
-            Some(entry.data.clone())
-        } else {
-            stats.miss_count += 1;
-            stats.hit_rate = stats.hit_count as f64 / (stats.hit_count + stats.miss_count) as f64;
-            None
+            None => {
+                stats.miss_count += 1;
+                stats.hit_rate = stats.hit_count as f64 / (stats.hit_count + stats.miss_count) as f64;
+                None
+            }
         }
     }
     
@@ -404,10 +387,10 @@ impl CacheManager {
         let mut removed_keys = Vec::new();
         
         for (key, entry) in cache.iter() {
-            if let Some(ttl) = entry.ttl {
-                if entry.created_at.elapsed() > ttl {
-                    removed_keys.push(key.clone());
-                }
+            if let Some(ttl) = entry.ttl
+                && entry.created_at.elapsed() > ttl
+            {
+                removed_keys.push(key.clone());
             }
         }
         

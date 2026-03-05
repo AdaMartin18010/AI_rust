@@ -14,7 +14,7 @@ members = [
 
 [workspace.package]
 edition = "2024"
-rust-version = "1.90"
+rust-version = "1.94"
 
 [profile.release]
 
@@ -270,7 +270,7 @@ tokenizers = "0.20.0"
 # 2025年最新AI库 - Rust 1.90优化
 # 注意：以下库名可能需要调整，因为某些库可能尚未发布或名称不同
 # faer-rs - 高性能线性代数库，专为Rust优化
-faer = "0.22.0"
+faer = "0.24.0"
 # 其他库暂时注释，等待实际发布
 # kornia-rs = "0.1.0"  # 3D计算机视觉高性能库
 # thistle = "0.3.0"     # 高性能向量数据库

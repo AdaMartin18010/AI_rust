@@ -190,7 +190,7 @@ impl ConfigManager {
         let configs = self.configs.read().await;
         if let Some(value) = configs.get(key) {
             let json_value = serde_json::to_value(value)
-                .map_err(|e| ConfigError::SerializationError(e))?;
+                .map_err(ConfigError::SerializationError)?;
             let typed_value = T::deserialize(json_value)
                 .map_err(|e| ConfigError::ParseError { message: e.to_string() })?;
             Ok(Some(typed_value))
@@ -216,7 +216,7 @@ impl ConfigManager {
         T: Serialize,
     {
         let config_value = serde_json::to_value(value)
-            .map_err(|e| ConfigError::SerializationError(e))?;
+            .map_err(ConfigError::SerializationError)?;
         
         let config_value = ConfigValue::deserialize(config_value)
             .map_err(|e| ConfigError::ParseError { message: e.to_string() })?;
