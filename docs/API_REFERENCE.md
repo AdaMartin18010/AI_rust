@@ -707,6 +707,7 @@ where
 执行模型推理。
 
 **请求体**:
+
 ```json
 {
   "model": "embedding",
@@ -719,6 +720,7 @@ where
 ```
 
 **响应**:
+
 ```json
 {
   "output": [...],
@@ -730,6 +732,7 @@ where
 ```
 
 **Rust客户端示例**:
+
 ```rust
 use reqwest::Client;
 use serde_json::json;
@@ -758,6 +761,7 @@ async fn infer(client: &Client, input: &str) -> Result<Vec<f32>> {
 查询RAG系统。
 
 **请求体**:
+
 ```json
 {
   "query": "What is Rust?",
@@ -767,6 +771,7 @@ async fn infer(client: &Client, input: &str) -> Result<Vec<f32>> {
 ```
 
 **响应**:
+
 ```json
 {
   "answer": "Rust is a systems programming language...",
@@ -793,6 +798,7 @@ async fn infer(client: &Client, input: &str) -> Result<Vec<f32>> {
 检查服务健康状态。
 
 **响应**:
+
 ```json
 {
   "status": "healthy",

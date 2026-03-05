@@ -140,10 +140,10 @@ impl AIWebService {
         // 文本预处理
         let tokens = self.tokenize(input)?;
         let input_tensor = Tensor::new(&tokens, &self.device)?;
-        
+
         // 模型推理
         let output = self.model.forward(&input_tensor)?;
-        
+
         // 后处理
         let result = self.decode(&output)?;
         Ok(result)
@@ -166,12 +166,12 @@ pub async fn ai_chat_handler(ws: WebSocketUpgrade) -> Response {
 
 async fn handle_ai_chat(socket: WebSocket) {
     let (mut sender, mut receiver) = socket.split();
-    
+
     while let Some(msg) = receiver.next().await {
         if let Ok(msg) = msg {
             // AI处理用户输入
             let response = ai_service.process(&msg.to_text().unwrap()).await;
-            
+
             // 流式返回AI响应
             for chunk in response.chunks() {
                 sender.send(Message::Text(chunk)).await.unwrap();
@@ -198,7 +198,7 @@ pub struct BatchProcessor {
 impl BatchProcessor {
     pub async fn process_batch(&mut self) -> Vec<Response> {
         let mut batch = Vec::new();
-        
+
         // 收集批处理请求
         while batch.len() < self.batch_size {
             if let Some(request) = self.pending_requests.pop_front() {
@@ -207,7 +207,7 @@ impl BatchProcessor {
                 break;
             }
         }
-        
+
         // 批量处理
         let responses = self.ai_service.batch_infer(batch).await?;
         responses
@@ -231,10 +231,10 @@ impl AICache {
         if let Some(cached) = self.response_cache.get(key).await {
             return Ok(cached);
         }
-        
+
         // 计算新结果
         let result = self.ai_service.compute(key).await?;
-        
+
         // 缓存结果
         self.response_cache.insert(key.to_string(), result.clone()).await;
         Ok(result)
@@ -260,20 +260,20 @@ impl ModelOptimizer {
         if self.quantization_config.enable_dynamic {
             model = self.dynamic_quantization(model).await?;
         }
-        
+
         // 2. 结构化剪枝
         if self.pruning_config.enable_structured {
             model = self.structured_pruning(model).await?;
         }
-        
+
         // 3. 知识蒸馏
         if self.distillation_config.enable_distillation {
             model = self.knowledge_distillation(model).await?;
         }
-        
+
         Ok(())
     }
-    
+
     async fn dynamic_quantization(&self, model: &Model) -> Result<Model> {
         // 动态量化实现
         let quantized_model = model.quantize_dynamic(
@@ -301,22 +301,22 @@ impl MemoryManager {
         if self.memory_monitor.usage() > 0.8 {
             self.gc_strategy.collect_garbage().await?;
         }
-        
+
         // 从内存池分配
         let tensor = self.memory_pool.allocate(shape, dtype).await?;
         Ok(tensor)
     }
-    
+
     pub async fn smart_gc(&self) -> Result<()> {
         // 智能垃圾回收策略
         let unused_tensors = self.memory_pool.find_unused_tensors().await?;
-        
+
         for tensor in unused_tensors {
             if tensor.last_access_time() < Instant::now() - Duration::from_secs(30) {
                 self.memory_pool.deallocate(tensor).await?;
             }
         }
-        
+
         Ok(())
     }
 }
@@ -337,26 +337,26 @@ impl ConcurrentProcessor {
     pub async fn process_concurrent(&self, tasks: Vec<Task>) -> Result<Vec<Response>> {
         let semaphore = Arc::new(Semaphore::new(self.max_concurrent));
         let mut handles = Vec::new();
-        
+
         for task in tasks {
             let semaphore = semaphore.clone();
             let processor = self.clone();
-            
+
             let handle = tokio::spawn(async move {
                 let _permit = semaphore.acquire().await.unwrap();
                 processor.execute_task(task).await
             });
-            
+
             handles.push(handle);
         }
-        
+
         // 等待所有任务完成
         let mut results = Vec::new();
         for handle in handles {
             let result = handle.await??;
             results.push(result);
         }
-        
+
         Ok(results)
     }
 }
@@ -377,23 +377,23 @@ impl NetworkOptimizer {
     pub async fn optimized_request(&self, request: &Request) -> Result<Response> {
         // 1. 连接复用
         let connection = self.connection_pool.get_connection().await?;
-        
+
         // 2. 请求压缩
         let compressed_request = self.compression.compress(request)?;
-        
+
         // 3. 熔断器保护
         if self.circuit_breaker.is_open() {
             return Err(Error::CircuitBreakerOpen);
         }
-        
+
         // 4. 重试机制
         let response = self.retry_policy.execute_with_retry(|| {
             connection.send_request(&compressed_request)
         }).await?;
-        
+
         // 5. 响应解压
         let decompressed_response = self.compression.decompress(&response)?;
-        
+
         Ok(decompressed_response)
     }
 }
@@ -416,14 +416,14 @@ impl HierarchicalCache {
         if let Some(value) = self.l1_cache.get(key).await? {
             return Ok(Some(value));
         }
-        
+
         // L2缓存查找
         if let Some(value) = self.l2_cache.get(key).await? {
             // 回填L1缓存
             self.l1_cache.set(key, &value).await?;
             return Ok(Some(value));
         }
-        
+
         // L3缓存查找
         if let Some(value) = self.l3_cache.get(key).await? {
             // 回填L1和L2缓存
@@ -431,10 +431,10 @@ impl HierarchicalCache {
             self.l2_cache.set(key, &value).await?;
             return Ok(Some(value));
         }
-        
+
         Ok(None)
     }
-    
+
     pub async fn set(&self, key: &str, value: &CachedValue) -> Result<()> {
         // 根据缓存策略决定存储级别
         match self.cache_policy.get_storage_level(key, value) {
@@ -451,7 +451,7 @@ impl HierarchicalCache {
                 self.l3_cache.set(key, value).await?;
             }
         }
-        
+
         Ok(())
     }
 }
@@ -470,25 +470,25 @@ pub struct PerformanceMonitor {
 impl PerformanceMonitor {
     pub async fn monitor_ai_inference(&self, request: &AIRequest) -> Result<AIResponse> {
         let start_time = Instant::now();
-        
+
         // 开始性能分析
         let _guard = self.profiler.start_profiling("ai_inference");
-        
+
         // 执行AI推理
         let response = self.execute_ai_inference(request).await?;
-        
+
         // 记录性能指标
         let duration = start_time.elapsed();
         self.metrics_collector.record_metric(
             "ai_inference_duration",
             duration.as_millis() as f64
         ).await?;
-        
+
         self.metrics_collector.record_metric(
             "ai_inference_throughput",
             1000.0 / duration.as_millis() as f64
         ).await?;
-        
+
         // 检查性能阈值
         if duration > Duration::from_millis(1000) {
             self.alert_manager.send_alert(
@@ -496,7 +496,7 @@ impl PerformanceMonitor {
                 format!("AI inference took {}ms", duration.as_millis())
             ).await?;
         }
-        
+
         Ok(response)
     }
 }
@@ -562,7 +562,7 @@ impl KnowledgeRetrievalSystem {
         let vector_results = self.vector_db.similarity_search(query, 10).await?;
         let text_results = self.text_search.search(query, 10).await?;
         let graph_results = self.knowledge_graph.expand_query(query).await?;
-        
+
         // 结果融合和重排序
         let combined = self.merge_and_rerank(vector_results, text_results, graph_results)?;
         Ok(combined)
@@ -583,13 +583,13 @@ impl KnowledgeVerificationPipeline {
     pub async fn verify(&self, response: &str, sources: &[Source]) -> Result<VerifiedResponse> {
         // 事实检查
         let fact_score = self.fact_checker.check(response).await?;
-        
+
         // 来源验证
         let source_credibility = self.source_validator.validate(sources).await?;
-        
+
         // 一致性检查
         let consistency = self.consistency_checker.check(response).await?;
-        
+
         Ok(VerifiedResponse {
             content: response.to_string(),
             confidence: (fact_score + source_credibility + consistency) / 3.0,
@@ -616,11 +616,11 @@ impl MultiTaskLearningFramework {
     pub async fn forward(&self, input: &Tensor, task_id: TaskId) -> Result<Tensor> {
         // 共享特征提取
         let shared_features = self.shared_encoder.forward(input)?;
-        
+
         // 任务特定处理
         let task_head = self.task_specific_heads.get(&task_id)
             .ok_or(Error::TaskNotFound)?;
-        
+
         let output = task_head.forward(&shared_features)?;
         Ok(output)
     }
@@ -640,16 +640,16 @@ impl ContinualLearningSystem {
     pub async fn learn_new_task(&mut self, new_data: &Dataset) -> Result<()> {
         // 重要样本选择
         let important_samples = self.memory_buffer.select_important_samples().await?;
-        
+
         // 知识蒸馏
         let distilled_knowledge = self.knowledge_distiller.distill(&important_samples).await?;
-        
+
         // 防止灾难性遗忘
         self.catastrophic_forgetting_preventer.prevent_forgetting(&distilled_knowledge).await?;
-        
+
         // 学习新任务
         self.model.train_on_new_task(new_data).await?;
-        
+
         Ok(())
     }
 }
@@ -670,16 +670,16 @@ impl EnterpriseKnowledgeAssistant {
     pub async fn answer_question(&self, question: &str, user: &User) -> Result<Answer> {
         // 权限检查
         self.permission_manager.check_access(user, &question).await?;
-        
+
         // 知识检索
         let relevant_knowledge = self.rag_system.retrieve(question).await?;
-        
+
         // 生成答案
         let answer = self.generate_answer(question, &relevant_knowledge).await?;
-        
+
         // 审计记录
         self.audit_trail.log_query(user, question, &answer).await?;
-        
+
         Ok(answer)
     }
 }
@@ -704,18 +704,18 @@ pub struct MultiTaskScheduler {
 impl MultiTaskScheduler {
     pub async fn schedule_task(&self, task: Task) -> Result<TaskId> {
         let task_id = task.id.clone();
-        
+
         // 检查并发限制
         if self.running_tasks.lock().unwrap().len() >= self.max_concurrent {
             self.task_queue.lock().unwrap().push_back(task);
             return Ok(task_id);
         }
-        
+
         // 启动任务
         let handle = tokio::spawn(async move {
             task.execute().await;
         });
-        
+
         self.running_tasks.lock().unwrap().insert(task_id.clone(), handle);
         Ok(task_id)
     }
@@ -734,14 +734,14 @@ impl TaskDependencyManager {
     pub async fn can_execute(&self, task_id: &TaskId) -> bool {
         let graph = self.dependency_graph.lock().unwrap();
         let completed = self.completed_tasks.lock().unwrap();
-        
+
         // 检查所有依赖是否完成
         for dependency in graph.neighbors_directed(*task_id, Direction::Incoming) {
             if !completed.contains(&dependency) {
                 return false;
             }
         }
-        
+
         true
     }
 }
@@ -763,16 +763,16 @@ impl DocumentProcessingPipeline {
     pub async fn process_document(&self, document: &Document) -> Result<ProcessedKnowledge> {
         // 文本提取
         let text = self.text_extractor.extract(document).await?;
-        
+
         // 知识提取
         let extracted_knowledge = self.knowledge_extractor.extract(&text).await?;
-        
+
         // 知识验证
         let validated_knowledge = self.knowledge_validator.validate(&extracted_knowledge).await?;
-        
+
         // 知识存储
         self.knowledge_storage.store(&validated_knowledge).await?;
-        
+
         Ok(validated_knowledge)
     }
 }
@@ -797,17 +797,17 @@ impl IntelligentDocumentSystem {
         for document in documents {
             // 文档预处理
             let processed = self.document_processor.process(&document).await?;
-            
+
             // AI分析
             let analysis = self.ai_analyzer.analyze(&processed).await?;
-            
+
             // 知识图谱更新
             self.knowledge_graph.update(&analysis).await?;
-            
+
             // 搜索引擎索引
             self.search_engine.index(&processed, &analysis).await?;
         }
-        
+
         Ok(())
     }
 }
@@ -831,18 +831,18 @@ impl CollaborativeKnowledgeEditor {
     pub async fn start_collaboration(&self, room_id: &str) -> Result<()> {
         // 连接WebSocket
         self.websocket_provider.connect(room_id).await?;
-        
+
         // 监听文档变化
         let doc = self.document.clone();
         let ai_assistant = self.ai_assistant.clone();
-        
+
         tokio::spawn(async move {
             doc.observe(|update| {
                 // AI辅助编辑
                 ai_assistant.assist_editing(&update).await;
             });
         });
-        
+
         Ok(())
     }
 }
@@ -869,10 +869,10 @@ impl EdgeAIInference {
     pub fn new() -> Result<EdgeAIInference, JsValue> {
         let device = Device::Cpu;
         let model = linear(768, 512, &VarBuilder::zeros(Dtype::F32, &device))?;
-        
+
         Ok(EdgeAIInference { model, device })
     }
-    
+
     #[wasm_bindgen]
     pub async fn infer(&self, input: &[f32]) -> Result<Vec<f32>, JsValue> {
         let input_tensor = Tensor::new(input, &self.device)?;
@@ -895,7 +895,7 @@ pub struct MultiModalContentGenerator {
 }
 
 impl MultiModalContentGenerator {
-    pub async fn generate_content(&self, 
+    pub async fn generate_content(&self,
         text_prompt: &str,
         image_input: Option<&[u8]>,
         audio_input: Option<&[f32]>
@@ -912,17 +912,17 @@ impl MultiModalContentGenerator {
         } else {
             None
         };
-        
+
         // 多模态融合
         let fused_embedding = self.fusion_model.fuse(
             &text_embedding,
             image_embedding.as_ref(),
             audio_embedding.as_ref()
         ).await?;
-        
+
         // 内容生成
         let generated = self.generation_model.generate(&fused_embedding).await?;
-        
+
         Ok(generated)
     }
 }
@@ -938,25 +938,25 @@ pub struct KnowledgeGraphRecommendation {
 }
 
 impl KnowledgeGraphRecommendation {
-    pub async fn recommend(&self, 
+    pub async fn recommend(&self,
         user_profile: &UserProfile,
         context: &RecommendationContext
     ) -> Result<Vec<Recommendation>> {
         // 用户兴趣图谱构建
         let user_interest_graph = self.build_user_interest_graph(user_profile).await?;
-        
+
         // 上下文知识检索
         let relevant_knowledge = self.knowledge_graph
             .query_relevant_knowledge(&context.query, 10).await?;
-        
+
         // 知识图谱嵌入
         let knowledge_embeddings = self.embedding_model
             .encode_knowledge(&relevant_knowledge).await?;
-        
+
         // 推荐计算
         let recommendations = self.recommendation_engine
             .compute_recommendations(&user_interest_graph, &knowledge_embeddings).await?;
-        
+
         Ok(recommendations)
     }
 }
@@ -974,26 +974,26 @@ pub struct DecentralizedAIService {
 }
 
 impl DecentralizedAIService {
-    pub async fn deploy_ai_model(&self, 
+    pub async fn deploy_ai_model(&self,
         model_data: &[u8],
         model_metadata: &ModelMetadata
     ) -> Result<H256> {
         // 上传模型到IPFS
         let ipfs_hash = self.ipfs_client.add(model_data).await?;
-        
+
         // 部署智能合约
         let deploy_tx = self.smart_contract
             .deploy_ai_model(ipfs_hash, model_metadata.clone())
             .send()
             .await?;
-        
+
         // 注册到模型注册表
         self.ai_model_registry.register(&deploy_tx, model_metadata).await?;
-        
+
         Ok(deploy_tx)
     }
-    
-    pub async fn request_ai_inference(&self, 
+
+    pub async fn request_ai_inference(&self,
         model_id: &str,
         input_data: &[u8]
     ) -> Result<InferenceResult> {
@@ -1002,10 +1002,10 @@ impl DecentralizedAIService {
             .request_inference(model_id, input_data)
             .send()
             .await?;
-        
+
         // 等待推理完成
         let result = self.wait_for_inference_result(&inference_tx).await?;
-        
+
         Ok(result)
     }
 }
@@ -1036,57 +1036,57 @@ pub struct AIModelMarketplace {
 }
 
 impl AIModelMarketplace {
-    pub async fn list_model(&self, 
+    pub async fn list_model(&self,
         model_data: &[u8],
         metadata: &ModelMetadata,
         price: U256
     ) -> Result<H256> {
         // 1. 上传模型到IPFS
         let ipfs_hash = self.ipfs_client.add(model_data).await?;
-        
+
         // 2. 在智能合约中注册模型
         let tx = self.contract
             .method::<_, H256>("listModel", (ipfs_hash, metadata.clone(), price))?
             .send()
             .await?;
-        
+
         Ok(tx)
     }
-    
+
     pub async fn purchase_model(&self, model_id: &str) -> Result<H256> {
         // 1. 获取模型信息
         let model_info = self.contract
             .method::<_, AIModel>("getModel", model_id)?
             .call()
             .await?;
-        
+
         // 2. 支付模型费用
         let tx = self.contract
             .method::<_, H256>("purchaseModel", model_id)?
             .value(model_info.price)
             .send()
             .await?;
-        
+
         Ok(tx)
     }
-    
+
     pub async fn download_model(&self, model_id: &str) -> Result<Vec<u8>> {
         // 1. 验证购买权限
         let has_access = self.contract
             .method::<_, bool>("hasAccess", (model_id, self.web3_client.address()))?
             .call()
             .await?;
-        
+
         if !has_access {
             return Err(Error::AccessDenied);
         }
-        
+
         // 2. 从IPFS下载模型
         let model_info = self.contract
             .method::<_, AIModel>("getModel", model_id)?
             .call()
             .await?;
-        
+
         let model_data = self.ipfs_client.get(&model_info.ipfs_hash).await?;
         Ok(model_data)
     }
@@ -1121,45 +1121,45 @@ impl DecentralizedTrainingNetwork {
             .method::<_, H256>("submitTrainingTask", task.clone())?
             .send()
             .await?;
-        
+
         // 2. 添加到本地任务队列
         self.task_queue.lock().unwrap().push_back(task);
-        
+
         Ok(tx)
     }
-    
+
     pub async fn join_training_network(&self) -> Result<()> {
         // 1. 注册为训练节点
         let tx = self.contract
             .method::<_, H256>("registerTrainingNode", ())?
             .send()
             .await?;
-        
+
         // 2. 启动训练节点
         let node = TrainingNode::new(self.contract.clone()).await?;
         self.training_nodes.lock().unwrap().insert(
             self.contract.client().address(),
             node
         );
-        
+
         Ok(())
     }
-    
+
     pub async fn execute_training_task(&self, task: &TrainingTask) -> Result<TrainingResult> {
         // 1. 下载数据集
         let dataset = self.download_dataset(&task.dataset_hash).await?;
-        
+
         // 2. 执行训练
         let model = self.train_model(dataset, &task.model_architecture, &task.hyperparameters).await?;
-        
+
         // 3. 提交训练结果
         let result_hash = self.upload_training_result(&model).await?;
-        
+
         let tx = self.contract
             .method::<_, H256>("submitTrainingResult", (task.task_id.clone(), result_hash))?
             .send()
             .await?;
-        
+
         Ok(TrainingResult {
             task_id: task.task_id.clone(),
             result_hash,
@@ -1190,25 +1190,25 @@ pub struct AIModelNFTMarketplace {
 }
 
 impl AIModelNFTMarketplace {
-    pub async fn mint_ai_model_nft(&self, 
+    pub async fn mint_ai_model_nft(&self,
         model_data: &[u8],
         metadata: &ModelMetadata,
         royalty_rate: u16
     ) -> Result<U256> {
         // 1. 上传模型到IPFS
         let model_hash = self.ipfs_client.add(model_data).await?;
-        
+
         // 2. 铸造NFT
         let token_id = self.nft_contract
             .method::<_, U256>("mint", (model_hash, metadata.clone(), royalty_rate))?
             .send()
             .await?;
-        
+
         Ok(token_id)
     }
-    
-    pub async fn list_nft_for_sale(&self, 
-        token_id: U256, 
+
+    pub async fn list_nft_for_sale(&self,
+        token_id: U256,
         price: U256
     ) -> Result<H256> {
         // 1. 授权市场合约
@@ -1216,50 +1216,50 @@ impl AIModelNFTMarketplace {
             .method::<_, H256>("approve", (self.marketplace_contract.address(), token_id))?
             .send()
             .await?;
-        
+
         // 2. 在市场上列出
         let list_tx = self.marketplace_contract
             .method::<_, H256>("listNFT", (token_id, price))?
             .send()
             .await?;
-        
+
         Ok(list_tx)
     }
-    
+
     pub async fn purchase_nft(&self, token_id: U256) -> Result<H256> {
         // 1. 获取NFT信息
         let nft_info = self.nft_contract
             .method::<_, AIModelNFT>("getNFT", token_id)?
             .call()
             .await?;
-        
+
         // 2. 购买NFT
         let tx = self.marketplace_contract
             .method::<_, H256>("purchaseNFT", token_id)?
             .value(nft_info.price)
             .send()
             .await?;
-        
+
         Ok(tx)
     }
-    
+
     pub async fn download_model_from_nft(&self, token_id: U256) -> Result<Vec<u8>> {
         // 1. 验证所有权
         let owner = self.nft_contract
             .method::<_, Address>("ownerOf", token_id)?
             .call()
             .await?;
-        
+
         if owner != self.nft_contract.client().address() {
             return Err(Error::NotOwner);
         }
-        
+
         // 2. 获取模型信息
         let nft_info = self.nft_contract
             .method::<_, AIModelNFT>("getNFT", token_id)?
             .call()
             .await?;
-        
+
         // 3. 从IPFS下载模型
         let model_data = self.ipfs_client.get(&nft_info.model_hash).await?;
         Ok(model_data)
@@ -1277,7 +1277,7 @@ pub struct CrossChainAIBridge {
 }
 
 impl CrossChainAIBridge {
-    pub async fn register_ai_service(&self, 
+    pub async fn register_ai_service(&self,
         chain_id: ChainId,
         service_address: Address,
         service_metadata: AIServiceMetadata
@@ -1285,20 +1285,20 @@ impl CrossChainAIBridge {
         // 1. 在源链注册服务
         let bridge = self.bridges.get(&chain_id)
             .ok_or(Error::UnsupportedChain)?;
-        
+
         let tx = bridge.register_service(service_address, service_metadata.clone()).await?;
-        
+
         // 2. 同步到其他链
         for (other_chain_id, other_bridge) in &self.bridges {
             if *other_chain_id != chain_id {
                 other_bridge.sync_service(chain_id, service_address, service_metadata.clone()).await?;
             }
         }
-        
+
         Ok(())
     }
-    
-    pub async fn call_cross_chain_ai_service(&self, 
+
+    pub async fn call_cross_chain_ai_service(&self,
         source_chain: ChainId,
         target_chain: ChainId,
         service_address: Address,
@@ -1307,41 +1307,41 @@ impl CrossChainAIBridge {
         // 1. 在源链发起跨链调用
         let bridge = self.bridges.get(&source_chain)
             .ok_or(Error::UnsupportedChain)?;
-        
+
         let cross_chain_tx = bridge.initiate_cross_chain_call(
             target_chain,
             service_address,
             request
         ).await?;
-        
+
         // 2. 等待跨链调用完成
         let response = bridge.wait_for_cross_chain_response(cross_chain_tx).await?;
-        
+
         Ok(response)
     }
-    
-    pub async fn sync_ai_model_across_chains(&self, 
+
+    pub async fn sync_ai_model_across_chains(&self,
         model_id: String,
         source_chain: ChainId,
         target_chains: Vec<ChainId>
     ) -> Result<Vec<H256>> {
         let mut transactions = Vec::new();
-        
+
         // 1. 获取源链模型信息
         let source_bridge = self.bridges.get(&source_chain)
             .ok_or(Error::UnsupportedChain)?;
-        
+
         let model_info = source_bridge.get_model_info(&model_id).await?;
-        
+
         // 2. 同步到目标链
         for target_chain in target_chains {
             let target_bridge = self.bridges.get(&target_chain)
                 .ok_or(Error::UnsupportedChain)?;
-            
+
             let tx = target_bridge.sync_model(model_id.clone(), model_info.clone()).await?;
             transactions.push(tx);
         }
-        
+
         Ok(transactions)
     }
 }
@@ -1370,7 +1370,7 @@ pub struct AIGovernanceDAO {
 }
 
 impl AIGovernanceDAO {
-    pub async fn create_proposal(&self, 
+    pub async fn create_proposal(&self,
         proposal_type: ProposalType,
         description: String,
         parameters: ProposalParameters
@@ -1380,11 +1380,11 @@ impl AIGovernanceDAO {
             .method::<_, String>("createProposal", (proposal_type, description, parameters))?
             .send()
             .await?;
-        
+
         Ok(proposal_id)
     }
-    
-    pub async fn vote_on_proposal(&self, 
+
+    pub async fn vote_on_proposal(&self,
         proposal_id: &str,
         vote: Vote
     ) -> Result<H256> {
@@ -1393,41 +1393,41 @@ impl AIGovernanceDAO {
             .method::<_, bool>("canVote", (proposal_id, self.dao_contract.client().address()))?
             .call()
             .await?;
-        
+
         if !can_vote {
             return Err(Error::NoVotingRights);
         }
-        
+
         // 2. 提交投票
         let tx = self.voting_contract
             .method::<_, H256>("vote", (proposal_id, vote))?
             .send()
             .await?;
-        
+
         Ok(tx)
     }
-    
+
     pub async fn execute_proposal(&self, proposal_id: &str) -> Result<H256> {
         // 1. 检查提案状态
         let proposal_status = self.dao_contract
             .method::<_, ProposalStatus>("getProposalStatus", proposal_id)?
             .call()
             .await?;
-        
+
         if proposal_status != ProposalStatus::Passed {
             return Err(Error::ProposalNotPassed);
         }
-        
+
         // 2. 执行提案
         let tx = self.execution_contract
             .method::<_, H256>("executeProposal", proposal_id)?
             .send()
             .await?;
-        
+
         Ok(tx)
     }
-    
-    pub async fn update_ai_model_parameters(&self, 
+
+    pub async fn update_ai_model_parameters(&self,
         model_id: &str,
         new_parameters: ModelParameters
     ) -> Result<H256> {
@@ -1437,10 +1437,10 @@ impl AIGovernanceDAO {
             format!("Update parameters for model {}", model_id),
             ProposalParameters::ModelParameters(new_parameters)
         ).await?;
-        
+
         // 2. 等待投票期结束
         tokio::time::sleep(Duration::from_secs(7 * 24 * 60 * 60)).await; // 7天
-        
+
         // 3. 执行提案
         self.execute_proposal(&proposal_id).await
     }
@@ -1668,7 +1668,7 @@ AI功能需求？
 
 ---
 
-*最后更新：2025年1月（Q1技术趋势更新）*  
-*版本：v1.1*  
-*状态：持续更新中*  
+*最后更新：2025年1月（Q1技术趋势更新）*
+*版本：v1.1*
+*状态：持续更新中*
 *新增内容：2025年Q1最新技术趋势、应用场景扩展、新兴技术方向*

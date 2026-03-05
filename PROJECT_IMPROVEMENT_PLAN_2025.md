@@ -4,9 +4,9 @@
 
 ## 📋 计划概述
 
-**制定时间**: 2025年1月  
-**计划周期**: 6个月（分3个阶段）  
-**目标**: 解决项目核心缺陷，提升实用性和用户体验  
+**制定时间**: 2025年1月
+**计划周期**: 6个月（分3个阶段）
+**目标**: 解决项目核心缺陷，提升实用性和用户体验
 **状态**: 🟢 执行中
 
 ---
@@ -164,7 +164,7 @@ trait AsyncAIInference<'a> {
     type Input: 'a;
     type Output: 'a;
     type Future: Future<Output = Self::Output> + 'a;
-    
+
     fn infer(&'a self, input: Self::Input) -> Self::Future;
 }
 
@@ -177,7 +177,7 @@ impl<'a> AsyncAIInference<'a> for SimpleModel {
     type Input = &'a [f64];
     type Output = f64;
     type Future = Pin<Box<dyn Future<Output = f64> + 'a>>;
-    
+
     fn infer(&'a self, input: Self::Input) -> Self::Future {
         Box::pin(async move {
             // 简单的线性模型推理
@@ -211,16 +211,16 @@ impl RAGSystem {
     pub async fn query(&self, question: &str) -> Result<String, RAGError> {
         // 1. 生成问题嵌入
         let query_embedding = self.embedding_model.embed(question).await?;
-        
+
         // 2. 检索相关文档
         let relevant_docs = self.retrieve_documents(&query_embedding, 5).await?;
-        
+
         // 3. 构建上下文
         let context = self.build_context(&relevant_docs).await?;
-        
+
         // 4. 生成答案
         let answer = self.llm.generate(&context, question).await?;
-        
+
         Ok(answer)
     }
 }
@@ -344,7 +344,7 @@ impl RAGSystem {
 
 ---
 
-*最后更新: 2025年1月*  
-*版本: v1.0*  
-*状态: 🟢 执行中*  
+*最后更新: 2025年1月*
+*版本: v1.0*
+*状态: 🟢 执行中*
 *负责人: AI-Rust开发团队*

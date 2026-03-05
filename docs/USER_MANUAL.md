@@ -1,6 +1,6 @@
 # 📖 AI-Rust 用户手册
 
-## 欢迎使用 AI-Rust！
+## 欢迎使用 AI-Rust
 
 本手册将引导您从零开始，快速掌握AI-Rust项目的使用方法，包括环境配置、基本操作、高级功能和常见问题解答。
 
@@ -12,12 +12,73 @@
 
 ## 📚 目录
 
-1. [新手入门](#新手入门)
-2. [基础操作](#基础操作)
-3. [核心功能](#核心功能)
-4. [高级应用](#高级应用)
-5. [常见问题](#常见问题)
-6. [故障排查](#故障排查)
+- [📖 AI-Rust 用户手册](#-ai-rust-用户手册)
+  - [欢迎使用 AI-Rust](#欢迎使用-ai-rust)
+  - [📚 目录](#-目录)
+  - [🚀 新手入门](#-新手入门)
+    - [第一步：环境准备](#第一步环境准备)
+      - [安装Rust](#安装rust)
+      - [安装系统依赖](#安装系统依赖)
+    - [第二步：获取项目](#第二步获取项目)
+    - [第三步：构建项目](#第三步构建项目)
+    - [第四步：运行第一个示例](#第四步运行第一个示例)
+  - [📖 基础操作](#-基础操作)
+    - [运行示例代码](#运行示例代码)
+      - [1. RAG系统示例](#1-rag系统示例)
+      - [2. 多模态处理示例](#2-多模态处理示例)
+      - [3. Agent系统示例](#3-agent系统示例)
+    - [使用Web API](#使用web-api)
+      - [启动服务](#启动服务)
+      - [基本API调用](#基本api调用)
+  - [🎯 核心功能](#-核心功能)
+    - [1. 模型推理](#1-模型推理)
+      - [加载模型](#加载模型)
+      - [执行推理](#执行推理)
+    - [2. RAG系统](#2-rag系统)
+      - [创建RAG系统](#创建rag系统)
+      - [添加文档](#添加文档)
+      - [查询RAG](#查询rag)
+    - [3. 多模态处理](#3-多模态处理)
+      - [处理不同模态](#处理不同模态)
+    - [4. Agent系统](#4-agent系统)
+      - [创建Agent](#创建agent)
+      - [添加工具](#添加工具)
+  - [🔥 高级应用](#-高级应用)
+    - [性能优化](#性能优化)
+      - [启用批量推理](#启用批量推理)
+      - [启用缓存](#启用缓存)
+      - [并行处理](#并行处理)
+    - [自定义扩展](#自定义扩展)
+      - [实现自定义模型](#实现自定义模型)
+      - [实现自定义工具](#实现自定义工具)
+    - [Docker部署](#docker部署)
+      - [构建镜像](#构建镜像)
+      - [运行容器](#运行容器)
+  - [❓ 常见问题](#-常见问题)
+    - [Q1: 如何指定Rust版本？](#q1-如何指定rust版本)
+    - [Q2: 编译时内存不足怎么办？](#q2-编译时内存不足怎么办)
+    - [Q3: 如何加快编译速度？](#q3-如何加快编译速度)
+    - [Q4: 模型文件放在哪里？](#q4-模型文件放在哪里)
+    - [Q5: 如何启用详细日志？](#q5-如何启用详细日志)
+    - [Q6: API返回错误怎么办？](#q6-api返回错误怎么办)
+  - [🔧 故障排查](#-故障排查)
+    - [编译问题](#编译问题)
+      - [问题: `error: linker 'cc' not found`](#问题-error-linker-cc-not-found)
+      - [问题: `error: failed to load source for dependency`](#问题-error-failed-to-load-source-for-dependency)
+    - [运行时问题](#运行时问题)
+      - [问题: 内存使用过高](#问题-内存使用过高)
+      - [问题: 推理速度慢](#问题-推理速度慢)
+      - [问题: 服务无响应](#问题-服务无响应)
+  - [📚 学习路径](#-学习路径)
+    - [初学者路径 (1-2周)](#初学者路径-1-2周)
+    - [进阶路径 (2-4周)](#进阶路径-2-4周)
+    - [专家路径 (1-2个月)](#专家路径-1-2个月)
+  - [🔗 相关资源](#-相关资源)
+    - [官方文档](#官方文档)
+    - [示例代码](#示例代码)
+    - [社区资源](#社区资源)
+  - [💬 获取帮助](#-获取帮助)
+  - [🎉 祝您使用愉快](#-祝您使用愉快)
 
 ---
 
@@ -41,17 +102,20 @@ rustup update
 #### 安装系统依赖
 
 **Linux (Ubuntu/Debian)**:
+
 ```bash
 sudo apt-get update
 sudo apt-get install -y build-essential pkg-config libssl-dev git
 ```
 
 **macOS**:
+
 ```bash
 brew install pkg-config openssl git
 ```
 
 **Windows**:
+
 - 下载并安装 [Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/)
 - 安装 [Git for Windows](https://git-scm.com/download/win)
 
@@ -69,6 +133,7 @@ ls -la
 ```
 
 **项目结构说明**:
+
 ```
 ai-rust/
 ├── src/          # 核心源代码
@@ -98,6 +163,7 @@ cargo doc --open
 ```
 
 **构建时间参考**:
+
 - 开发构建: 约5分钟 (首次)
 - 发布构建: 约10分钟 (首次)
 - 增量构建: 约30秒
@@ -140,6 +206,7 @@ cargo run --example rag_system
 ```
 
 **示例输出**:
+
 ```
 RAG系统演示:
 1. 添加文档...
@@ -194,6 +261,7 @@ cargo run --release --bin ai_service
 #### 基本API调用
 
 **健康检查**:
+
 ```bash
 curl http://localhost:8080/health
 
@@ -202,6 +270,7 @@ curl http://localhost:8080/health
 ```
 
 **推理请求**:
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/infer \
   -H "Content-Type: application/json" \
@@ -224,6 +293,7 @@ curl -X POST http://localhost:8080/api/v1/infer \
 ```
 
 **RAG查询**:
+
 ```bash
 curl -X POST http://localhost:8080/api/v1/rag/query \
   -H "Content-Type: application/json" \
@@ -574,6 +644,7 @@ codegen-units = 1
 ```
 
 或者使用：
+
 ```bash
 cargo build -j 2  # 限制为2个并行任务
 ```
@@ -645,6 +716,7 @@ RUST_LOG=ai_rust=debug,info cargo run
 ```
 
 常见错误：
+
 - `ModelNotFound`: 模型文件不存在
 - `InvalidInput`: 输入格式错误
 - `Timeout`: 推理超时
@@ -659,6 +731,7 @@ RUST_LOG=ai_rust=debug,info cargo run
 #### 问题: `error: linker 'cc' not found`
 
 **解决方案**:
+
 ```bash
 # Ubuntu/Debian
 sudo apt-get install build-essential
@@ -672,6 +745,7 @@ xcode-select --install
 #### 问题: `error: failed to load source for dependency`
 
 **解决方案**:
+
 ```bash
 # 清理缓存
 cargo clean
@@ -690,6 +764,7 @@ cargo build
 #### 问题: 内存使用过高
 
 **解决方案**:
+
 1. 减少批处理大小
 2. 启用对象池
 3. 清理缓存
@@ -708,6 +783,7 @@ let config = InferenceConfig {
 #### 问题: 推理速度慢
 
 **解决方案**:
+
 1. 启用发布模式构建
 2. 使用批量推理
 3. 启用缓存
@@ -777,6 +853,7 @@ pkill ai_service
 ## 🔗 相关资源
 
 ### 官方文档
+
 - [快速开始](QUICK_START.md)
 - [API参考](API_REFERENCE.md)
 - [最佳实践](docs/05_practical_guides/rust_ai_best_practices.md)
@@ -784,11 +861,13 @@ pkill ai_service
 - [部署指南](DEPLOYMENT_GUIDE.md)
 
 ### 示例代码
+
 - [examples/rust_190_demo](examples/rust_190_demo/) - Rust 1.90特性展示
 - [examples/practical_systems](examples/practical_systems/) - 实用AI系统
 - [examples/web_services](examples/web_services/) - Web服务示例
 
 ### 社区资源
+
 - [GitHub Issues](https://github.com/your-org/ai-rust/issues) - 问题反馈
 - [讨论区](https://github.com/your-org/ai-rust/discussions) - 交流讨论
 - [贡献指南](CONTRIBUTING.md) - 参与贡献
@@ -805,6 +884,7 @@ pkill ai_service
 4. **提交Issue**: 如果是Bug，请提交Issue
 
 **提问模板**:
+
 ```
 ## 问题描述
 简要描述您遇到的问题
@@ -827,13 +907,15 @@ pkill ai_service
 
 ## 相关日志
 ```
+
 粘贴相关日志
+
 ```
 ```
 
 ---
 
-## 🎉 祝您使用愉快！
+## 🎉 祝您使用愉快
 
 感谢您选择AI-Rust！如果您觉得这个项目有帮助，请给我们一个Star ⭐️
 
